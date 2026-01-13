@@ -1,8 +1,6 @@
-// server.js
-const createHttpServer = require("./interfaces/http/server");
-
-const CreateUser = require("./application/user/CreateUser");
-const InMemoryUserRepository = require("./infrastructure/InMemory/UserRepository");
+import createHttpServer from "./interfaces/http/server";
+import CreateUser from "./application/user/CreateUser";
+import InMemoryUserRepository from "./infrastructure/InMemory/UserRepository";
 
 const userRepo = new InMemoryUserRepository();
 const createUser = new CreateUser(userRepo);
