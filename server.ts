@@ -1,12 +1,13 @@
 import createHttpServer from "./interfaces/http/server";
-import CreateUser from "./application/user/CreateUser";
-import InMemoryUserRepository from "./infrastructure/InMemory/UserRepository";
 
-const userRepo = new InMemoryUserRepository();
-const createUser = new CreateUser(userRepo);
+
+const userUseCases = require("./composition/user")();
+const boardGameUseCases = require("./composition/boardGame")();
+
 
 const app = createHttpServer({
-  createUser,
+  ...userUseCases,
+  ...boardGameUseCases,
 });
 
 app.listen(3000, () => {
