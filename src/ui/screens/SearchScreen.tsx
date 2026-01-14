@@ -1,8 +1,8 @@
-import React from "react";
-import { View, TextInput, Button, FlatList, Text } from "react-native";
-import { useSearchViewModel } from "../viewModels/useSearchViewModel";
-import { FindBoardGames } from "../../application/FindBoardGames";
-import type { BoardGame } from "../../domain/entities/BoardGame";
+import React from 'react';
+import { View, TextInput, Button, FlatList, Text } from 'react-native';
+import { useSearchViewModel } from '../viewModels/useSearchViewModel';
+import { FindBoardGames } from '../../application/FindBoardGames';
+import type { BoardGame } from '../../domain/entities/BoardGame';
 
 interface SearchScreenProps {
   findBoardGames: FindBoardGames;
