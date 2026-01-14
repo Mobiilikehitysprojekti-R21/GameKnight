@@ -2,6 +2,18 @@
 
 This is Nodejs server application meant to accompany GameKnight mobile app. GameKnight is social boardgame app allowing users to track their game collection, games, results and friends.
 
+## Styling guide
+
+Install prettier with `npm i` in project root folder and install [prettier extension for VS Code](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode).
+
+Optional (but recommended):
+
+- [Format On Save Mode = File](vscode://settings/editor.formatOnSaveMode)
+- [Format On Save = Check](vscode://settings/editor.formatOnSave)
+- [Default formatter = Prettier - Code Formatter](vscode://settings/editor.defaultFormatter)
+
+Prettier config is in .prettierrc file.
+
 # Architecture
 
 Server architecture is designed with _Clean architecture_, allowing clear separation of responsibilities, easy technology changes and maintainable code. Below is short guidance for contributors.
@@ -61,7 +73,7 @@ class User {
     if (!email.includes("@")) {
       throw new Error("Invalid email");
     }
-    this.id = id;      
+    this.id = id;
     this.email = email;
     // ...snip
   }
@@ -109,6 +121,7 @@ How the outside world talks to us
 - Background jobs
 
 Responsibilities:
+
 - Parse input
 - Call useCase.execute()
 
