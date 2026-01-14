@@ -1,20 +1,16 @@
 import { ScrollView, View, Text, TouchableOpacity } from 'react-native';
 import { styles } from '../styles/homeStyles';
 
-
 export default function HomeScreen() {
   return (
     <ScrollView
       contentContainerStyle={styles.scrollContainer}
       showsVerticalScrollIndicator={false}
     >
-
       {/* OTSIKKO */}
       <View style={styles.header}>
         <Text style={styles.title}>GameKnight</Text>
-        <Text style={styles.subtitle}>
-          Remember every game night!
-        </Text>
+        <Text style={styles.subtitle}>Remember every game night!</Text>
       </View>
 
       {/* PÄÄTOIMINNOT */}
@@ -36,22 +32,18 @@ export default function HomeScreen() {
         </Text>
       </View>
 
-{/* KIRJAUTUMINEN */}
-<View style={styles.card}>
-  <Text style={styles.sectionTitle}>Käyttäjä</Text>
+      {/* KIRJAUTUMINEN */}
+      <View style={styles.card}>
+        <Text style={styles.sectionTitle}>Käyttäjä</Text>
 
-  <Text style={styles.statText}>
-    Kirjaudu sisään tallentaaksesi pisteet ja tilastot
-  </Text>
+        <Text style={styles.statText}>
+          Kirjaudu sisään tallentaaksesi pisteet ja tilastot
+        </Text>
 
-  <TouchableOpacity style={styles.loginButton}>
-    <Text style={styles.loginButtonText}>
-      Kirjaudu / Luo käyttäjä
-    </Text>
-  </TouchableOpacity>
-</View>
-
-
+        <TouchableOpacity style={styles.loginButton}>
+          <Text style={styles.loginButtonText}>Kirjaudu / Luo käyttäjä</Text>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   );
 }

@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { FindBoardGames } from "../../application/FindBoardGames";
-import { BoardGame } from "../../domain/entities/BoardGame";
+import { useState } from 'react';
+import { FindBoardGames } from '../../application/FindBoardGames';
+import { BoardGame } from '../../domain/entities/BoardGame';
 
 export function useSearchViewModel(findBoardGames: FindBoardGames) {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState('');
   const [games, setGames] = useState<BoardGame[]>([]);
   const [loading, setLoading] = useState(false);
 

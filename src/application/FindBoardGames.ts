@@ -1,4 +1,4 @@
-import { BoardGameRepository } from "../domain/repositories/BoardGameRepository";
+import { BoardGameRepository } from '../domain/repositories/BoardGameRepository';
 
 export class FindBoardGames {
   constructor(private repo: BoardGameRepository) {}
