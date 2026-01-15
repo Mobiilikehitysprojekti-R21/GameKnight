@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 import { colors, spacing, radius } from './theme';
 
 export const styles = StyleSheet.create({
-    header: {
+  header: {
     alignItems: 'center',
     marginBottom: 40,
   },
@@ -26,7 +26,6 @@ export const styles = StyleSheet.create({
     padding: 24,
     paddingBottom: 40,
   },
-
 
   card: {
     backgroundColor: colors.surface,
@@ -68,7 +67,7 @@ export const styles = StyleSheet.create({
     fontSize: 14,
   },
 
-    loginButton: {
+  loginButton: {
     marginTop: 12,
     paddingVertical: 12,
     borderRadius: 10,
@@ -82,5 +81,4 @@ export const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '500',
   },
-
 });
