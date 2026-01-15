@@ -1,0 +1,37 @@
+flowchart LR
+
+subgraph 0["src"]
+subgraph 1["application"]
+2["FindBoardGames.ts"]
+end
+subgraph 3["domain"]
+subgraph 4["entities"]
+5["BoardGame.ts"]
+end
+subgraph 6["repositories"]
+7["BoardGameRepository.ts"]
+end
+end
+subgraph 8["infrastructure"]
+subgraph 9["api"]
+A["BoardGameApiRepository.ts"]
+end
+end
+subgraph B["ui"]
+subgraph C["screens"]
+D["HomeScreen.tsx"]
+H["SearchScreen.tsx"]
+end
+subgraph E["styles"]
+F["homeStyles.tsx"]
+G["theme.ts"]
+end
+subgraph I["viewModels"]
+J["useSearchViewModel.ts"]
+K["useHomeScreenViewModel.ts"]
+end
+end
+end
+D-->F
+F-->G
+H-->J
