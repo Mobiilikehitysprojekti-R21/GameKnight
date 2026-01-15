@@ -31,5 +31,5 @@ jobs:
           git add docs/architecture.mmd
           git diff --cached --quiet || (
             git commit -m "chore: update architecture diagram"
-            git push origin HEAD:${{ github.ref_name }}
+            git push origin HEAD:${{ github.event.pull_request.head.ref || github.ref_name }}
           )
