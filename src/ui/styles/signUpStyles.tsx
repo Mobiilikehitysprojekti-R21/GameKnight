@@ -2,9 +2,36 @@ import { StyleSheet } from 'react-native';
 import { colors, spacing, radius } from './theme';
 
 export const styles = StyleSheet.create({
+
+  container: {
+    padding: 24,
+    paddingBottom: 40,
+    flex: 1,
+    alignItems: 'center',
+    backgroundColor: colors.background
+  },
+
   header: {
     alignItems: 'center',
     marginBottom: 40,
+  },
+
+  inputRow: {
+    flexDirection: 'column',
+    marginBottom: 20,
+    marginRight: 16,
+    marginLeft: 16,
+  },
+
+  input: {
+    borderWidth: 1,
+    textAlign: 'center',
+    borderColor: '#ccc',
+    backgroundColor: '#fff',
+    borderRadius: 4,
+    padding: 8,
+    marginBottom: 16,
+    fontSize: 16,
   },
 
   title: {
@@ -12,6 +39,7 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#F8FAFC',
     letterSpacing: 1,
+    marginBottom: 20,
   },
 
   subtitle: {
@@ -20,12 +48,6 @@ export const styles = StyleSheet.create({
     color: '#CBD5E1',
     textAlign: 'center',
     maxWidth: 260,
-  },
-
-  scrollContainer: {
-    padding: 24,
-    paddingBottom: 40,
-    backgroundColor: colors.background
   },
 
   card: {

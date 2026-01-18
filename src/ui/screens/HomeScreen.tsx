@@ -1,7 +1,12 @@
 import { ScrollView, View, Text, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { styles } from '../styles/homeStyles';
+import SignUpScreen from './SignUpScreen';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-export default function HomeScreen() {
+type Props = NativeStackScreenProps<any>
+
+export default function HomeScreen({navigation}:Props) {
   return (
     <ScrollView
       contentContainerStyle={styles.scrollContainer}
@@ -40,7 +45,7 @@ export default function HomeScreen() {
           Kirjaudu sisään tallentaaksesi pisteet ja tilastot
         </Text>
 
-        <TouchableOpacity style={styles.loginButton}>
+        <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('SignUp')}>
           <Text style={styles.loginButtonText}>Kirjaudu / Luo käyttäjä</Text>
         </TouchableOpacity>
       </View>
