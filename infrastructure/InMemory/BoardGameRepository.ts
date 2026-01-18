@@ -73,13 +73,13 @@ function loadBoardGamesFromCsv(): BoardGame[] {
       const is_expansion = columns[isExpansionIndex] === "1";
 
       games.push({
-        id,
+        bgg_id: id,
         name: columns[nameIndex],
-        yearpublished,
+        year_published: yearpublished,
         rank,
-        bayesaverage,
+        bayes_average: bayesaverage,
         average,
-        usersrated,
+        users_rated: usersrated,
         is_expansion,
       });
     }
