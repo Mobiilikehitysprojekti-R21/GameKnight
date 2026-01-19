@@ -16,11 +16,17 @@ export const styles = StyleSheet.create({
     marginBottom: 40,
   },
 
-  inputRow: {
+  inputColumn: {
     flexDirection: 'column',
     marginBottom: 20,
     marginRight: 16,
     marginLeft: 16,
+  },
+
+  inputRow: {
+    flexDirection: 'row',
+    maxWidth: '100%',
+    alignItems: 'center'
   },
 
   input: {
@@ -32,6 +38,7 @@ export const styles = StyleSheet.create({
     padding: 8,
     marginBottom: 16,
     fontSize: 16,
+    minWidth: 200
   },
 
   title: {
@@ -85,9 +92,12 @@ export const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
 
-  statText: {
+  text: {
     color: colors.textSecondary,
-    fontSize: 14,
+    fontSize: 20,
+    textAlignVertical: 'center',
+    marginRight: 16,
+    minWidth: 100
   },
 
   loginButton: {

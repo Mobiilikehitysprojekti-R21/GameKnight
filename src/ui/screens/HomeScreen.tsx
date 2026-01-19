@@ -20,7 +20,7 @@ export default function HomeScreen({navigation}:Props) {
 
       {/* PÄÄTOIMINNOT */}
       <View style={styles.card}>
-        <TouchableOpacity style={styles.primaryButton}>
+        <TouchableOpacity style={styles.primaryButton} onPress={() => navigation.navigate('Search')}>
           <Text style={styles.buttonText}>Aloita uusi peli</Text>
         </TouchableOpacity>
 
