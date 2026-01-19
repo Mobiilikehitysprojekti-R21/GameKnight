@@ -2,8 +2,9 @@ import User from "../../domain/User";
 import UserRepository from "../../ports/UserRepository";
 
 export interface CreateUserInput {
-  id: string;
   email: string;
+  password: string;
+  nickname: string;
 }
 
 class CreateUser {
@@ -21,16 +22,16 @@ class CreateUser {
     this.userRepository = userRepository;
   }
 
-  async execute({ id, email }: CreateUserInput): Promise<User> {
-    const existing = await this.userRepository.findByEmail(email);
+  async execute(input: CreateUserInput): Promise<User> {
+    const existing = await this.userRepository.findByEmail(input.email);
     if (existing) {
       throw new Error("User already exists");
     }
 
-    const user = new User({ id, email });
-    await this.userRepository.save(user);
+    const user = new User(input);
+    const saved = await this.userRepository.save(user);
 
-    return user;
+    return saved;
   }
 }
 

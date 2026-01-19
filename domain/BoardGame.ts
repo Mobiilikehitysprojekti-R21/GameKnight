@@ -1,32 +1,26 @@
 export interface BoardGameProps {
-    id: number,
-    name: string,
-    yearpublished: number,
-    rank: number,
-    bayesaverage: number,
-    average: number,
-    usersrated: number,
-    is_expansion: boolean,
-    // abstracts_rank: number: number,
-    // cgs_rank: numer: number,
-    // childrensgames_rank: number,
-    // familygames_rank: number,
-    // partygames_rank: number,
-    // strategygames_rank: number,
-    // thematic_rank: number,
-    // wargames_rank: number,
+    game_id?: number;
+    bgg_id: number;
+    name: string;
+    year_published?: number;
+    rank?: number;
+    bayes_average?: number;
+    average?: number;
+    users_rated?: number;
+    is_expansion: boolean;
 }
 
 class BoardGame implements BoardGameProps {
     constructor (
-    public readonly id: number,
+    public readonly bgg_id: number,
     public readonly name: string,
-    public readonly yearpublished: number,
-    public readonly rank: number,
-    public readonly bayesaverage: number,
-    public readonly average: number,
-    public readonly usersrated: number,
     public readonly is_expansion: boolean,
+    public readonly game_id?: number,
+    public readonly year_published?: number,
+    public readonly rank?: number,
+    public readonly bayes_average?: number,
+    public readonly average?: number,
+    public readonly users_rated?: number,
     ) {
         
     }

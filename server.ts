@@ -1,9 +1,22 @@
 import createHttpServer from "./interfaces/http/server";
 
+import "dotenv/config";
+import { pool } from "./infrastructure/postgres/db";
+import PostgresUserRepository from "./infrastructure/postgres/UserRepository";
+
+console.log("DATABASE_URL =", process.env.DATABASE_URL);
+
+(async () => {
+  try {
+    await pool.query("SELECT 1");
+    console.log("✅ Database connection OK");
+  } catch (err) {
+    console.error("❌ Database connection failed", err);
+  }
+})();
 
 const userUseCases = require("./composition/user")();
 const boardGameUseCases = require("./composition/boardGame")();
-
 
 const app = createHttpServer({
   ...userUseCases,

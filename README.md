@@ -128,3 +128,20 @@ Responsibilities:
 Format output
 
 No business logic here.
+
+### `db/`
+
+Database schema is defined in `db/db.sql` and initial test data in `db/seed.sql`.
+
+Schema and seed data were executed in PostgreSQL using pgAdmin. Database functionality was verified using SQL queries and a lightweight Node.js database test (`tests/dbTest.js`) without UI or REST APIs.
+
+## Automatic dependecy graph
+
+Dependecy graph is automatically updated on PR and Push to main branch.
+
+Graph can be manually updated with command below.
+
+```sh
+npx depcruise . --config .dependency-cruiser.js \
+     --output-type mermaid > docs/architecture.mmd
+```
