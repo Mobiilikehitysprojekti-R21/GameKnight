@@ -4,7 +4,7 @@ import "dotenv/config";
 import { pool } from "./infrastructure/postgres/db";
 import PostgresUserRepository from "./infrastructure/postgres/UserRepository";
 
- console.log("DATABASE_URL =", process.env.DATABASE_URL);
+console.log("DATABASE_URL =", process.env.DATABASE_URL);
 
 (async () => {
   try {
@@ -13,12 +13,10 @@ import PostgresUserRepository from "./infrastructure/postgres/UserRepository";
   } catch (err) {
     console.error("❌ Database connection failed", err);
   }
-})(); 
+})();
 
-
-/* const userUseCases = require("./composition/user")();
+const userUseCases = require("./composition/user")();
 const boardGameUseCases = require("./composition/boardGame")();
-
 
 const app = createHttpServer({
   ...userUseCases,
@@ -28,4 +26,3 @@ const app = createHttpServer({
 app.listen(3000, () => {
   console.log("Server running on http://localhost:3000");
 });
- */

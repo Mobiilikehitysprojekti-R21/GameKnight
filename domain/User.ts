@@ -1,12 +1,12 @@
 export interface UserProps {
-  user_id: string;
+  user_id?: number | null;
   email: string;
   password: string;
   nickname: string;
 }
 
 class User {
-  public readonly user_id: string;
+  public readonly user_id: number | null;
   public readonly email: string;
   public readonly password: string;
   public readonly nickname: string;
@@ -15,7 +15,8 @@ class User {
     if (!email.includes("@")) {
       throw new Error("Invalid email");
     }
-    this.user_id = user_id;
+
+    this.user_id = user_id ?? null;
     this.email = email;
     this.password = password;
     this.nickname = nickname;
