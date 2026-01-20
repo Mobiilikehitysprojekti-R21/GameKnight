@@ -1,8 +1,8 @@
 -- USERS
-INSERT INTO users (email, password, nickname) VALUES
-  ('alli@esimerkki.fi', 'hashed_pw', 'Alli'),
-  ('pertti@esimerkki.fi', 'hashed_pw', 'Pertti'),
-  ('roope@esimerkki.fi', 'hashed_pw', 'Roope');
+INSERT INTO users (email, auth0_id, nickname) VALUES
+  ('alli@esimerkki.fi', 'auth0ID', 'Alli'),
+  ('pertti@esimerkki.fi', 'auth0ID', 'Pertti'),
+  ('roope@esimerkki.fi', 'auth0ID', 'Roope');
 
 -- GROUP
 INSERT INTO groups (name) VALUES

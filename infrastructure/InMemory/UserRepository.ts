@@ -10,7 +10,7 @@ class InMemoryUserRepository extends UserRepository {
     const userWithId = new User({
       user_id: this.serial,
       email: user.email,
-      password: user.password,
+      auth0_id: user.auth0_id,
       nickname: user.nickname,
     });
     this.users.push(userWithId);
@@ -19,6 +19,10 @@ class InMemoryUserRepository extends UserRepository {
 
   async findByEmail(email: string): Promise<User | undefined> {
     return this.users.find((u) => u.email === email);
+  }
+
+  async findByNickname(nickname: string): Promise<User | undefined> {
+    return this.users.find((u) => u.nickname === nickname);
   }
 }
 
