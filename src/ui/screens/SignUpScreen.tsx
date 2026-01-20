@@ -3,6 +3,8 @@ import React, { useState } from 'react'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../navigation/types'
 import { styles } from '../styles/signUpStyles'
+import axios from 'axios'
+import Constants from 'expo-constants'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SignUp'>
 
@@ -10,6 +12,7 @@ const SignUpScreen = ({ route, navigation }: Props) => {
   const [email, setEmail] = useState("")
   const [nickname, setNickname] = useState("")
   const [password, setPassword] = useState("")
+  const [isNickAvailable, setIsNickAvailable] = useState(false)
 
   // Function to check inputs
   const signUpCheck = () => {
@@ -36,6 +39,31 @@ const SignUpScreen = ({ route, navigation }: Props) => {
     }
   }
 
+  const nicknameCheck = async () => {
+    console.log("tarkistetaan nick:", nickname)
+
+    // For development: if no backend available, assume nickname is available
+    const apiUrl = Constants.expoConfig?.extra?.API_URL
+    if (!apiUrl) {
+      console.log("No API_URL set, assuming nickname is available")
+      setIsNickAvailable(true)
+      return
+    }
+
+    const headers = { headers: { 'Content-Type': 'application/json' } }
+
+    try {
+      // POST request to backend to validate nickname
+      const response = await axios.post(`${apiUrl}/users/validateNickname`, { nickname }, headers)
+      console.log("API response:", response.data)
+      const isAvailable = response.data === true
+      console.log("Setting isNickAvailable to:", isAvailable)
+      setIsNickAvailable(isAvailable)
+    } catch (error) {
+      console.error('Network error:', error)
+    }
+  }
+
   const handleSubmit = async () => {
     try {
       // check inputs
@@ -54,7 +82,7 @@ const SignUpScreen = ({ route, navigation }: Props) => {
       // navigate to HomeScreen
       navigation.navigate('Home')
     } catch (error) {
-      
+
       // alert user of an error in input fields
       alert(error instanceof Error ? error.message : 'An error occurred')
     }
@@ -89,12 +117,29 @@ const SignUpScreen = ({ route, navigation }: Props) => {
           <TextInput
             style={styles.input}
             value={nickname}
-            onChangeText={setNickname}
+            onChangeText={(text) => {
+              setNickname(text)
+              setIsNickAvailable(false)
+            }}
+            onEndEditing={nicknameCheck}
             placeholder='your name'
           />
         </View>
 
-        <TouchableOpacity style={styles.primaryButton} onPress={handleSubmit}>
+        {nickname.length > 0 && (
+          <Text style={{ color: isNickAvailable ? 'green' : 'red' }}>
+            {isNickAvailable ? 'Nickname on vapaa' : 'Nickname on varattu'}
+          </Text>
+        )}
+
+
+        <TouchableOpacity
+          style={[
+            styles.primaryButton,
+            !isNickAvailable && styles.disabledButton]}
+          onPress={handleSubmit}
+          disabled={!isNickAvailable}
+        >
           <Text style={styles.buttonText}>Submit</Text>
         </TouchableOpacity>
       </View>

@@ -21,17 +21,17 @@ export default function App() {
     <>
       <NavigationContainer>
         <SafeAreaView style={{ flex: 1, backgroundColor: '#0F172A' }}>
-        <Stack.Navigator screenOptions={{headerStyle: {backgroundColor: colors.secondary}, headerTintColor: colors.textPrimary, headerTitleStyle: {color: colors.textPrimary}}}>
-          <Stack.Screen name='Home' component={HomeScreen}/>
-          <Stack.Screen name='Search'>
-            {() => <SearchScreen findBoardGames={findBoardGames}/>}
-          </Stack.Screen>
-          <Stack.Screen name='SignUp' component={SignUpScreen}/>
+          <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: colors.secondary }, headerTintColor: colors.textPrimary, headerTitleStyle: { color: colors.textPrimary } }}>
+            <Stack.Screen name='Home' component={HomeScreen} />
+            <Stack.Screen name='Search'>
+              {() => <SearchScreen findBoardGames={findBoardGames} />}
+            </Stack.Screen>
+            <Stack.Screen name='SignUp' component={SignUpScreen} />
           </Stack.Navigator>
         </SafeAreaView>
       </NavigationContainer>
       <StatusBar style="light" />
-      </>
-    
+    </>
+
   );
 }
