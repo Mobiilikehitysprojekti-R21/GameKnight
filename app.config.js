@@ -1,5 +1,3 @@
-import { ExpoConfig } from 'expo/config';
-
 const config = {
     name: 'GameKnight',
     slug: 'GameKnight',
@@ -28,7 +26,7 @@ const config = {
         favicon: './assets/favicon.png',
     },
     extra: {
-        API_URL: process.env.API_URL || 'http://192.168.0.104:3000',
+        API_URL: process.env.API_URL,
     },
 };
 

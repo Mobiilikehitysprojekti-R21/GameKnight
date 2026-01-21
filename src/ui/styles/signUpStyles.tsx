@@ -116,7 +116,21 @@ export const styles = StyleSheet.create({
   },
   
   disabledButton: {
-  backgroundColor: '#aaa',
-  opacity: 0.6,
-}
+    backgroundColor: '#aaa',
+    opacity: 0.6,
+  },
+
+  nicknameText: {
+    fontSize: 20,
+    marginBottom: 16,
+    textAlign: 'center'
+  },
+
+  available: {
+    color: 'green',
+  },
+  
+  unavailable: {
+    color: 'red',
+  }
 });
