@@ -3,7 +3,7 @@ import UserRepository from "../../ports/UserRepository";
 
 export interface CreateUserInput {
   email: string;
-  auth0_id: string;
+  auth0_id?: string;  // valinnainen, että voi testata ennen Auth0 käyttöönottoa
   nickname: string;
 }
 
