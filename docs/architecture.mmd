@@ -7,84 +7,90 @@ subgraph 2["boardgame"]
 end
 subgraph 4["user"]
 5["CreateUser.ts"]
+9["ValidateNickname.ts"]
 end
 end
 subgraph 6["domain"]
 7["User.ts"]
-M["BoardGame.ts"]
-N["Friendship.ts"]
-O["Group.ts"]
-P["Location.ts"]
-Q["Session.ts"]
-R["SessionPlayer.ts"]
+O["BoardGame.ts"]
+P["Friendship.ts"]
+Q["Group.ts"]
+R["Location.ts"]
+S["Session.ts"]
+T["SessionPlayer.ts"]
 end
-subgraph 8["composition"]
-9["boardGame.ts"]
-H["user.ts"]
+8["crypto"]
+subgraph A["composition"]
+B["boardGame.ts"]
+J["user.ts"]
 end
-subgraph A["infrastructure"]
-subgraph B["InMemory"]
-C["BoardGameRepository.ts"]
-S["SessionPlayerRepository.ts"]
-U["SessionRepository.ts"]
-W["UserRepository.ts"]
+subgraph C["infrastructure"]
+subgraph D["InMemory"]
+E["BoardGameRepository.ts"]
+U["SessionPlayerRepository.ts"]
+W["SessionRepository.ts"]
+Y["UserRepository.ts"]
 end
-subgraph I["postgres"]
-J["db.ts"]
-K["UserRepository.ts"]
-X["SessionPlayerRepository.ts"]
-Y["SessionRepository.ts"]
-end
-end
-D["fs"]
-E["path"]
-subgraph F["ports"]
-G["BoardGameRepository.ts"]
-L["UserRepository.ts"]
-T["SessionPlayerRepository.ts"]
-V["SessionRepository.ts"]
-end
-subgraph Z["interfaces"]
-subgraph 10["http"]
-subgraph 11["controllers"]
-12["createUserController.ts"]
-13["findBoardGameController.ts"]
-end
-subgraph 14["routes"]
-15["boardgames.ts"]
-16["users.ts"]
-end
-17["server.ts"]
+subgraph K["postgres"]
+L["db.ts"]
+M["UserRepository.ts"]
+Z["SessionPlayerRepository.ts"]
+10["SessionRepository.ts"]
 end
 end
-18["server.ts"]
-subgraph 19["tests"]
-1A["dbTest.js"]
+F["fs"]
+G["path"]
+subgraph H["ports"]
+I["BoardGameRepository.ts"]
+N["UserRepository.ts"]
+V["SessionPlayerRepository.ts"]
+X["SessionRepository.ts"]
+end
+subgraph 11["interfaces"]
+subgraph 12["http"]
+subgraph 13["controllers"]
+14["createUserController.ts"]
+15["findBoardGameController.ts"]
+16["validateNicknameController.ts"]
+end
+subgraph 17["routes"]
+18["boardgames.ts"]
+19["users.ts"]
+end
+1A["server.ts"]
+end
+end
+1B["server.ts"]
+subgraph 1C["tests"]
+1D["dbTest.js"]
 end
 5-->7
-9-->3
-9-->C
-C-->G
-C-->D
-C-->E
-H-->5
-H-->J
-H-->K
-K-->7
-K-->L
-S-->T
+7-->8
+B-->3
+B-->E
+E-->I
+E-->F
+E-->G
+J-->5
+J-->9
+J-->L
+J-->M
+M-->7
+M-->N
 U-->V
-W-->7
-W-->L
-X-->R
-X-->T
-Y-->Q
-Y-->V
-15-->13
-16-->12
-17-->15
-17-->16
-18-->9
-18-->H
-18-->J
-18-->17
+W-->X
+Y-->7
+Y-->N
+Z-->T
+Z-->V
+10-->S
+10-->X
+18-->15
+19-->14
+19-->16
+1A-->18
+1A-->19
+1B-->B
+1B-->J
+1B-->L
+1B-->1A
