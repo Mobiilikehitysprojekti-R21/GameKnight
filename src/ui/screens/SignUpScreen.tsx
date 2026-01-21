@@ -39,7 +39,7 @@ const SignUpScreen = ({ navigation }: Props) => {
           />
         </View>
 
-        {vm.nickname.length > 0 && (
+        {vm.showCheck && (
           <Text style={[
             styles.nicknameText,
             vm.isNickAvailable ? styles.available : styles.unavailable

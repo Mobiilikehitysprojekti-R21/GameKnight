@@ -8,6 +8,7 @@ export const useSignUpViewModel = (onSuccess: () => void) => {
     //const [auth0_id, setAuth0_id] = useState("")                  // state for auth0 id
     const [nickname, setNickname] = useState("")                    // state for nickname
     const [isNickAvailable, setIsNickAvailable] = useState(false)   // state to track if the nickname is available
+    const [showCheck, setShowCheck] = useState(false)               // state to handle user notification text about nickname´s availability
 
     // Repository and UseCase instances (application)
     const repo = new UserApiRepository()
@@ -17,6 +18,7 @@ export const useSignUpViewModel = (onSuccess: () => void) => {
     const checkNickname = async () => {
         const available = await repo.validateNickname(nickname)
         setIsNickAvailable(available)
+        setShowCheck(true)  // notify user if nickname is available or not
     }
 
     // 
@@ -42,6 +44,7 @@ export const useSignUpViewModel = (onSuccess: () => void) => {
         email,
         nickname,
         isNickAvailable,
+        showCheck,
         setEmail,
         setNickname,
         checkNickname,
