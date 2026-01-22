@@ -3,7 +3,7 @@ import UserRepository from "../../ports/UserRepository";
 
 export interface CreateUserInput {
   email: string;
-  password: string;
+  auth0_id?: string;  // valinnainen, että voi testata ennen Auth0 käyttöönottoa
   nickname: string;
 }
 
@@ -23,9 +23,13 @@ class CreateUser {
   }
 
   async execute(input: CreateUserInput): Promise<User> {
-    const existing = await this.userRepository.findByEmail(input.email);
+    /*const existing = await this.userRepository.findByEmail(input.email);
     if (existing) {
       throw new Error("User already exists");
+    }*/
+   const existing = await this.userRepository.findByNickname(input.nickname);
+    if (existing) {
+      throw new Error("Nickname already exists");
     }
 
     const user = new User(input);

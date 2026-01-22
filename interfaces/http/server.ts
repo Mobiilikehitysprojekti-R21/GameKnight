@@ -4,9 +4,11 @@ import userRoutes from "./routes/users";
 import CreateUser from "../../application/user/CreateUser";
 import FindBoardGame from "../../application/boardgame/FindBoardGame";
 import boardGameRouter from "./routes/boardgames";
+import ValidateNickname from "../../application/user/ValidateNickname";
 
 export interface HttpServerDeps {
   createUser: CreateUser;
+  validateNickname: ValidateNickname
   findBoardGame: FindBoardGame;
 }
 

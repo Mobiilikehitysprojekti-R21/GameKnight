@@ -12,17 +12,17 @@ class PostgresUserRepository extends UserRepository {
 
   async save(user: User): Promise<User> {
     const result = await this.pool.query(
-      `INSERT INTO users (email, password, nickname)
+      `INSERT INTO users (email, auth0_id, nickname)
        VALUES ($1, $2, $3)
-       RETURNING user_id, email, password, nickname`,
-      [user.email, user.password, user.nickname]
+       RETURNING user_id, auth0_id, email, nickname`,
+      [user.email, user.auth0_id, user.nickname]
     );
     if (result.rows.length > 0) {
       const row = result.rows[0];
       return new User({
         user_id: row.user_id,
         email: row.email,
-        password: row.password,
+        auth0_id: row.auth0_id,
         nickname: row.nickname,
       });
     } else {
@@ -43,7 +43,7 @@ class PostgresUserRepository extends UserRepository {
     return new User({
       user_id: row.user_id,
       email: row.email,
-      password: row.password,
+      auth0_id: row.auth0_id,
       nickname: row.nickname,
     });
   }
@@ -61,10 +61,29 @@ class PostgresUserRepository extends UserRepository {
     return new User({
       user_id: row.user_id,
       email: row.email,
-      password: row.password,
+      auth0_id: row.auth0_id,
       nickname: row.nickname,
     });
   }
+
+  async findByNickname(nickname: string): Promise<User | undefined> {
+    const result = await this.pool.query(
+      `SELECT * FROM users WHERE nickname = $1`,
+      [nickname]
+    );
+
+    if (result.rowCount === 0) return undefined;
+
+    const row = result.rows[0];
+
+    return new User({
+      user_id: row.user_id,
+      email: row.email,
+      auth0_id: row.auth0_id,
+      nickname: row.nickname,
+    });
+  }
+
 }
 
 export default PostgresUserRepository;
