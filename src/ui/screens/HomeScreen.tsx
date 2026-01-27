@@ -49,6 +49,18 @@ export default function HomeScreen({navigation}:Props) {
           <Text style={styles.loginButtonText}>Kirjaudu / Luo käyttäjä</Text>
         </TouchableOpacity>
       </View>
+
+    <View style={styles.card}>
+        <Text style={styles.sectionTitle}>Profiili</Text>
+
+        <Text style={styles.statText}>
+          Siirry profiilisivulle
+        </Text>
+
+        <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('Profile')}>
+          <Text style={styles.loginButtonText}>Profiilisivu</Text>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   );
 }
