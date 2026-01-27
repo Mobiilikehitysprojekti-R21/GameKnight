@@ -39,4 +39,9 @@ export class UserApiRepository implements UserRepository {
         console.log("rekisteröidytään....") // debugging...
         await axios.post(`${this.apiUrl}/users/`, user)
     }
+
+    // Update user´s nickname
+    async changeNickname(nickname: string): Promise<void> {
+        await axios.patch(`${this.apiUrl}/users/updateNickname`, { nickname })
+    }
 }

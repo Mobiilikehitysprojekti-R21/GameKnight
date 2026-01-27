@@ -93,4 +93,55 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#000',
   },
+
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: colors.background,
+    margin: spacing.md
+  },
+
+  modalContainer: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: spacing.lg,
+    marginBottom: spacing.md,
+  },
+
+  inputRow: {
+    flexDirection: 'row',
+    marginBottom: 16,
+    marginTop: 16,
+    maxWidth: '100%'
+  },
+
+  input: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 4,
+    padding: 8,
+    marginRight: 16,
+    maxWidth: '100%',
+    color: "white"
+  },
+
+  nicknameText: {
+    fontSize: 20,
+    marginBottom: 16,
+    textAlign: 'center'
+  },
+
+  available: {
+    color: 'green',
+  },
+  
+  unavailable: {
+    color: 'red',
+  },
+
+  disabledButton: {
+    backgroundColor: '#aaa',
+    opacity: 0.6,
+  },
 });

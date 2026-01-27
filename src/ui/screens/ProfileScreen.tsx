@@ -1,14 +1,19 @@
-import { ScrollView, View, Text, TouchableOpacity } from 'react-native';
+import { ScrollView, View, Text, TouchableOpacity, TextInput, Modal } from 'react-native';
 import { styles } from '../styles/profileStyles';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/types'
 import GameCollectionScreen from './GameCollectionScreen';
+import { useState } from 'react';
+import { colors } from '../styles/theme'
+import { useProfileScreenViewModel } from '../viewModels/useProfileScreenViewModel';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Profile'>
 
 export default function ProfileScreen({navigation}:Props) {
 
-    //const vm = useProfileViewModel(() => navigation.navigate('Home'))
+    const vm = useProfileScreenViewModel(() => navigation.navigate('Profile'))
+
+    const [modalVisible, setModalVisible] = useState(false)
     
   return (
     <ScrollView
@@ -28,7 +33,9 @@ export default function ProfileScreen({navigation}:Props) {
                 <Text style={styles.statText}>
                     Käyttäjänimi: "nickname"
                 </Text>
-                <TouchableOpacity style={styles.settingsButton} onPress={() => { }}>
+                <TouchableOpacity 
+                  style={styles.settingsButton} 
+                  onPress={() => setModalVisible(true)}>
                     <Text style={styles.settingsButtonText}>Muuta</Text>
                 </TouchableOpacity>
               </View>
@@ -73,6 +80,52 @@ export default function ProfileScreen({navigation}:Props) {
           <Text style={styles.buttonText}>Etsi ystäviä</Text>
         </TouchableOpacity>
       </View>
+
+      <Modal
+        animationType='slide'
+        transparent={false}
+        visible={modalVisible}
+        onRequestClose={()=> setModalVisible(false)}
+        backdropColor={colors.background}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.sectionTitle}>
+              Vaihda nimimerkki
+            </Text>
+            <View style={styles.inputRow}>
+              <TextInput
+              style={styles.input}
+              placeholder='Uusi nimimerkki'
+              value={vm.nickname}
+              onChangeText={(text) => {vm.setNickname(text)}}
+              onEndEditing={vm.checkNickname}
+              />
+              <TouchableOpacity
+                style={[
+                  styles.settingsButton,
+                  !vm.isNickAvailable && styles.disabledButton
+                ]}
+                onPress={vm.changeNick}
+                disabled={!vm.isNickAvailable}
+              >
+                <Text>Vaihda</Text>
+              </TouchableOpacity>
+            </View>
+            {vm.showCheck && (
+              <Text style={[
+                styles.nicknameText,
+                vm.isNickAvailable ? styles.available : styles.unavailable
+              ]}>
+                {vm.isNickAvailable ? 'Nickname on vapaa' : 'Nickname on varattu'}
+              </Text>
+            )}
+          </View>
+        </View>
+      
+      </Modal>
     </ScrollView>
+
+    
   );
 }

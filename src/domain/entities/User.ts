@@ -13,7 +13,6 @@ export type User = {
 */
 
 export const validateUser = (user: User) => {
-    console.log("validoidaan käyttäjääää")
     const { email, nickname } = user
 
     // every input needs to be filled
