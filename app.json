@@ -7,19 +7,29 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
+    "plugins": [
+      [
+        "react-native-auth0",
+        {
+          "domain": "gameknight.eu.auth0.com"
+        }
+      ]
+    ],
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "packageIdentifier": "io.r21.gameknight"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
+      "packageIdentifier": "io.r21.gameknight",
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false
     },
