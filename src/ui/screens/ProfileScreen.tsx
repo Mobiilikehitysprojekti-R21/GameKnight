@@ -2,6 +2,7 @@ import { ScrollView, View, Text, TouchableOpacity } from 'react-native';
 import { styles } from '../styles/profileStyles';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/types'
+import GameCollectionScreen from './GameCollectionScreen';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Profile'>
 
@@ -47,8 +48,8 @@ export default function ProfileScreen({navigation}:Props) {
         <Text style={styles.statText}>
           Ei vielä lisättyjä pelejä - Lisää uusi peli
         </Text>
-        <TouchableOpacity style={styles.primaryButton} onPress={() => navigation.navigate('SignUp')}>
-          <Text style={styles.buttonText}>Lisää peli</Text>
+        <TouchableOpacity style={styles.primaryButton} onPress={() => navigation.navigate('GameCollection')}>
+          <Text style={styles.buttonText}>Siirry pelikokoelmaan</Text>
         </TouchableOpacity>
       </View>
 
@@ -68,7 +69,7 @@ export default function ProfileScreen({navigation}:Props) {
           Ei ystäviä?
         </Text>
 
-        <TouchableOpacity style={styles.primaryButton} onPress={() => navigation.navigate('SignUp')}>
+        <TouchableOpacity style={styles.primaryButton} onPress={() => {}}>
           <Text style={styles.buttonText}>Etsi ystäviä</Text>
         </TouchableOpacity>
       </View>

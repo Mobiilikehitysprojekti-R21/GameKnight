@@ -11,6 +11,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { RootStackParamList } from './src/navigation/types';
 import { NavigationContainer } from '@react-navigation/native';
 import { colors } from './src/ui/styles/theme';
+import GameCollectionScreen from './src/ui/screens/GameCollectionScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 
@@ -29,6 +30,7 @@ export default function App() {
             </Stack.Screen>
             <Stack.Screen name='SignUp' component={SignUpScreen} />
             <Stack.Screen name='Profile' component={ProfileScreen} />
+            <Stack.Screen name='GameCollection' component={GameCollectionScreen} />
           </Stack.Navigator>
         </SafeAreaView>
       </NavigationContainer>

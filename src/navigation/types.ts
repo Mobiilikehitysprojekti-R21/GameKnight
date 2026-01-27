@@ -5,4 +5,5 @@ export type RootStackParamList = {
   Search: {findBoardGames: FindBoardGames}
   SignUp: undefined
   Profile: undefined
+  GameCollection: undefined
 };
