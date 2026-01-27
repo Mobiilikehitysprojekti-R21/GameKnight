@@ -6,6 +6,7 @@ import HomeScreen from './src/ui/screens/HomeScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import SignUpScreen from './src/ui/screens/SignUpScreen';
+import ProfileScreen from './src/ui/screens/ProfileScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { RootStackParamList } from './src/navigation/types';
 import { NavigationContainer } from '@react-navigation/native';
@@ -27,6 +28,7 @@ export default function App() {
               {() => <SearchScreen findBoardGames={findBoardGames} />}
             </Stack.Screen>
             <Stack.Screen name='SignUp' component={SignUpScreen} />
+            <Stack.Screen name='Profile' component={ProfileScreen} />
           </Stack.Navigator>
         </SafeAreaView>
       </NavigationContainer>
