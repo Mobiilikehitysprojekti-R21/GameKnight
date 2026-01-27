@@ -25,29 +25,40 @@ subgraph F["navigation"]
 G["types.ts"]
 end
 subgraph H["ui"]
-subgraph I["screens"]
-J["HomeScreen.tsx"]
-N["SearchScreen.tsx"]
-Q["SignUpScreen.tsx"]
+subgraph I["components"]
+J["Settings.tsx"]
 end
-subgraph K["styles"]
-L["homeStyles.tsx"]
-M["theme.ts"]
-R["signUpStyles.tsx"]
+subgraph K["screens"]
+L["GameCollectionScreen.tsx"]
+P["HomeScreen.tsx"]
+R["ProfileScreen.tsx"]
+T["SearchScreen.tsx"]
+W["SignUpScreen.tsx"]
 end
-subgraph O["viewModels"]
-P["useSearchViewModel.ts"]
-S["useSignUpViewModel.ts"]
-T["useHomeScreenViewModel.ts"]
+subgraph M["styles"]
+N["gameCollectionStyles.tsx"]
+O["theme.ts"]
+Q["homeStyles.tsx"]
+S["profileStyles.tsx"]
+X["signUpStyles.tsx"]
+end
+subgraph U["viewModels"]
+V["useSearchViewModel.ts"]
+Y["useSignUpViewModel.ts"]
+Z["useHomeScreenViewModel.ts"]
 end
 end
 end
 3-->6
-J-->L
-L-->M
-N-->P
-Q-->R
-Q-->S
-R-->M
-S-->3
-S-->C
+L-->N
+N-->O
+P-->Q
+Q-->O
+R-->S
+S-->O
+T-->V
+W-->X
+W-->Y
+X-->O
+Y-->3
+Y-->C
