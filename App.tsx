@@ -3,7 +3,7 @@ import { BoardGameApiRepository } from './src/infrastructure/api/BoardGameApiRep
 import { FindBoardGames } from './src/application/FindBoardGames';
 import { SearchScreen } from './src/ui/screens/SearchScreen';
 import HomeScreen from './src/ui/screens/HomeScreen';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import SignUpScreen from './src/ui/screens/SignUpScreen';
 import ProfileScreen from './src/ui/screens/ProfileScreen';
@@ -20,22 +20,27 @@ const findBoardGames = new FindBoardGames(repo);
 
 export default function App() {
   return (
-    <>
+    <SafeAreaProvider>
       <NavigationContainer>
         <SafeAreaView style={{ flex: 1, backgroundColor: '#0F172A' }}>
-          <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: colors.secondary }, headerTintColor: colors.textPrimary, headerTitleStyle: { color: colors.textPrimary } }}>
-            <Stack.Screen name='Home' component={HomeScreen} />
-            <Stack.Screen name='Search'>
+          <Stack.Navigator
+            screenOptions={{
+              headerStyle: { backgroundColor: colors.secondary },
+              headerTintColor: colors.textPrimary,
+              headerTitleStyle: { color: colors.textPrimary },
+            }}
+          >
+            <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="Search">
               {() => <SearchScreen findBoardGames={findBoardGames} />}
             </Stack.Screen>
-            <Stack.Screen name='SignUp' component={SignUpScreen} />
-            <Stack.Screen name='Profile' component={ProfileScreen} />
-            <Stack.Screen name='GameCollection' component={GameCollectionScreen} />
+            <Stack.Screen name="SignUp" component={SignUpScreen} />
+            <Stack.Screen name="Profile" component={ProfileScreen} />
+            <Stack.Screen name="GameCollection" component={GameCollectionScreen} />
           </Stack.Navigator>
         </SafeAreaView>
       </NavigationContainer>
       <StatusBar style="light" />
-    </>
-
+    </SafeAreaProvider>
   );
 }
