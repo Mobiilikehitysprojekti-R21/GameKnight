@@ -1,13 +1,46 @@
-import { SafeAreaView } from 'react-native';
+import React from 'react';
+import { BoardGameApiRepository } from './src/infrastructure/api/BoardGameApiRepository';
+import { FindBoardGames } from './src/application/FindBoardGames';
+import { SearchScreen } from './src/ui/screens/SearchScreen';
+import HomeScreen from './src/ui/screens/HomeScreen';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
-import HomeScreen from './screens/HomeScreen';
+import SignUpScreen from './src/ui/screens/SignUpScreen';
+import ProfileScreen from './src/ui/screens/ProfileScreen';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { RootStackParamList } from './src/navigation/types';
+import { NavigationContainer } from '@react-navigation/native';
+import { colors } from './src/ui/styles/theme';
+import GameCollectionScreen from './src/ui/screens/GameCollectionScreen';
+
+const Stack = createNativeStackNavigator<RootStackParamList>()
+
+const repo = new BoardGameApiRepository();
+const findBoardGames = new FindBoardGames(repo);
 
 export default function App() {
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#0F172A' }}>
-      <HomeScreen />
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#0F172A' }}>
+          <Stack.Navigator
+            screenOptions={{
+              headerStyle: { backgroundColor: colors.secondary },
+              headerTintColor: colors.textPrimary,
+              headerTitleStyle: { color: colors.textPrimary },
+            }}
+          >
+            <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="Search">
+              {() => <SearchScreen findBoardGames={findBoardGames} />}
+            </Stack.Screen>
+            <Stack.Screen name="SignUp" component={SignUpScreen} />
+            <Stack.Screen name="Profile" component={ProfileScreen} />
+            <Stack.Screen name="GameCollection" component={GameCollectionScreen} />
+          </Stack.Navigator>
+        </SafeAreaView>
+      </NavigationContainer>
       <StatusBar style="light" />
-    </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
-
