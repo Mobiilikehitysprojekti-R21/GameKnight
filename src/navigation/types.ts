@@ -6,4 +6,5 @@ export type RootStackParamList = {
   SignUp: undefined
   Profile: undefined
   GameCollection: undefined
+  GameSessions: undefined
 };

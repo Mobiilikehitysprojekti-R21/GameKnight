@@ -2,63 +2,77 @@ flowchart LR
 
 subgraph 0["src"]
 subgraph 1["application"]
-2["FindBoardGames.ts"]
-3["SignUpUser.ts"]
+2["AddGameSession.ts"]
+3["FindBoardGames.ts"]
+4["GetGameSessions.ts"]
+5["SignUpUser.ts"]
 end
-subgraph 4["domain"]
-subgraph 5["entities"]
-6["User.ts"]
-7["BoardGame.ts"]
+subgraph 6["domain"]
+subgraph 7["entities"]
+8["User.ts"]
+9["BoardGame.ts"]
+A["GameSessions.ts"]
 end
-subgraph 8["repositories"]
-9["BoardGameRepository.ts"]
-A["UserRepository.ts"]
-end
-end
-subgraph B["infrastructure"]
-C["UserApiRepository.ts"]
-subgraph D["api"]
-E["BoardGameApiRepository.ts"]
+subgraph B["repositories"]
+C["BoardGameRepository.ts"]
+D["GameSessionRepository.ts"]
+E["UserRepository.ts"]
 end
 end
-subgraph F["navigation"]
-G["types.ts"]
-end
-subgraph H["ui"]
-subgraph I["components"]
-J["Settings.tsx"]
-end
-subgraph K["screens"]
-L["GameCollectionScreen.tsx"]
-P["HomeScreen.tsx"]
-R["ProfileScreen.tsx"]
-T["SearchScreen.tsx"]
-W["SignUpScreen.tsx"]
-end
-subgraph M["styles"]
-N["gameCollectionStyles.tsx"]
-O["theme.ts"]
-Q["homeStyles.tsx"]
-S["profileStyles.tsx"]
-X["signUpStyles.tsx"]
-end
-subgraph U["viewModels"]
-V["useSearchViewModel.ts"]
-Y["useSignUpViewModel.ts"]
-Z["useHomeScreenViewModel.ts"]
+subgraph F["infrastructure"]
+G["UserApiRepository.ts"]
+subgraph H["api"]
+I["BoardGameApiRepository.ts"]
+J["GameSessionsApiRepository.ts"]
+K["UserApiRepository.ts"]
 end
 end
+subgraph L["navigation"]
+M["types.ts"]
 end
-3-->6
-L-->N
-N-->O
-P-->Q
-Q-->O
+subgraph N["ui"]
+subgraph O["components"]
+P["SessionCard.tsx"]
+T["Settings.tsx"]
+end
+subgraph Q["styles"]
+R["GameSessionStyles.tsx"]
+S["theme.ts"]
+W["gameCollectionStyles.tsx"]
+Z["homeStyles.tsx"]
+11["profileStyles.tsx"]
+16["signUpStyles.tsx"]
+end
+subgraph U["screens"]
+V["GameCollectionScreen.tsx"]
+X["GameSessionsScreen.tsx"]
+Y["HomeScreen.tsx"]
+10["ProfileScreen.tsx"]
+12["SearchScreen.tsx"]
+15["SignUpScreen.tsx"]
+end
+subgraph 13["viewModels"]
+14["useSearchViewModel.ts"]
+17["useSignUpViewModel.ts"]
+18["useGameSessionsViewModel.ts"]
+19["useHomeScreenViewModel.ts"]
+end
+end
+end
+5-->8
+P-->R
 R-->S
-S-->O
-T-->V
-W-->X
-W-->Y
-X-->O
-Y-->3
-Y-->C
+V-->W
+W-->S
+X-->P
+X-->R
+Y-->Z
+Z-->S
+10-->11
+11-->S
+12-->14
+15-->16
+15-->17
+16-->S
+17-->5
+17-->G
