@@ -59,6 +59,12 @@ export default function ProfileScreen({navigation}:Props) {
         <Text style={styles.statText}>
           Lista pelatuista peleistä? Ehkä jokin kuvaaja voitoista/häviöistä?
         </Text>
+        <TouchableOpacity
+          style={styles.primaryButton}
+          onPress={() => navigation.navigate('GameSessions')}
+        >
+          <Text style={styles.buttonText}>Näytä pelikerrat</Text>
+        </TouchableOpacity>
       </View>
 
       {/* YSTÄVÄT */}
