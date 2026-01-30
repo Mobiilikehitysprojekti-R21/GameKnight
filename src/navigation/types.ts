@@ -10,5 +10,7 @@ export type RootStackParamList = {
   Friends: undefined
   NewGame: undefined
   MapScreen: undefined;
+  MapPicker: undefined;
+
 
 };
