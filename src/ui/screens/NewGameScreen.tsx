@@ -3,10 +3,12 @@ import { View, Text, TextInput, Pressable, FlatList, } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { BoardGame } from '../../domain/entities/BoardGame';
 import { styles } from '../styles/NewGameStyles';
-import { useRoute } from "@react-navigation/native";
+import { useRoute } from '@react-navigation/native';
+import type { Location } from '../../domain/entities/Location';
+import { useFavoriteLocationsViewModel } from '../viewModels/useFavoriteLocationsViewModel';
 
 
-/* ===== Types ===== */
+/* Types */
 
 type GamePlayer = {
   id?: string;
@@ -14,7 +16,7 @@ type GamePlayer = {
   type: "USER" | "GUEST";
 };
 
-/* ===== Screen ===== */
+/* Screen */
 
 export const NewGameScreen = () => {
   const navigation = useNavigation<any>();
@@ -23,19 +25,18 @@ export const NewGameScreen = () => {
   const [selectedGame, setSelectedGame] = useState<BoardGame | null>(null);
   const [playerName, setPlayerName] = useState("");
   const [players, setPlayers] = useState<GamePlayer[]>([]);
-  const [location, setLocation] = useState("");
+  const [gameLocation, setGameLocation] = useState<Location | null>(null);;
+  const [favoriteLocations, setFavoriteLocations] = useState<Location[]>([]);
+  const { favorites, loading: favoritesLoading, } = useFavoriteLocationsViewModel();
 
-  /* ===== Paluu kartalta ===== */
+  /* Paluu kartalta */
   useEffect(() => {
     if (route.params?.pickedLocation) {
-      const { latitude, longitude } = route.params.pickedLocation;
-      setLocation(
-        `Lat ${latitude.toFixed(4)}, Lng ${longitude.toFixed(4)}`
-      );
+      setGameLocation(route.params.pickedLocation);
     }
   }, [route.params]);
 
-  /* ===== Pelaajat ===== */
+  /* Pelaajat */
 
   const addGuestPlayer = () => {
     if (!playerName.trim()) return;
@@ -59,7 +60,7 @@ export const NewGameScreen = () => {
     setPlayers(prev => prev.filter((_, i) => i !== index));
   };
 
-  /* ===== Aloita peli ===== */
+  /* Aloita peli */
 
   const startGame = () => {
     if (!selectedGame || players.length === 0) return;
@@ -67,7 +68,7 @@ export const NewGameScreen = () => {
     const gameSessionDraft = {
       boardGame: selectedGame,
       players,
-      location,
+      location: gameLocation,
       startedAt: new Date(),
     };
 
@@ -156,16 +157,67 @@ export const NewGameScreen = () => {
       {/* Sijainti */}
       <Text style={styles.sectionTitle}>Sijainti</Text>
 
-      <Pressable onPress={() => navigation.navigate("MapPicker")}>
+      <Pressable onPress={() => navigation.navigate("MapScreen", {
+        onPickLocation: (location: Location) => {
+          setGameLocation(location);
+        },
+        favoriteLocations,
+      })}>
+        {/* Suosikkisijainnit */}
+        {favorites.length > 0 && (
+          <>
+            <Text style={styles.sectionSubtitle}>Suosikit</Text>
+
+            {favorites.map((loc) => (
+              <Pressable
+                key={`${loc.latitude}-${loc.longitude}`}
+                style={styles.favoriteLocation}
+                onPress={() => setGameLocation(loc)}
+              >
+                <Text style={styles.favoriteLocationText}>
+                  {loc.label}
+                </Text>
+              </Pressable>
+            ))}
+          </>
+        )}
+
         <Text style={styles.link}>Valitse sijainti kartalta</Text>
       </Pressable>
 
       <TextInput
         style={styles.locationInput}
-        placeholder="Esim. Koti, Mökillä..."
-        value={location}
-        onChangeText={setLocation}
+        placeholder="Valitse sijainti"
+        value={gameLocation?.label ?? ""}
+        editable={false}
       />
+
+      {gameLocation && (
+        <Pressable
+          onPress={() => {
+            const exists = favoriteLocations.some(
+              (l) =>
+                l.latitude === gameLocation.latitude &&
+                l.longitude === gameLocation.longitude
+            );
+
+            if (exists) return;
+
+            setFavoriteLocations((prev) => [...prev, gameLocation]);
+          }}
+        >
+          <Text style={styles.link}>Tallenna sijainti suosikiksi</Text>
+        </Pressable>
+      )}
+
+      {favoriteLocations.map((loc) => (
+        <Pressable
+          key={`${loc.latitude}-${loc.longitude}`}
+          onPress={() => setGameLocation(loc)}
+        >
+          <Text style={styles.link}>📍 {loc.label}</Text>
+        </Pressable>
+      ))}
 
       {/* Aloita peli */}
       <Pressable

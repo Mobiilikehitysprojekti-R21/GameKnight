@@ -1,73 +1,103 @@
 import { StyleSheet } from "react-native";
+import { colors, spacing, radius } from "./theme";
 
 export const styles = StyleSheet.create({
   container: {
-    padding: 16,
     flex: 1,
+    backgroundColor: colors.background,
+    padding: spacing.md,
   },
 
   title: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: "600",
-    marginBottom: 16,
+    color: colors.textPrimary,
+    marginBottom: spacing.md,
   },
 
   sectionTitle: {
     fontSize: 16,
     fontWeight: "500",
-    marginBottom: 8,
-    marginTop: 16,
+    color: colors.textSecondary,
+    marginTop: spacing.lg,
+    marginBottom: spacing.sm,
+  },
+
+  sectionSubtitle: {
+    marginTop: spacing.sm,
+    marginBottom: spacing.xs,
+    color: colors.textSecondary,
+    fontSize: 14,
+    fontWeight: "600",
+  },
+
+  favoriteLocation: {
+    backgroundColor: colors.surface,
+    padding: spacing.sm,
+    borderRadius: radius.sm,
+    marginBottom: spacing.xs,
+  },
+
+  favoriteLocationText: {
+    color: colors.textPrimary,
+    fontSize: 15,
+  },
+
+  link: {
+    color: colors.primary,
+    marginBottom: spacing.sm,
   },
 
   row: {
     flexDirection: "row",
     alignItems: "center",
+    gap: spacing.sm,
   },
 
   input: {
     flex: 1,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 8,
-    borderRadius: 4,
+    backgroundColor: colors.surface,
+    color: colors.textPrimary,
+    padding: spacing.sm,
+    borderRadius: radius.sm,
   },
 
   addButton: {
-    marginLeft: 8,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.md,
+    backgroundColor: colors.secondary,
+    borderRadius: radius.sm,
   },
 
   playerRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingVertical: 4,
+    alignItems: "center",
+    backgroundColor: colors.surface,
+    padding: spacing.sm,
+    borderRadius: radius.sm,
+    marginTop: spacing.xs,
   },
 
   locationInput: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 8,
-    borderRadius: 4,
-    marginTop: 8,
-    marginBottom: 24,
+    backgroundColor: colors.surface,
+    color: colors.textPrimary,
+    padding: spacing.sm,
+    borderRadius: radius.sm,
+    marginTop: spacing.sm,
   },
 
   primaryButton: {
-    backgroundColor: "#6c5ce7",
-    paddingVertical: 12,
+    backgroundColor: colors.primary,
+    paddingVertical: spacing.md,
+    borderRadius: radius.md,
     alignItems: "center",
-    borderRadius: 6,
+    marginTop: spacing.xl,
   },
 
   primaryButtonText: {
-    color: "white",
+    color: colors.textPrimary,
     fontSize: 16,
-    fontWeight: "500",
-  },
-
-  link: {
-    color: "#6c5ce7",
-    marginBottom: 16,
+    fontWeight: "600",
   },
 });

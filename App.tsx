@@ -43,7 +43,7 @@ export default function App() {
             <Stack.Screen name="GameCollection" component={GameCollectionScreen} />
             <Stack.Screen name="GameSessions" component={GameSessionsScreen} />
             <Stack.Screen name="NewGame" component={NewGameScreen} />
-            <Stack.Screen name="MapPicker" component={MapScreen}/>
+            <Stack.Screen name="MapScreen" component={MapScreen} />
 
           </Stack.Navigator>
         </SafeAreaView>

@@ -8,6 +8,6 @@ export type RootStackParamList = {
   GameCollection: undefined
   GameSessions: undefined
   NewGame: undefined
-  MapPicker: undefined;
+  MapScreen: undefined;
 
 };

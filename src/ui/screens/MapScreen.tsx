@@ -1,53 +1,113 @@
-import { View, Pressable, Text } from "react-native";
-import MapView, { Marker, MapPressEvent } from "react-native-maps";
-import { useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { View, Text, Pressable } from 'react-native';
+import MapView, { Marker, MapPressEvent } from 'react-native-maps';
+import { useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { styles } from '../styles/MapStyles';
+import { TextInput } from 'react-native';
+import { useRoute } from '@react-navigation/native';
+import type { Location } from '../../domain/entities/Location';
+import { useFavoriteLocationsViewModel } from '../viewModels/useFavoriteLocationsViewModel';
 
 export const MapScreen = () => {
   const navigation = useNavigation<any>();
+  const route = useRoute<any>();
 
   const [location, setLocation] = useState({
     latitude: 60.1699,
     longitude: 24.9384,
   });
 
-  const onMapPress = (e: MapPressEvent) => {
-    setLocation(e.nativeEvent.coordinate);
+  const { addFavorite } = useFavoriteLocationsViewModel();
+  const [favoriteName, setFavoriteName] = useState("");
+
+  /* Karttaa painamalla siirretään pinni */
+  const handleMapPress = (event: MapPressEvent) => {
+    setLocation(event.nativeEvent.coordinate);
   };
 
+  /* Pinniä vetämällä siirretään pinni */
+  const handleMarkerDragEnd = (event: any) => {
+    setLocation(event.nativeEvent.coordinate);
+  };
+
+  /* Palautetaan sijainti NewGameScreeniin */
   const confirmLocation = () => {
-    navigation.navigate("NewGame", {
-      pickedLocation: location,
-    });
+    const pickedLocation: Location = {
+      label: favoriteName || "Valittu sijainti",
+      latitude: location.latitude,
+      longitude: location.longitude,
+    };
+
+    route.params?.onPickLocation?.(pickedLocation);
+
+    navigation.goBack();
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.container}>
       <MapView
-        style={{ flex: 1 }}
+        style={styles.map}
         initialRegion={{
           latitude: location.latitude,
           longitude: location.longitude,
           latitudeDelta: 0.01,
           longitudeDelta: 0.01,
         }}
-        onPress={onMapPress}
+        onPress={handleMapPress}
       >
-        <Marker coordinate={location} />
+        <Marker
+          coordinate={location}
+          draggable
+          onDragEnd={handleMarkerDragEnd}
+        />
       </MapView>
 
+      <TextInput
+        style={styles.input}
+        placeholder="Nimeä sijainti (esim. Koti)"
+        value={favoriteName}
+        onChangeText={setFavoriteName}
+      />
+
       <Pressable
-        onPress={confirmLocation}
-        style={{
-          position: "absolute",
-          bottom: 20,
-          alignSelf: "center",
-          backgroundColor: "#6c5ce7",
-          padding: 12,
-          borderRadius: 6,
+        style={styles.secondaryButton}
+        onPress={async () => {
+          if (!favoriteName.trim()) return;
+
+          await addFavorite({
+            name: favoriteName,
+            latitude: location.latitude,
+            longitude: location.longitude,
+          });
+
+          setFavoriteName("");
         }}
       >
-        <Text style={{ color: "white" }}>Valitse sijainti</Text>
+        <Text style={styles.secondaryButtonText}>
+          Tallenna suosikiksi
+        </Text>
+      </Pressable>
+
+      <View style={styles.header}>
+        <Text style={styles.headerText}>
+          Valitse sijainti kartalta
+        </Text>
+
+        <TextInput
+          style={{
+            backgroundColor: "#1E293B",
+            color: "#F8FAFC",
+            padding: 8,
+            borderRadius: 8,
+            marginTop: 8,
+          }}
+        />
+      </View>
+
+      <Pressable style={styles.confirmButton} onPress={confirmLocation}>
+        <Text style={styles.confirmButtonText}>
+          Valitse sijainti
+        </Text>
       </Pressable>
     </View>
   );
