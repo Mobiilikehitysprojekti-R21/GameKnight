@@ -21,7 +21,9 @@ export const useProfileScreenViewModel = (onSuccess: () => void) => {
     // Function to change Nickname
     const changeNick = async () => {
         try {
-            //await changeNewNickname.execute(nickname)
+            const test_auth0id = "auth0ID"
+            console.log("vm: changeNick:", nickname, test_auth0id)
+            await changeNewNickname.execute(nickname, test_auth0id)
             // clear field
             setNickname('')
             onSuccess()

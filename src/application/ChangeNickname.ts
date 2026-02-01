@@ -7,6 +7,8 @@ export class ChangeNickname {
 
     // Execute nickname change 
     async execute(nickname: string, auth0_id: string) {
+        console.log("useCase:", nickname, auth0_id)
         await this.repo.changeNickname(nickname, auth0_id)   // save new nickname in the database
+        
     }
 }

@@ -43,6 +43,16 @@ export class UserApiRepository implements UserRepository {
 
     // Update user´s nickname
     async changeNickname(nickname: string, auth0_id: string): Promise<void> {
-        await axios.patch(`${this.apiUrl}/users/updateNickname`, { nickname, auth0_id })
+
+        try{
+            console.log("UserApiRepo ennen axios kutsua")
+            await axios.patch(`${this.apiUrl}/users/updateNickname`, { nickname, auth0_id })
+            console.log("UserApiRepossa: nick ja auth0: ", nickname, auth0_id)
+        } catch (e: any) {
+            console.error("changeNickname axios error", e.response?.data)
+            console.error("Status:", e.response?.status)
+            throw e
+        }
+        
     }
 }
