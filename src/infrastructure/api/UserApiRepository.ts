@@ -13,6 +13,7 @@ export class UserApiRepository implements UserRepository {
 
     private apiUrl = Constants.expoConfig?.extra?.API_URL
 
+    
     // Checks if nickname is available
     async validateNickname(nickname: string): Promise<boolean> {
         // Debugging...
