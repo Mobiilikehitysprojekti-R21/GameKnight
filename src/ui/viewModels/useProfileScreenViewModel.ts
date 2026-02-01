@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { UserApiRepository } from "../../infrastructure/api/UserApiRepository";
 import { ChangeNickname } from "../../application/ChangeNickname";
+import Toast from "react-native-toast-message";
 
 export const useProfileScreenViewModel = (onSuccess: () => void) => {
     const [nickname, setNickname] = useState("")
@@ -21,12 +22,21 @@ export const useProfileScreenViewModel = (onSuccess: () => void) => {
     // Function to change Nickname
     const changeNick = async () => {
         try {
-            const test_auth0id = "auth0ID"
+            const test_auth0id = "auth0ID"  // kovakoodattu testauksen vuoksi, haetaan myöhemmin muistista!!!
             console.log("vm: changeNick:", nickname, test_auth0id)
             await changeNewNickname.execute(nickname, test_auth0id)
+
+            Toast.show({
+                type: 'success',
+                text1: 'Nimimerkki vaihdettu!',
+                text2: `Uusi nimimerkki: ${nickname}`,
+                position: 'top',
+                visibilityTime: 3000,
+            })
+
             // clear field
             setNickname('')
-            onSuccess()
+            onSuccess()     // close modal
         } catch (e: any) {
             console.error("Error changing nickname:", e.message || e)
             // Notify user about error in sign up
@@ -40,7 +50,7 @@ export const useProfileScreenViewModel = (onSuccess: () => void) => {
         isNickAvailable,
         showCheck,
         checkNickname,
-        changeNick
+        changeNick,
     }
 
 }

@@ -6,16 +6,18 @@ import GameCollectionScreen from './GameCollectionScreen';
 import { useState } from 'react';
 import { colors } from '../styles/theme'
 import { useProfileScreenViewModel } from '../viewModels/useProfileScreenViewModel';
+import Toast from 'react-native-toast-message';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Profile'>
 
-export default function ProfileScreen({navigation}:Props) {
+export default function ProfileScreen({ navigation }: Props) {
 
-    const vm = useProfileScreenViewModel(() => navigation.navigate('Profile'))
+  const vm = useProfileScreenViewModel(() => setModalVisible(false))
 
-    const [modalVisible, setModalVisible] = useState(false)
-    
+  const [modalVisible, setModalVisible] = useState(false)
+
   return (
+    <>
     <ScrollView
       contentContainerStyle={styles.scrollContainer}
       showsVerticalScrollIndicator={false}
@@ -29,24 +31,24 @@ export default function ProfileScreen({navigation}:Props) {
       {/* ASETUKSET */}
       <View style={styles.card}>
         <Text style={styles.sectionTitle}>Asetukset</Text>
-            <View style={styles.settings}>
-                <Text style={styles.statText}>
-                    Käyttäjänimi: "nickname"
-                </Text>
-                <TouchableOpacity 
-                  style={styles.settingsButton} 
-                  onPress={() => setModalVisible(true)}>
-                    <Text style={styles.settingsButtonText}>Muuta</Text>
-                </TouchableOpacity>
-              </View>
-            <View style={styles.settings}>
-                <Text style={styles.statText}>
-                    Poista tili
-                </Text>
-                <TouchableOpacity style={styles.deleteButton} onPress={() => { }}>
-                    <Text style={styles.settingsButtonText}>Poista</Text>
-                </TouchableOpacity>
-              </View>
+        <View style={styles.settings}>
+          <Text style={styles.statText}>
+            Käyttäjänimi: "nickname"
+          </Text>
+          <TouchableOpacity
+            style={styles.settingsButton}
+            onPress={() => setModalVisible(true)}>
+            <Text style={styles.settingsButtonText}>Muuta</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.settings}>
+          <Text style={styles.statText}>
+            Poista tili
+          </Text>
+          <TouchableOpacity style={styles.deleteButton} onPress={() => { }}>
+            <Text style={styles.settingsButtonText}>Poista</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* OMAT PELIT */}
@@ -82,7 +84,7 @@ export default function ProfileScreen({navigation}:Props) {
           Ei ystäviä?
         </Text>
 
-        <TouchableOpacity style={styles.primaryButton} onPress={() => {}}>
+        <TouchableOpacity style={styles.primaryButton} onPress={() => { }}>
           <Text style={styles.buttonText}>Etsi ystäviä</Text>
         </TouchableOpacity>
       </View>
@@ -91,7 +93,7 @@ export default function ProfileScreen({navigation}:Props) {
         animationType='slide'
         transparent={false}
         visible={modalVisible}
-        onRequestClose={()=> setModalVisible(false)}
+        onRequestClose={() => setModalVisible(false)}
         backdropColor={colors.background}
       >
         <View style={styles.modalOverlay}>
@@ -101,11 +103,11 @@ export default function ProfileScreen({navigation}:Props) {
             </Text>
             <View style={styles.inputRow}>
               <TextInput
-              style={styles.input}
-              placeholder='Uusi nimimerkki'
-              value={vm.nickname}
-              onChangeText={(text) => {vm.setNickname(text)}}
-              onEndEditing={vm.checkNickname}
+                style={styles.input}
+                placeholder='Uusi nimimerkki'
+                value={vm.nickname}
+                onChangeText={(text) => { vm.setNickname(text) }}
+                onEndEditing={vm.checkNickname}
               />
               <TouchableOpacity
                 style={[
@@ -128,10 +130,13 @@ export default function ProfileScreen({navigation}:Props) {
             )}
           </View>
         </View>
-      
       </Modal>
     </ScrollView>
 
-    
+    {/* TOAST MESSAGE */}
+      <Toast/>
+    </>
+
+
   );
 }
