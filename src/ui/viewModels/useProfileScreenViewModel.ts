@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { UserApiRepository } from "../../infrastructure/UserApiRepository";
+import { UserApiRepository } from "../../infrastructure/api/UserApiRepository";
 import { ChangeNickname } from "../../application/ChangeNickname";
 
 export const useProfileScreenViewModel = (onSuccess: () => void) => {
@@ -21,7 +21,7 @@ export const useProfileScreenViewModel = (onSuccess: () => void) => {
     // Function to change Nickname
     const changeNick = async () => {
         try {
-            await changeNewNickname.execute( nickname )
+            //await changeNewNickname.execute(nickname)
             // clear field
             setNickname('')
             onSuccess()

@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { UserApiRepository } from "../../infrastructure/UserApiRepository";
+import { UserApiRepository } from "../../infrastructure/api/UserApiRepository";
 import { SignUpUser } from "../../application/SignUpUser";
 
 export const useSignUpViewModel = (onSuccess: () => void) => {
-    
+
     const [email, setEmail] = useState("")                          // state for email
     //const [auth0_id, setAuth0_id] = useState("")                  // state for auth0 id
     const [nickname, setNickname] = useState("")                    // state for nickname
@@ -37,7 +37,7 @@ export const useSignUpViewModel = (onSuccess: () => void) => {
             // Notify user about error in sign up
             alert(`Virhe tilin luomisessa: ${error.message || error}`)
         }
-        
+
     }
 
     return {
