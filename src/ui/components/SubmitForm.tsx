@@ -12,10 +12,11 @@ type SubmitFormProps = {
     showCheck: boolean
     isNickAvailable: boolean
     submit: () => void
+    signIn: () => void
 
 }
 
-const SubmitForm = ({header, email, nickname, setEmail, setNickname, checkNickname, showCheck, isNickAvailable, submit}: SubmitFormProps) => {
+const SubmitForm = ({header, email, nickname, setEmail, setNickname, checkNickname, showCheck, isNickAvailable, submit, signIn}: SubmitFormProps) => {
   return (
     <View>
           <Text style={styles.title}>{header}</Text>
@@ -60,7 +61,17 @@ const SubmitForm = ({header, email, nickname, setEmail, setNickname, checkNickna
               onPress={submit}
               disabled={!isNickAvailable}
             >
-              <Text style={styles.buttonText}>Submit</Text>
+              <Text style={styles.buttonText}>Rekisteröidy</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.primaryButton,
+                isNickAvailable && styles.disabledButton]}
+              onPress={signIn}
+              disabled={isNickAvailable}
+            >
+              <Text style={styles.buttonText}>Kirjaudu sisään</Text>
             </TouchableOpacity>
           </View>
           </View>

@@ -15,7 +15,7 @@ const SignUpScreen = ({ navigation }: Props) => {
 
   return (
     <View style={styles.container}>
-      <View>
+      
         <SubmitForm
         header='Luo tili'
         email={vm.email}
@@ -26,21 +26,9 @@ const SignUpScreen = ({ navigation }: Props) => {
         showCheck={vm.showCheck}
         isNickAvailable={vm.isNickAvailable}
         submit={vm.submit}
+        signIn={vm.signIn}
         />
-      </View>
-      <View>
-        <SubmitForm
-        header='Kirjaudu sisään'
-        email={vm.email}
-        nickname={vm.nickname}
-        setEmail={vm.setEmail}
-        setNickname={vm.setNickname}
-        checkNickname={vm.checkNickname}
-        showCheck={vm.showCheck}
-        isNickAvailable={vm.isNickAvailable}
-        submit={vm.signIn}
-        />
-      </View>
+      
       
     </View>
   )

@@ -8,6 +8,7 @@ import { User } from "../entities/User";
 export interface UserRepository {
     validateNickname(nickname: string): Promise<boolean>    // checks if nickname is available
     signUp(user: User): Promise<void>                       // Registers a new user
+    signIn(user: User): Promise<void>                       // Sign in user
     changeNickname(nickname: string, auth0_id: string): Promise<void>         // change nickname
 
 }

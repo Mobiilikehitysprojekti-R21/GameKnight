@@ -3,18 +3,39 @@ import { styles } from '../styles/profileStyles';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/types'
 import GameCollectionScreen from './GameCollectionScreen';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { colors } from '../styles/theme'
 import { useProfileScreenViewModel } from '../viewModels/useProfileScreenViewModel';
 import Toast from 'react-native-toast-message';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Profile'>
 
 export default function ProfileScreen({ navigation }: Props) {
 
-  const vm = useProfileScreenViewModel(() => setModalVisible(false))
+  const vm = useProfileScreenViewModel(() => setModalVisible(false), () => navigation.navigate('Home'))
 
   const [modalVisible, setModalVisible] = useState(false)
+
+  const [userNick, setUserNick] = useState('')
+
+  // hae käyttäjän nick
+  useEffect(() => {
+  if (!vm.isLoggedIn) return
+
+  const loadUserNick = async () => {
+    try {
+      const nick = await AsyncStorage.getItem('nickname')
+      if (nick) {
+        setUserNick(nick)
+      }
+    } catch (e) {
+      console.error('Failed to load nickname', e)
+    }
+  }
+
+  loadUserNick()
+}, [vm.isLoggedIn])
 
   return (
     <>
@@ -25,7 +46,7 @@ export default function ProfileScreen({ navigation }: Props) {
       {/* OTSIKKO */}
       <View style={styles.header}>
         <Text style={styles.title}>Oma profiili</Text>
-        <Text style={styles.subtitle}>Hei, "nickname"!</Text>
+        <Text style={styles.subtitle}>Hei, {userNick || 'tyyppi'}!</Text>
       </View>
 
       {/* ASETUKSET */}
@@ -33,7 +54,7 @@ export default function ProfileScreen({ navigation }: Props) {
         <Text style={styles.sectionTitle}>Asetukset</Text>
         <View style={styles.settings}>
           <Text style={styles.statText}>
-            Käyttäjänimi: "nickname"
+            Käyttäjänimi: {userNick || 'tuntematon'}
           </Text>
           <TouchableOpacity
             style={styles.settingsButton}
@@ -86,6 +107,15 @@ export default function ProfileScreen({ navigation }: Props) {
 
         <TouchableOpacity style={styles.primaryButton} onPress={() => { }}>
           <Text style={styles.buttonText}>Etsi ystäviä</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Kirjaudu ulos */}
+      <View style={styles.card}>
+        <Text style={styles.sectionTitle}>Kirjaudu ulos</Text>
+
+        <TouchableOpacity style={styles.primaryButton} onPress={vm.logoutUser}>
+          <Text style={styles.buttonText}>Kirjaudu ulos</Text>
         </TouchableOpacity>
       </View>
 

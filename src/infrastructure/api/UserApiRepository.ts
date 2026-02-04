@@ -2,6 +2,7 @@ import { UserRepository } from "../../domain/repositories/UserRepository";
 import axios from "axios";
 import { User } from "../../domain/entities/User";
 import Constants from "expo-constants";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 /*
     - UserApiRepository handles HTTP requests to the backend
@@ -39,6 +40,19 @@ export class UserApiRepository implements UserRepository {
     async signUp(user: User): Promise<void> {
         console.log("rekisteröidytään....") // debugging...
         await axios.post(`${this.apiUrl}/users/`, user)
+    }
+
+    // Sign in user and store locally
+    async signIn(user: User): Promise<void> {
+        try {
+            await AsyncStorage.setItem('email', user.email)
+            await AsyncStorage.setItem('nickname', user.nickname)
+        } catch (e: any) {
+            console.error("Error storing data", e.response?.data)
+            console.error("Status:", e.response?.status)
+            throw e
+        }
+        
     }
 
     // Update user´s nickname

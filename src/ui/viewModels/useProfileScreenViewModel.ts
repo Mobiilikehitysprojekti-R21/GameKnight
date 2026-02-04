@@ -2,8 +2,13 @@ import { useState } from "react";
 import { UserApiRepository } from "../../infrastructure/api/UserApiRepository";
 import { ChangeNickname } from "../../application/ChangeNickname";
 import Toast from "react-native-toast-message";
+import { useAuth } from "../auth/useAuth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const useProfileScreenViewModel = (onSuccess: () => void) => {
+export const useProfileScreenViewModel = (onSuccess: () => void, onLogout: () => void) => {
+ 
+    const { isLoggedIn, logout } = useAuth()
+
     const [nickname, setNickname] = useState("")
     const [isNickAvailable, setIsNickAvailable] = useState(false)   // state to track if the nickname is available
     const [showCheck, setShowCheck] = useState(false)               // state to handle user notification text about nickname´s availability
@@ -44,6 +49,28 @@ export const useProfileScreenViewModel = (onSuccess: () => void) => {
         }
     }
 
+    const logoutUser = async() => {
+        try {
+            await AsyncStorage.clear()
+            logout()
+            Toast.show({
+                type: 'success',
+                text1: 'Kirjauduit ulos.',
+                text2: `Nähdään taas pian!`,
+                position: 'top',
+                visibilityTime: 3000,
+            })
+            setTimeout(() => {
+                onLogout()
+            }, 1500)
+            
+        } catch (e: any) {
+            console.log('Logged out.')
+        }
+        
+
+    }
+
     return {
         nickname,
         setNickname,
@@ -51,6 +78,8 @@ export const useProfileScreenViewModel = (onSuccess: () => void) => {
         showCheck,
         checkNickname,
         changeNick,
+        isLoggedIn,
+        logoutUser
     }
 
 }
