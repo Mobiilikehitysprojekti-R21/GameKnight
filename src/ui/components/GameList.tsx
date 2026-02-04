@@ -1,0 +1,76 @@
+import { SwipeListView } from "react-native-swipe-list-view"
+import { View, Text, TextInput, Button } from "react-native"
+import { BoardGame } from "../../domain/entities/BoardGame"
+import { styles } from "../styles/gameCollectionStyles"
+type GameListProps = {
+    filteredItems: BoardGame[]
+    games: BoardGame[]
+    userNick: string
+    search: string
+    setSearch: (input: string) => void
+    setGames: (id: number) => void
+
+}
+
+const GameList = ({filteredItems, games, userNick, search, setSearch, setGames}: GameListProps) => {
+
+    return (
+        <SwipeListView
+              data={filteredItems}
+              keyExtractor={(item) => item.game_id.toString()}
+              contentContainerStyle={styles.scrollContainer}
+              showsVerticalScrollIndicator={false}
+        
+              ListHeaderComponent={
+                <>
+                  {/* HEADER */}
+                  <View style={styles.header}>
+                    <Text style={styles.title}>Oma pelikokoelma</Text>
+                    {games.length > 0 ? (
+                      <Text style={styles.subtitle}>Upea kokoelma, {userNick || 'tyyppi'}!</Text>
+                    ) : (
+                      <Text style={styles.subtitle}>Kuulepas, {userNick || 'tyyppi'}! Missä kaikki pelisi ovat?</Text>
+                    )
+                    }
+                  </View>
+        
+                  <View style={styles.container}>
+                    
+                    <View style={styles.inputRow}>
+                      <Text style={styles.subtitle}>Hae peliä</Text>
+                      <TextInput
+                        style={styles.input}
+                        value={search}
+                        onChangeText={setSearch}
+                        placeholder="Hae peliä"
+                      />
+                    </View>
+                  </View>
+                </>
+              }
+        
+              renderItem={({ item }) => (
+                <View style={styles.rowFront}>
+                  <Text style={styles.statText}>{item.name}</Text>
+                </View>
+              )}
+        
+              renderHiddenItem={({ item }) => (
+                <View style={styles.rowBack}>
+                  <Button
+                    title="Delete"
+                    color="#d11a2a"
+                    onPress={()=>setGames(item.game_id)}
+                  />
+                </View>
+              )}
+        
+              rightOpenValue={-100}
+              disableRightSwipe
+            />
+    )
+
+
+}
+
+export default GameList

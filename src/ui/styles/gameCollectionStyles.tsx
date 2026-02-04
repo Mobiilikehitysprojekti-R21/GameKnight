@@ -18,7 +18,6 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
-    paddingTop: 60,
     paddingHorizontal: 16,
     maxWidth: '100%'
   },
@@ -40,7 +39,8 @@ export const styles = StyleSheet.create({
   input: {
     flex: 1,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#eee',
+    backgroundColor: '#f9f9f9',
     borderRadius: 4,
     padding: 8,
     marginRight: 8,
@@ -48,7 +48,7 @@ export const styles = StyleSheet.create({
   },
 
   rowBack: {
-    backgroundColor: '#ddd',
+    backgroundColor: colors.background,
     flex: 1,
     alignItems: 'flex-end',
     justifyContent: 'center',
@@ -56,9 +56,9 @@ export const styles = StyleSheet.create({
   },
 
   rowFront: {
-    backgroundColor: '#f9f9f9',
+    backgroundColor: colors.surface,
     borderBottomWidth: 1,
-    borderColor: '#eee',
+    borderColor: colors.secondary,
     padding: 16
   },
 
@@ -68,6 +68,7 @@ export const styles = StyleSheet.create({
     color: '#CBD5E1',
     textAlign: 'center',
     maxWidth: 260,
+    paddingRight: 16,
   },
 
   card: {
@@ -94,7 +95,7 @@ export const styles = StyleSheet.create({
   statText: {
     color: colors.textSecondary,
     fontSize: 14,
-    marginBottom: 16,
+    marginBottom: 4,
   },
 
   settingsButton: {
