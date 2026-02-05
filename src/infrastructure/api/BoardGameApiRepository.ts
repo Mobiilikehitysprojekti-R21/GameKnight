@@ -37,4 +37,16 @@ export class BoardGameApiRepository implements BoardGameRepository {
       throw e
     }
   }
+
+  async getGameCollection(user_id: number): Promise<BoardGame[]> {
+     try {
+      const res = await axios.get<BoardGame[]>(`${this.apiUrl}/boardgames/getUserGameCollection/${user_id}`)
+      console.log('etsitään käyttäjän pelejä')
+      console.log(res.data);
+      return res.data
+    } catch (e) {
+      console.error('Error finding boardgames:', e)
+      throw e
+    }
+  }
 }

@@ -19,7 +19,6 @@ export default function GameCollectionScreen({ navigation }: Props) {
 
   const [userNick, setUserNick] = useState('')
   const [newGame, setNewgame] = useState('')
-  const [input, setInput] = useState('')
   const [search, setSearch] = useState('')
 
   // hae käyttäjän nick

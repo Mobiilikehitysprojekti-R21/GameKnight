@@ -5,6 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BoardGameApiRepository } from "../../infrastructure/api/BoardGameApiRepository";
 import { FindBoardGames } from "../../application/FindBoardGames";
 import { AddGameToCollection } from "../../application/AddGameToCollection";
+import { GetGameCollection } from "../../application/GetGameCollection";
 
 export function useGameCollectionViewModel() {
 
@@ -19,68 +20,22 @@ export function useGameCollectionViewModel() {
     const repo = new BoardGameApiRepository()
     const findBoardgames = new FindBoardGames(repo)
     const addGameToCollection = new AddGameToCollection(repo)
+    const getGameCollection = new GetGameCollection(repo)
 
-    useEffect(()=> {
-        // TODO: korvaa oikeilla peleillä
-        const mygames: BoardGame[] = [
-            {
-                game_id: 1,
-                bgg_id: 13,
-                name: 'Catan',
-                year_published: 1995,
-                rank: 480,
-                bayes_average: 7.1,
-                average: 7.2,
-                users_rated: 120000,
-                is_expansion: false,
-            },
-            {
-                game_id: 2,
-                bgg_id: 68448,
-                name: '7 Wonders',
-                year_published: 2010,
-                rank: 89,
-                bayes_average: 7.7,
-                average: 7.8,
-                users_rated: 180000,
-                is_expansion: false,
-            },
-            {
-                game_id: 3,
-                bgg_id: 174430,
-                name: 'Gloomhaven',
-                year_published: 2017,
-                rank: 1,
-                bayes_average: 8.4,
-                average: 8.6,
-                users_rated: 65000,
-                is_expansion: false,
-            },
-            {
-                game_id: 4,
-                bgg_id: 30549,
-                name: 'Pandemic',
-                year_published: 2008,
-                rank: 125,
-                bayes_average: 7.6,
-                average: 7.6,
-                users_rated: 110000,
-                is_expansion: false,
-            },
-            {
-                game_id: 5,
-                bgg_id: 50,
-                name: 'Catan: Seafarers',
-                year_published: 1997,
-                rank: 600,
-                bayes_average: 6.9,
-                average: 7.0,
-                users_rated: 45000,
-                is_expansion: true,
-            },
-        ]
-        setGames(mygames)
-        setLoading(false)
+    // Load user´s game collection, set loading state
+    const loadGames = async () => {
+        try {
+            const gamelist = await getGameCollection.execute(1)
+            setGames(gamelist)
+        } catch (e) {
+            console.error('Failed to load game collection', e)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        loadGames()
     }, [])
 
     const handleDeleteGame = (gameId: number) => {
@@ -99,23 +54,24 @@ export function useGameCollectionViewModel() {
     }
 
     const addGame = async () => {
-        const userID = 1    // VAIHDA TÄHÄN oikea user_id 
+        const userID = 1    // VAIHDA TÄHÄN oikea user_id !!!
         try {
             await addGameToCollection.execute(userID, Number(bggId))
+            await loadGames()   // update game collection
         } catch (e: any) {
             console.error("Error adding the game:", e.message || e)
             alert('Virhe pelin lisäämisessä')
         }
     }
-        
+
 
 
     return {
-        games, 
-        loading, 
-        isLoggedIn, 
-        setGames, 
-        handleDeleteGame, 
+        games,
+        loading,
+        isLoggedIn,
+        setGames,
+        handleDeleteGame,
         searhedGame,
         findGame,
         addGame,
