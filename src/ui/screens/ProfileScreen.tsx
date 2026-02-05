@@ -8,6 +8,7 @@ import { colors } from '../styles/theme'
 import { useProfileScreenViewModel } from '../viewModels/useProfileScreenViewModel';
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ModalComponent from '../components/Modal';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Profile'>
 
@@ -118,49 +119,21 @@ export default function ProfileScreen({ navigation }: Props) {
           <Text style={styles.buttonText}>Kirjaudu ulos</Text>
         </TouchableOpacity>
       </View>
-
-      <Modal
-        animationType='slide'
-        transparent={false}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-        backdropColor={colors.background}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContainer}>
-            <Text style={styles.sectionTitle}>
-              Vaihda nimimerkki
-            </Text>
-            <View style={styles.inputRow}>
-              <TextInput
-                style={styles.input}
-                placeholder='Uusi nimimerkki'
-                value={vm.nickname}
-                onChangeText={(text) => { vm.setNickname(text) }}
-                onEndEditing={vm.checkNickname}
-              />
-              <TouchableOpacity
-                style={[
-                  styles.settingsButton,
-                  !vm.isNickAvailable && styles.disabledButton
-                ]}
-                onPress={vm.changeNick}
-                disabled={!vm.isNickAvailable}
-              >
-                <Text>Vaihda</Text>
-              </TouchableOpacity>
-            </View>
-            {vm.showCheck && (
-              <Text style={[
-                styles.nicknameText,
-                vm.isNickAvailable ? styles.available : styles.unavailable
-              ]}>
-                {vm.isNickAvailable ? 'Nickname on vapaa' : 'Nickname on varattu'}
-              </Text>
-            )}
-          </View>
-        </View>
-      </Modal>
+      <ModalComponent
+        modalVisible={modalVisible}
+        setModalVisible={()=>setModalVisible(false)}
+        header='Vaihda nimimerkki'
+        placeholder='Uusi nimimerkki'
+        inputValue={vm.nickname}
+        setInputValue={vm.setNickname}
+        checkValue={vm.checkNickname}
+        isValueAvailable={vm.isNickAvailable}
+        onPress={vm.changeNick}
+        buttonText='Vaihda'
+        showCheck={vm.showCheck}
+        trueText='Nickname on vapaa'
+        falseText='Nickname on varattu'
+      />
     </ScrollView>
 
     {/* TOAST MESSAGE */}

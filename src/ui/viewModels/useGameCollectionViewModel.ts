@@ -8,7 +8,10 @@ export function useGameCollectionViewModel() {
 
     const { isLoggedIn } = useAuth()
     const [games, setGames] = useState<BoardGame[]>([])
+    const [myGame, setMyGame] = useState<BoardGame>()
     const [loading, setLoading] = useState(true)
+    const [isGameChosen, setIsGameChosen] = useState(false)
+    const [isGameAdded, setIsGameAdded] = useState(false)
 
     useEffect(()=> {
         // TODO: korvaa oikeilla peleillä
@@ -78,8 +81,27 @@ export function useGameCollectionViewModel() {
         setGames(newGames)
     }
 
+    const findGame = async (name: string) => {
+        setIsGameChosen(true)
+    }
+
+    const addGame = async (game: BoardGame) => {
+        setGames(prev => [...prev, game])
+        setIsGameAdded(true)
+    }
+
 
     return {
-        games, loading, isLoggedIn, setGames, handleDeleteGame
+        games, 
+        loading, 
+        isLoggedIn, 
+        setGames, 
+        handleDeleteGame, 
+        myGame, 
+        setMyGame,
+        findGame,
+        addGame,
+        isGameChosen,
+        isGameAdded
     }
 }

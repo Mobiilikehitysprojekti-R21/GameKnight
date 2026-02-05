@@ -10,6 +10,10 @@ export const styles = StyleSheet.create({
     minHeight: '100%'
   },
 
+  swipeContainer: {
+    borderRadius: radius.lg,
+  },
+
   header: {
     alignItems: 'center',
     marginBottom: 40,
@@ -52,7 +56,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'flex-end',
     justifyContent: 'center',
-    paddingRight: 20
+    paddingRight: 20,
   },
 
   rowFront: {
@@ -104,7 +108,6 @@ export const styles = StyleSheet.create({
     paddingHorizontal: spacing.md,
     borderRadius: radius.md,
     alignItems: 'center',
-    marginBottom: spacing.sm,
   },
 
   settingsButtonText: {
@@ -134,5 +137,19 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#000',
+  },
+
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: colors.background,
+    margin: spacing.md
+  },
+
+  modalContainer: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: spacing.lg,
+    marginBottom: spacing.md,
   },
 });

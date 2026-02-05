@@ -18,7 +18,7 @@ const GameList = ({filteredItems, games, userNick, search, setSearch, setGames}:
         <SwipeListView
               data={filteredItems}
               keyExtractor={(item) => item.game_id.toString()}
-              contentContainerStyle={styles.scrollContainer}
+              contentContainerStyle={styles.swipeContainer}
               showsVerticalScrollIndicator={false}
         
               ListHeaderComponent={
