@@ -49,9 +49,9 @@ export default function GameCollectionScreen({ navigation }: Props) {
     : vm.games
 
   return (
-    <ScrollView
-        contentContainerStyle={styles.scrollContainer}
-        showsVerticalScrollIndicator={false}>
+    <View
+        style={styles.scrollContainer}
+    >
     <GameList 
     filteredItems={filteredItems} 
     games={vm.games}
@@ -76,7 +76,7 @@ export default function GameCollectionScreen({ navigation }: Props) {
         placeholder='Uusi peli'
         inputValue={newGame}
         setInputValue={setNewgame}
-        checkValue={()=>vm.findGame}
+        checkValue={()=>vm.findGame(newGame)}
         isValueAvailable={vm.isGameChosen}
         onPress={()=>vm.addGame}
         buttonText='Lisää'
@@ -84,6 +84,6 @@ export default function GameCollectionScreen({ navigation }: Props) {
         trueText='Nickname on vapaa'
         falseText='Nickname on varattu'
       />
-    </ScrollView>
+    </View>
   )
 }

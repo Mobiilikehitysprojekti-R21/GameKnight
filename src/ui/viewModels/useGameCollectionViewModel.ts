@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import type { BoardGame } from "../../domain/entities/BoardGame";
 import { useAuth } from "../auth/useAuth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { BoardGameApiRepository } from "../../infrastructure/api/BoardGameApiRepository";
+import { FindBoardGames } from "../../application/FindBoardGames";
 
 export function useGameCollectionViewModel() {
 
@@ -12,6 +13,9 @@ export function useGameCollectionViewModel() {
     const [loading, setLoading] = useState(true)
     const [isGameChosen, setIsGameChosen] = useState(false)
     const [isGameAdded, setIsGameAdded] = useState(false)
+
+    const repo = new BoardGameApiRepository()
+    const findBoardgames = new FindBoardGames(repo)
 
     useEffect(()=> {
         // TODO: korvaa oikeilla peleillä
@@ -82,6 +86,7 @@ export function useGameCollectionViewModel() {
     }
 
     const findGame = async (name: string) => {
+        const games = await findBoardgames.execute(name)
         setIsGameChosen(true)
     }
 
