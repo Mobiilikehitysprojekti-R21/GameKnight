@@ -1,7 +1,9 @@
-import { View, Text, TextInput, TouchableOpacity, Modal } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, Modal, FlatList } from 'react-native'
 import React from 'react'
 import { colors, spacing, radius } from '../styles/theme'
 import { StyleSheet } from 'react-native';
+import { BoardGame } from '../../domain/entities/BoardGame';
+
 
 type ModalProps = {
 
@@ -12,12 +14,14 @@ type ModalProps = {
     inputValue: string
     setInputValue: (input: string) => void
     checkValue: () => void
+    games?: BoardGame[]
+    onSelected?: (game: BoardGame) => void
     isValueAvailable: boolean
     onPress: () => void
     buttonText: string
-    showCheck: boolean
-    trueText: string
-    falseText: string
+    showCheck?: boolean
+    trueText?: string
+    falseText?: string
 }
 
 const ModalComponent = ({
@@ -28,6 +32,8 @@ const ModalComponent = ({
     inputValue, 
     setInputValue, 
     checkValue, 
+    games,
+    onSelected,
     isValueAvailable, 
     onPress,
     buttonText,
@@ -52,13 +58,31 @@ return (
                   {header}
                 </Text>
                 <View style={styles.inputRow}>
-                  <TextInput
+                  <View style={styles.gamelist}>
+                    <TextInput
                     style={styles.input}
                     placeholder={placeholder}
                     value={inputValue}
                     onChangeText={setInputValue}
                     onEndEditing={checkValue}
-                  />
+                    />
+                    { games && (
+                      <FlatList
+                        data={games}
+                        keyExtractor={g=> g.game_id.toString()}
+                        renderItem={({item})=> (
+                          <View>
+                            <TouchableOpacity style={styles.listButton} onPress={() => onSelected && onSelected(item)}>
+                              <Text style={styles.statText}>{item.name}</Text>
+                            </TouchableOpacity>
+                          </View>
+                        )}
+
+                    />
+                    )}
+                    
+                  </View>
+                  
                   <TouchableOpacity
                     style={[
                       styles.settingsButton,
@@ -111,11 +135,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 16,
     marginTop: 16,
-    maxWidth: '100%'
+    maxWidth: '100%',
+    alignItems: 'center',
   },
 
   input: {
-    flex: 1,
     borderWidth: 1,
     borderColor: '#ccc',
     backgroundColor: colors.textSecondary,
@@ -131,7 +155,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.md,
     borderRadius: radius.md,
     alignItems: 'center',
-    marginBottom: spacing.sm,
+    justifyContent: 'center',
+    maxHeight: 60,
   },
 
   disabledButton: {
@@ -151,6 +176,26 @@ const styles = StyleSheet.create({
   
   unavailable: {
     color: 'red',
+  },
+
+  listButton: {
+    backgroundColor: colors.secondary,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.md,
+    borderRadius: radius.md,
+    alignItems: 'center',
+    marginTop: spacing.sm,
+  },
+  
+  gamelist: {
+    flex: 1,
+    justifyContent: 'space-evenly',
+    marginRight: 16,
+  },
+
+  statText: {
+    color: colors.textSecondary,
+    fontSize: 14,
   },
 })
 

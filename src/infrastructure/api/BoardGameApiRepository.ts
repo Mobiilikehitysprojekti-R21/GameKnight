@@ -25,4 +25,16 @@ export class BoardGameApiRepository implements BoardGameRepository {
   async addGame(game: BoardGame): Promise<void> {
     
   }
+
+  async addGameToCollection(user_id: number, bgg_id: BoardGame['bgg_id']): Promise<void> {
+
+    try {
+      const res = await axios.post(`${this.apiUrl}/boardgames/addToUser`, {userId: user_id, game: bgg_id})
+      console.log(res.data)  // debugging...
+    } catch (e: any) {
+      console.error("Error adding game to collection:", e.response?.data)
+      console.error("Status:", e.response?.status)
+      throw e
+    }
+  }
 }

@@ -12,54 +12,54 @@ import ModalComponent from '../components/Modal';
 type Props = NativeStackScreenProps<RootStackParamList, 'GameCollection'>
 
 export default function GameCollectionScreen({ navigation }: Props) {
-  
+
   const vm = useGameCollectionViewModel()
-  
+
   const [modalVisible, setModalVisible] = useState(false)
 
   const [userNick, setUserNick] = useState('')
-  const [newGame, setNewgame]= useState('')
+  const [newGame, setNewgame] = useState('')
   const [input, setInput] = useState('')
   const [search, setSearch] = useState('')
 
   // hae käyttäjän nick
   useEffect(() => {
-  if (!vm.isLoggedIn) return
+    if (!vm.isLoggedIn) return
 
-  const loadUserNick = async () => {
-    try {
-      const nick = await AsyncStorage.getItem('nickname')
-      if (nick) {
-        setUserNick(nick)
+    const loadUserNick = async () => {
+      try {
+        const nick = await AsyncStorage.getItem('nickname')
+        if (nick) {
+          setUserNick(nick)
+        }
+      } catch (e) {
+        console.error('Failed to load nickname', e)
       }
-    } catch (e) {
-      console.error('Failed to load nickname', e)
     }
-  }
 
-  loadUserNick()
-}, [vm.isLoggedIn])
+    loadUserNick()
+  }, [vm.isLoggedIn])
 
-  
+
 
   const filteredItems = search.trim()
     ? vm.games.filter(game =>
-        game.name.toLowerCase().includes(search.trim().toLowerCase())
-      )
+      game.name.toLowerCase().includes(search.trim().toLowerCase())
+    )
     : vm.games
 
   return (
     <View
-        style={styles.scrollContainer}
+      style={styles.scrollContainer}
     >
-    <GameList 
-    filteredItems={filteredItems} 
-    games={vm.games}
-    userNick={userNick}
-    search={search}
-    setSearch={setSearch}
-    setGames={vm.handleDeleteGame}
-    />
+      <GameList
+        filteredItems={filteredItems}
+        games={vm.games}
+        userNick={userNick}
+        search={search}
+        setSearch={setSearch}
+        setGames={vm.handleDeleteGame}
+      />
       <View style={styles.card}>
 
         <TouchableOpacity
@@ -70,19 +70,18 @@ export default function GameCollectionScreen({ navigation }: Props) {
       </View>
 
       <ModalComponent
-      modalVisible={modalVisible}
-        setModalVisible={()=>setModalVisible(false)}
+        modalVisible={modalVisible}
+        setModalVisible={() => setModalVisible(false)}
         header='Lisää uusi peli kokoelmaasi'
         placeholder='Uusi peli'
         inputValue={newGame}
         setInputValue={setNewgame}
-        checkValue={()=>vm.findGame(newGame)}
+        checkValue={() => vm.findGame(newGame)}
+        games={vm.searhedGame}
+        onSelected={vm.chooseGame}
         isValueAvailable={vm.isGameChosen}
-        onPress={()=>vm.addGame}
+        onPress={vm.addGame}
         buttonText='Lisää'
-        showCheck={vm.isGameAdded}
-        trueText='Nickname on vapaa'
-        falseText='Nickname on varattu'
       />
     </View>
   )

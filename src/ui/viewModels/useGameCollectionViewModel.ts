@@ -4,18 +4,21 @@ import { useAuth } from "../auth/useAuth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BoardGameApiRepository } from "../../infrastructure/api/BoardGameApiRepository";
 import { FindBoardGames } from "../../application/FindBoardGames";
+import { AddGameToCollection } from "../../application/AddGameToCollection";
 
 export function useGameCollectionViewModel() {
 
     const { isLoggedIn } = useAuth()
     const [games, setGames] = useState<BoardGame[]>([])
-    const [myGame, setMyGame] = useState<BoardGame>()
+    const [searhedGame, setSearchedGame] = useState<BoardGame[]>()
+    const [bggId, setBggId] = useState<BoardGame["bgg_id"]>()
     const [loading, setLoading] = useState(true)
     const [isGameChosen, setIsGameChosen] = useState(false)
     const [isGameAdded, setIsGameAdded] = useState(false)
 
     const repo = new BoardGameApiRepository()
     const findBoardgames = new FindBoardGames(repo)
+    const addGameToCollection = new AddGameToCollection(repo)
 
     useEffect(()=> {
         // TODO: korvaa oikeilla peleillä
@@ -87,13 +90,24 @@ export function useGameCollectionViewModel() {
 
     const findGame = async (name: string) => {
         const games = await findBoardgames.execute(name)
+        setSearchedGame(games)
+    }
+
+    const chooseGame = async (game: BoardGame) => {
+        setBggId(game.bgg_id)
         setIsGameChosen(true)
     }
 
-    const addGame = async (game: BoardGame) => {
-        setGames(prev => [...prev, game])
-        setIsGameAdded(true)
+    const addGame = async () => {
+        const userID = 1    // VAIHDA TÄHÄN oikea user_id 
+        try {
+            await addGameToCollection.execute(userID, Number(bggId))
+        } catch (e: any) {
+            console.error("Error adding the game:", e.message || e)
+            alert('Virhe pelin lisäämisessä')
+        }
     }
+        
 
 
     return {
@@ -102,10 +116,10 @@ export function useGameCollectionViewModel() {
         isLoggedIn, 
         setGames, 
         handleDeleteGame, 
-        myGame, 
-        setMyGame,
+        searhedGame,
         findGame,
         addGame,
+        chooseGame,
         isGameChosen,
         isGameAdded
     }

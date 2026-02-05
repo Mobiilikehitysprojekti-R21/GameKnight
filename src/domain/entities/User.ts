@@ -4,6 +4,7 @@ export type User = {
     email: string,
     //auth0_id: string,   // added when using Auth0 for authentication
     nickname: string
+    user_id?: number
 }
 
 /*
