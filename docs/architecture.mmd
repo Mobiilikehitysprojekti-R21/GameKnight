@@ -2,77 +2,98 @@ flowchart LR
 
 subgraph 0["src"]
 subgraph 1["application"]
-2["AddGameSession.ts"]
-3["FindBoardGames.ts"]
-4["GetGameSessions.ts"]
-5["SignUpUser.ts"]
+2["AcceptRequest.ts"]
+3["AddFriend.ts"]
+4["AddGameSession.ts"]
+5["DeclineRequest.ts"]
+6["FindBoardGames.ts"]
+7["GetFriendRequest.ts"]
+8["GetFriends.ts"]
+9["GetGameSessions.ts"]
+A["InviteFriend.ts"]
+B["SignUpUser.ts"]
 end
-subgraph 6["domain"]
-subgraph 7["entities"]
-8["User.ts"]
-9["BoardGame.ts"]
-A["GameSessions.ts"]
+subgraph C["domain"]
+subgraph D["entities"]
+E["User.ts"]
+F["BoardGame.ts"]
+G["Friend.ts"]
+H["FriendInviteResult.ts"]
+I["FriendRequest.ts"]
+J["GameSessions.ts"]
 end
-subgraph B["repositories"]
-C["BoardGameRepository.ts"]
-D["GameSessionRepository.ts"]
-E["UserRepository.ts"]
-end
-end
-subgraph F["infrastructure"]
-G["UserApiRepository.ts"]
-subgraph H["api"]
-I["BoardGameApiRepository.ts"]
-J["GameSessionsApiRepository.ts"]
-K["UserApiRepository.ts"]
-end
-end
-subgraph L["navigation"]
-M["types.ts"]
-end
-subgraph N["ui"]
-subgraph O["components"]
-P["SessionCard.tsx"]
-T["Settings.tsx"]
-end
-subgraph Q["styles"]
-R["GameSessionStyles.tsx"]
-S["theme.ts"]
-W["gameCollectionStyles.tsx"]
-Z["homeStyles.tsx"]
-11["profileStyles.tsx"]
-16["signUpStyles.tsx"]
-end
-subgraph U["screens"]
-V["GameCollectionScreen.tsx"]
-X["GameSessionsScreen.tsx"]
-Y["HomeScreen.tsx"]
-10["ProfileScreen.tsx"]
-12["SearchScreen.tsx"]
-15["SignUpScreen.tsx"]
-end
-subgraph 13["viewModels"]
-14["useSearchViewModel.ts"]
-17["useSignUpViewModel.ts"]
-18["useGameSessionsViewModel.ts"]
-19["useHomeScreenViewModel.ts"]
+subgraph K["repositories"]
+L["BoardGameRepository.ts"]
+M["FriendRepository.ts"]
+N["GameSessionRepository.ts"]
+O["UserRepository.ts"]
 end
 end
+subgraph P["infrastructure"]
+subgraph Q["api"]
+R["BoardGameApiRepository.ts"]
+S["FriendApiRepository.ts"]
+T["GameSessionsApiRepository.ts"]
+U["UserApiRepository.ts"]
 end
-5-->8
-P-->R
-R-->S
-V-->W
-W-->S
-X-->P
-X-->R
-Y-->Z
-Z-->S
-10-->11
-11-->S
-12-->14
-15-->16
-15-->17
-16-->S
-17-->5
-17-->G
+end
+subgraph V["navigation"]
+W["types.ts"]
+end
+subgraph X["ui"]
+subgraph Y["components"]
+Z["FriendCard.tsx"]
+13["SessionCard.tsx"]
+15["Settings.tsx"]
+end
+subgraph 10["styles"]
+11["friendStyles.tsx"]
+12["theme.ts"]
+14["GameSessionStyles.tsx"]
+1B["gameCollectionStyles.tsx"]
+1E["homeStyles.tsx"]
+1G["profileStyles.tsx"]
+1K["signUpStyles.tsx"]
+end
+subgraph 16["screens"]
+17["FriendsScreen.tsx"]
+1A["GameCollectionScreen.tsx"]
+1C["GameSessionsScreen.tsx"]
+1D["HomeScreen.tsx"]
+1F["ProfileScreen.tsx"]
+1H["SearchScreen.tsx"]
+1J["SignUpScreen.tsx"]
+end
+subgraph 18["viewModels"]
+19["useFriendsViewModel.ts"]
+1I["useSearchViewModel.ts"]
+1L["useSignUpViewModel.ts"]
+1M["useGameSessionsViewModel.ts"]
+1N["useHomeScreenViewModel.ts"]
+end
+end
+end
+B-->E
+Z-->11
+11-->12
+13-->14
+14-->12
+17-->11
+17-->19
+19-->S
+1A-->1B
+1B-->12
+1C-->13
+1C-->14
+1D-->1E
+1E-->12
+1F-->Z
+1F-->1G
+1F-->19
+1G-->12
+1H-->1I
+1J-->1K
+1J-->1L
+1K-->12
+1L-->B
+1L-->U
