@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { UserApiRepository } from "../../infrastructure/UserApiRepository";
+import { UserApiRepository } from "../../infrastructure/api/UserApiRepository";
 import { SignUpUser } from "../../application/SignUpUser";
 
 export const useSignUpViewModel = (onSuccess: () => void) => {
