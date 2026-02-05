@@ -12,67 +12,88 @@ subgraph 7["entities"]
 8["User.ts"]
 9["BoardGame.ts"]
 A["GameSessions.ts"]
+B["Location.ts"]
 end
-subgraph B["repositories"]
-C["BoardGameRepository.ts"]
-D["GameSessionRepository.ts"]
-E["UserRepository.ts"]
-end
-end
-subgraph F["infrastructure"]
-G["UserApiRepository.ts"]
-subgraph H["api"]
-I["BoardGameApiRepository.ts"]
-J["GameSessionsApiRepository.ts"]
-K["UserApiRepository.ts"]
+subgraph C["repositories"]
+D["BoardGameRepository.ts"]
+E["GameSessionRepository.ts"]
+F["UserRepository.ts"]
 end
 end
-subgraph L["navigation"]
-M["types.ts"]
+subgraph G["infrastructure"]
+H["UserApiRepository.ts"]
+subgraph I["api"]
+J["BoardGameApiRepository.ts"]
+K["GameSessionsApiRepository.ts"]
+L["UserApiRepository.ts"]
 end
-subgraph N["ui"]
-subgraph O["components"]
-P["SessionCard.tsx"]
-T["Settings.tsx"]
 end
-subgraph Q["styles"]
-R["GameSessionStyles.tsx"]
-S["theme.ts"]
-W["gameCollectionStyles.tsx"]
-Z["homeStyles.tsx"]
-11["profileStyles.tsx"]
-16["signUpStyles.tsx"]
+subgraph M["navigation"]
+N["types.ts"]
 end
-subgraph U["screens"]
-V["GameCollectionScreen.tsx"]
-X["GameSessionsScreen.tsx"]
-Y["HomeScreen.tsx"]
-10["ProfileScreen.tsx"]
-12["SearchScreen.tsx"]
-15["SignUpScreen.tsx"]
+subgraph O["ui"]
+subgraph P["components"]
+Q["SessionCard.tsx"]
+U["Settings.tsx"]
+end
+subgraph R["styles"]
+S["GameSessionStyles.tsx"]
+T["theme.ts"]
+X["gameCollectionStyles.tsx"]
+10["homeStyles.tsx"]
+12["MapStyles.tsx"]
+17["NewGameStyles.tsx"]
+19["profileStyles.tsx"]
+1B["SearchStyles.tsx"]
+1E["signUpStyles.tsx"]
+end
+subgraph V["screens"]
+W["GameCollectionScreen.tsx"]
+Y["GameSessionsScreen.tsx"]
+Z["HomeScreen.tsx"]
+11["MapScreen.tsx"]
+15["MapScreen.web.tsx"]
+16["NewGameScreen.tsx"]
+18["ProfileScreen.tsx"]
+1A["SearchScreen.tsx"]
+1D["SignUpScreen.tsx"]
 end
 subgraph 13["viewModels"]
-14["useSearchViewModel.ts"]
-17["useSignUpViewModel.ts"]
-18["useGameSessionsViewModel.ts"]
-19["useHomeScreenViewModel.ts"]
+14["useFavoriteLocationsViewModel.ts"]
+1C["useSearchViewModel.ts"]
+1F["useSignUpViewModel.ts"]
+1I["useGameSessionsViewModel.ts"]
+1J["useHomeScreenViewModel.ts"]
+end
+subgraph 1G["services"]
+1H["location.ts"]
 end
 end
 end
 5-->8
-P-->R
-R-->S
-V-->W
-W-->S
-X-->P
-X-->R
-Y-->Z
-Z-->S
-10-->11
-11-->S
-12-->14
-15-->16
-15-->17
-16-->S
-17-->5
-17-->G
+Q-->S
+S-->T
+W-->X
+X-->T
+Y-->Q
+Y-->S
+Z-->10
+10-->T
+11-->12
+11-->14
+12-->T
+14-->L
+15-->12
+16-->17
+16-->14
+17-->T
+18-->19
+19-->T
+1A-->1B
+1A-->1C
+1B-->T
+1D-->1E
+1D-->1F
+1E-->T
+1F-->5
+1F-->H
