@@ -2,25 +2,28 @@ import { ScrollView, View, Text, TouchableOpacity, TextInput, Modal } from 'reac
 import { styles } from '../styles/profileStyles';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/types'
-import GameCollectionScreen from './GameCollectionScreen';
 import { useState, useEffect } from 'react';
-import { colors } from '../styles/theme'
 import { useProfileScreenViewModel } from '../viewModels/useProfileScreenViewModel';
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ModalComponent from '../components/Modal';
 
+// Define navigation props for the screen
 type Props = NativeStackScreenProps<RootStackParamList, 'Profile'>
 
 export default function ProfileScreen({ navigation }: Props) {
 
+  // ViewModel handling profile-related business logic
+  // Callbacks are used to close modal and navigate after actions
   const vm = useProfileScreenViewModel(() => setModalVisible(false), () => navigation.navigate('Home'))
 
+  // state to control modal visibility
   const [modalVisible, setModalVisible] = useState(false)
 
+  // state for user´s nickname
   const [userNick, setUserNick] = useState('')
 
-  // hae käyttäjän nick
+  // Load user´s nickname if user is logged in
   useEffect(() => {
   if (!vm.isLoggedIn) return
 

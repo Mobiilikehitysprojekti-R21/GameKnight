@@ -2,17 +2,19 @@ import { View, Text, TextInput, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { styles } from '../styles/signUpStyles'
 
+// Component for submit form
+
 type SubmitFormProps = {
-    header: string
-    email: string
-    nickname: string
-    setEmail: (text: string) => void
-    setNickname: (text: string) => void
-    checkNickname: () => void
-    showCheck: boolean
-    isNickAvailable: boolean
-    submit: () => void
-    signIn: () => void
+    header: string                        // Header for form
+    email: string                         // value for email
+    nickname: string                      // value for nickname
+    setEmail: (text: string) => void      // function for setting email
+    setNickname: (text: string) => void   // function for setting nickname
+    checkNickname: () => void             // function for checking nickname availability
+    showCheck: boolean                    // boolean for showing check-text
+    isNickAvailable: boolean              // boolean for nickname´s availability
+    submit: () => void                    // function signUp
+    signIn: () => void                    // function signIn
 
 }
 

@@ -1,6 +1,8 @@
 import { BoardGame } from '../../../domain/entities/BoardGame'
 import { BoardGameDto } from '../dtos/BoardGameDto'
 
+/*structure is altered for better usage*/
+
 export const mapDtoToBoardGame = (dto: BoardGameDto): BoardGame => ({
   game_id: dto.game_id,
   bgg_id: dto.bgg_id,

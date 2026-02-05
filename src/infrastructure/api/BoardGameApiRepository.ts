@@ -8,6 +8,7 @@ export class BoardGameApiRepository implements BoardGameRepository {
   
   private apiUrl = Constants.expoConfig?.extra?.API_URL
   
+  // Function to find boardgames by name (or partial name)
   async findByName(name: string) {
 
     try {
@@ -22,10 +23,12 @@ export class BoardGameApiRepository implements BoardGameRepository {
     
   }
 
+  // TODO: function to add game to db
   async addGame(game: BoardGame): Promise<void> {
     
   }
 
+  // Function to add game to user´s game collection
   async addGameToCollection(user_id: number, bgg_id: BoardGame['bgg_id']): Promise<void> {
 
     try {
@@ -38,6 +41,7 @@ export class BoardGameApiRepository implements BoardGameRepository {
     }
   }
 
+  // Function to fetch user´s game collection
   async getGameCollection(user_id: number): Promise<BoardGame[]> {
      try {
       const res = await axios.get<BoardGame[]>(`${this.apiUrl}/boardgames/getUserGameCollection/${user_id}`)

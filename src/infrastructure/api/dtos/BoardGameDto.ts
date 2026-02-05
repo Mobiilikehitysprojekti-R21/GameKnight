@@ -1,5 +1,5 @@
 /*Data Transfer Object
-    rakenne vastaa täysin API:n rakennetta
+    structure is exactly as in API
 */
 
 export type BoardGameDto = {

@@ -5,6 +5,8 @@ import Toast from "react-native-toast-message";
 import { useAuth } from "../auth/useAuth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+// Viewmodel hook for profile screen logic
+
 export const useProfileScreenViewModel = (onSuccess: () => void, onLogout: () => void) => {
  
     const { isLoggedIn, logout } = useAuth()
@@ -49,6 +51,8 @@ export const useProfileScreenViewModel = (onSuccess: () => void, onLogout: () =>
         }
     }
 
+    // Function for logout user
+    // TODO: logout with auth0???
     const logoutUser = async() => {
         try {
             await AsyncStorage.clear()

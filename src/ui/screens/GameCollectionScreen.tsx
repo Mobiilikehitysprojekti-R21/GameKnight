@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Modal, TextInput, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { styles } from '../styles/gameCollectionStyles';
 import { useState, useEffect } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -6,22 +6,24 @@ import { RootStackParamList } from '../../navigation/types'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useGameCollectionViewModel } from '../viewModels/useGameCollectionViewModel';
 import GameList from '../components/GameList';
-import { colors } from '../styles/theme'
 import ModalComponent from '../components/Modal';
 
+// Define navigation props for the screen
 type Props = NativeStackScreenProps<RootStackParamList, 'GameCollection'>
 
 export default function GameCollectionScreen({ navigation }: Props) {
 
+  // ViewModel that contains business logic and state
   const vm = useGameCollectionViewModel()
 
+  // State to control modal visibility
   const [modalVisible, setModalVisible] = useState(false)
 
-  const [userNick, setUserNick] = useState('')
-  const [newGame, setNewgame] = useState('')
-  const [search, setSearch] = useState('')
+  const [userNick, setUserNick] = useState('')  // state for user´s nickname
+  const [newGame, setNewgame] = useState('')    // input value for adding a new game
+  const [search, setSearch] = useState('')      // input value for searching a game
 
-  // hae käyttäjän nick
+  // Load user´s nickname if user is logged in
   useEffect(() => {
     if (!vm.isLoggedIn) return
 
@@ -40,7 +42,7 @@ export default function GameCollectionScreen({ navigation }: Props) {
   }, [vm.isLoggedIn])
 
 
-
+  // Filter games based on input
   const filteredItems = search.trim()
     ? vm.games.filter(game =>
       game.name.toLowerCase().includes(search.trim().toLowerCase())

@@ -4,24 +4,25 @@ import { colors, spacing, radius } from '../styles/theme'
 import { StyleSheet } from 'react-native';
 import { BoardGame } from '../../domain/entities/BoardGame';
 
+// Component for Modal view. Allows input to be submitted
 
 type ModalProps = {
 
-    modalVisible: boolean
-    setModalVisible: (value: boolean) => void
-    header: string
-    placeholder: string
-    inputValue: string
-    setInputValue: (input: string) => void
-    checkValue: () => void
-    games?: BoardGame[]
-    onSelected?: (game: BoardGame) => void
-    isValueAvailable: boolean
-    onPress: () => void
-    buttonText: string
-    showCheck?: boolean
-    trueText?: string
-    falseText?: string
+    modalVisible: boolean                       // boolean for modal visibility
+    setModalVisible: (value: boolean) => void   // function to set boolean for modal visibility
+    header: string                              // Components header
+    placeholder: string                         // Inputfields placeholder
+    inputValue: string                          // value for inputfield
+    setInputValue: (input: string) => void      // function to set the input value
+    checkValue: () => void                      // function to handle the input value
+    games?: BoardGame[]                         // gamelist (optional)
+    onSelected?: (game: BoardGame) => void      // onPress -function for gamelist items (optional)
+    isValueAvailable: boolean                   // boolean for allowing submit function
+    onPress: () => void                         // submit function
+    buttonText: string                          // submit-button´s text
+    showCheck?: boolean                         // boolean for showing check-text (optional)
+    trueText?: string                           // text option for true (optional)
+    falseText?: string                          // text option for false (optional)
 }
 
 const ModalComponent = ({

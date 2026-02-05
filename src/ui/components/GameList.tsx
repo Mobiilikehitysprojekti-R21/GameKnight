@@ -2,13 +2,16 @@ import { SwipeListView } from "react-native-swipe-list-view"
 import { View, Text, TextInput, Button } from "react-native"
 import { BoardGame } from "../../domain/entities/BoardGame"
 import { styles } from "../styles/gameCollectionStyles"
+
+// Component for list of games
+
 type GameListProps = {
-    filteredItems: BoardGame[]
-    games: BoardGame[]
-    userNick: string
-    search: string
-    setSearch: (input: string) => void
-    setGames: (id: number) => void
+    filteredItems: BoardGame[]          // List of boardgames
+    games: BoardGame[]                  // list of boardgames (if not filtered)
+    userNick: string                    // user´s nickname
+    search: string                      // search input
+    setSearch: (input: string) => void  // function for search
+    setGames: (id: number) => void      // function for updating gamelist after removal
 
 }
 
