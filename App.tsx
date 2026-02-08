@@ -13,6 +13,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { colors } from './src/ui/styles/theme';
 import GameCollectionScreen from './src/ui/screens/GameCollectionScreen';
 import GameSessionsScreen from './src/ui/screens/GameSessionsScreen';
+import FriendsScreen from './src/ui/screens/FriendsScreen';
 import { AuthProvider } from './src/ui/auth/AuthContext';
 import { NewGameScreen } from './src/ui/screens/NewGameScreen';
 import { MapScreen } from './src/ui/screens/MapScreen';
@@ -44,6 +45,7 @@ export default function App() {
             <Stack.Screen name="Profile" component={ProfileScreen} />
             <Stack.Screen name="GameCollection" component={GameCollectionScreen} />
             <Stack.Screen name="GameSessions" component={GameSessionsScreen} />
+            <Stack.Screen name="Friends" component={FriendsScreen} />
             <Stack.Screen name="NewGame" component={NewGameScreen} />
             <Stack.Screen name="MapScreen" component={MapScreen} />
 

@@ -1,17 +1,35 @@
-import { ScrollView, View, Text, TouchableOpacity, TextInput, Modal } from 'react-native';
+
+import { ScrollView, View, Text, TouchableOpacity, ActivityIndicator, FlatList, TextInput, Modal } from 'react-native';
 import { styles } from '../styles/profileStyles';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/types'
+import GameCollectionScreen from './GameCollectionScreen';
+import { FriendCard } from '../components/FriendCard';
+import { useFriendsViewModel } from '../viewModels/useFriendsViewModel';
 import { useState, useEffect } from 'react';
 import { useProfileScreenViewModel } from '../viewModels/useProfileScreenViewModel';
+
+
+
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ModalComponent from '../components/Modal';
+
 
 // Define navigation props for the screen
 type Props = NativeStackScreenProps<RootStackParamList, 'Profile'>
 
 export default function ProfileScreen({ navigation }: Props) {
+  // const vm = useProfileViewModel(() => navigation.navigate('Home'))
+  const vm = useFriendsViewModel();
+
+  function chunkArray<T>(arr: T[], size: number): T[][] {
+    const res: T[][] = [];
+    for (let i = 0; i < arr.length; i += size) {
+      res.push(arr.slice(i, i + size));
+    }
+    return res;
+  }
 
   // ViewModel handling profile-related business logic
   // Callbacks are used to close modal and navigate after actions
@@ -103,14 +121,27 @@ export default function ProfileScreen({ navigation }: Props) {
 
       {/* YSTÄVÄT */}
       <View style={styles.card}>
-        <Text style={styles.sectionTitle}>Ystävät</Text>
+        <Text style={styles.sectionTitle}>Kaverit</Text>
 
-        <Text style={styles.statText}>
-          Ei ystäviä?
-        </Text>
+        {vm.loading ? (
+          <ActivityIndicator />
+        ) : vm.friends.length === 0 ? (
+          <Text style={styles.statText}>Ei kavereita vielä.</Text>
+        ) : (
+          chunkArray(vm.friends, 2).map((pair, idx) => (
+            <View key={idx} style={{ 
+              flexDirection: "row", 
+              justifyContent: "flex-start",
+              gap: 60,
+              marginBottom: 8}}>
+              <FriendCard friend={pair[0]} />
+              {pair[1] ? <FriendCard friend={pair[1]} /> : <View style={{ flex: 1 }} />}
+            </View>
+          ))
+        )}
 
-        <TouchableOpacity style={styles.primaryButton} onPress={() => { }}>
-          <Text style={styles.buttonText}>Etsi ystäviä</Text>
+        <TouchableOpacity style={styles.primaryButton} onPress={() => navigation.navigate('Friends')}>
+          <Text style={styles.buttonText}>Löydä ja lisää kavereita</Text>
         </TouchableOpacity>
       </View>
 

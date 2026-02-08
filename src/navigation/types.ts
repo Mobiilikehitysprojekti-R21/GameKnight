@@ -7,6 +7,7 @@ export type RootStackParamList = {
   Profile: undefined
   GameCollection: undefined
   GameSessions: undefined
+  Friends: undefined
   NewGame: undefined
   MapScreen: undefined;
 
