@@ -1,10 +1,15 @@
 import { ScrollView, View, Text, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { styles } from '../styles/homeStyles';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+
 import { useAuthViewModel } from '../viewModels/useAuthViewModel';
 
-export default function HomeScreen() {
+type Props = NativeStackScreenProps<any>
+export default function HomeScreen({navigation}:Props) {
   const { loggedIn, displayName, errorMessage, login, logout } =
     useAuthViewModel();
+
   return (
     <ScrollView
       contentContainerStyle={styles.scrollContainer}
@@ -18,7 +23,7 @@ export default function HomeScreen() {
 
       {/* PÄÄTOIMINNOT */}
       <View style={styles.card}>
-        <TouchableOpacity style={styles.primaryButton}>
+        <TouchableOpacity style={styles.primaryButton} onPress={() => navigation.navigate('NewGame')}>
           <Text style={styles.buttonText}>Aloita uusi peli</Text>
         </TouchableOpacity>
 
@@ -59,6 +64,18 @@ export default function HomeScreen() {
             {errorMessage}
           </Text>
         )}
+      </View>
+
+    <View style={styles.card}>
+        <Text style={styles.sectionTitle}>Profiili</Text>
+
+        <Text style={styles.statText}>
+          Siirry profiilisivulle
+        </Text>
+
+        <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('Profile')}>
+          <Text style={styles.loginButtonText}>Profiilisivu</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );

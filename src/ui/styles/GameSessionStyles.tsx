@@ -2,6 +2,23 @@ import { StyleSheet } from 'react-native';
 import { colors, spacing, radius } from './theme';
 
 export const styles = StyleSheet.create({
+
+  scrollContainer: {
+    padding: 24,
+    paddingBottom: 40,
+    backgroundColor: colors.background
+  },
+
+   sessionCardContainer: {
+    marginVertical: 8,
+    marginHorizontal: 0,
+    backgroundColor: '#1a2332',
+    borderRadius: 8,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: '#2a3a4a',
+  },
+
   header: {
     alignItems: 'center',
     marginBottom: 40,
@@ -18,14 +35,8 @@ export const styles = StyleSheet.create({
     marginTop: 8,
     fontSize: 15,
     color: '#CBD5E1',
-    textAlign: 'center',
+    //textAlign: 'center',
     maxWidth: 260,
-  },
-
-  scrollContainer: {
-    padding: 24,
-    paddingBottom: 40,
-    backgroundColor: colors.background
   },
 
   card: {
@@ -35,27 +46,6 @@ export const styles = StyleSheet.create({
     marginBottom: spacing.md,
   },
 
-  primaryButton: {
-    backgroundColor: colors.primary,
-    paddingVertical: spacing.md,
-    borderRadius: radius.md,
-    alignItems: 'center',
-    marginBottom: spacing.sm,
-  },
-
-  secondaryButton: {
-    backgroundColor: colors.secondary,
-    paddingVertical: spacing.md,
-    borderRadius: radius.md,
-    alignItems: 'center',
-  },
-
-  buttonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#000',
-  },
-
   sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
@@ -63,23 +53,24 @@ export const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
 
+  settings: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    maxWidth: '100%'
+  },
+
   statText: {
     color: colors.textSecondary,
     fontSize: 14,
+    marginBottom: 16,
   },
 
-  loginButton: {
-    marginTop: 12,
-    paddingVertical: 12,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: '#334155',
+  primaryButton: {
+    backgroundColor: colors.primary,
+    paddingVertical: spacing.md,
+    borderRadius: radius.md,
     alignItems: 'center',
-  },
-
-  loginButtonText: {
-    color: '#F8FAFC',
-    fontSize: 15,
-    fontWeight: '500',
+    marginBottom: spacing.sm,
   },
 });
