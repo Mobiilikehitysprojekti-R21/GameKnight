@@ -8,4 +8,7 @@ export type RootStackParamList = {
   GameCollection: undefined
   GameSessions: undefined
   Friends: undefined
+  NewGame: undefined
+  MapScreen: undefined;
+
 };

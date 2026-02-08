@@ -97,3 +97,137 @@ Z-->11
 1K-->12
 1L-->B
 1L-->U
+2["AddGameSession.ts"]
+3["AddGameToCollection.ts"]
+4["ChangeNickname.ts"]
+5["FindBoardGames.ts"]
+6["GetGameCollection.ts"]
+7["GetGameSessions.ts"]
+8["SignInUser.ts"]
+C["SignUpUser.ts"]
+end
+subgraph 9["domain"]
+subgraph A["entities"]
+B["User.ts"]
+D["BoardGame.ts"]
+E["GameSessions.ts"]
+F["Location.ts"]
+end
+subgraph G["repositories"]
+H["BoardGameRepository.ts"]
+I["GameSessionRepository.ts"]
+J["UserRepository.ts"]
+end
+end
+subgraph K["infrastructure"]
+subgraph L["api"]
+M["BoardGameApiRepository.ts"]
+N["GameSessionsApiRepository.ts"]
+O["UserApiRepository.ts"]
+subgraph P["dtos"]
+Q["BoardGameDto.ts"]
+end
+subgraph R["mappers"]
+S["BoardGameMapper.ts"]
+end
+end
+end
+subgraph T["navigation"]
+U["types.ts"]
+end
+subgraph V["ui"]
+subgraph W["auth"]
+X["AuthContext.tsx"]
+Y["useAuth.ts"]
+end
+subgraph Z["components"]
+10["GameList.tsx"]
+14["Modal.tsx"]
+15["SessionCard.tsx"]
+17["Settings.tsx"]
+18["SubmitForm.tsx"]
+end
+subgraph 11["styles"]
+12["gameCollectionStyles.tsx"]
+13["theme.ts"]
+16["GameSessionStyles.tsx"]
+19["signUpStyles.tsx"]
+1G["homeStyles.tsx"]
+1I["MapStyles.tsx"]
+1M["NewGameStyles.tsx"]
+1O["profileStyles.tsx"]
+1R["SearchStyles.tsx"]
+end
+subgraph 1A["screens"]
+1B["GameCollectionScreen.tsx"]
+1E["GameSessionsScreen.tsx"]
+1F["HomeScreen.tsx"]
+1H["MapScreen.tsx"]
+1K["MapScreen.web.tsx"]
+1L["NewGameScreen.tsx"]
+1N["ProfileScreen.tsx"]
+1Q["SearchScreen.tsx"]
+1T["SignUpScreen.tsx"]
+end
+subgraph 1C["viewModels"]
+1D["useGameCollectionViewModel.ts"]
+1J["useFavoriteLocationsViewModel.ts"]
+1P["useProfileScreenViewModel.ts"]
+1S["useSearchViewModel.ts"]
+1U["useSignUpViewModel.ts"]
+1X["useGameSessionsViewModel.ts"]
+1Y["useHomeScreenViewModel.ts"]
+end
+subgraph 1V["services"]
+1W["location.ts"]
+end
+end
+end
+8-->B
+C-->B
+Y-->X
+10-->12
+12-->13
+14-->13
+15-->16
+16-->13
+18-->19
+19-->13
+1B-->10
+1B-->14
+1B-->12
+1B-->1D
+1D-->3
+1D-->5
+1D-->6
+1D-->M
+1D-->Y
+1E-->15
+1E-->16
+1F-->1G
+1G-->13
+1H-->1I
+1H-->1J
+1I-->13
+1J-->O
+1K-->1I
+1L-->1M
+1L-->1J
+1M-->13
+1N-->14
+1N-->1O
+1N-->1P
+1O-->13
+1P-->4
+1P-->O
+1P-->Y
+1Q-->1R
+1Q-->1S
+1R-->13
+1T-->18
+1T-->19
+1T-->1U
+1U-->8
+1U-->C
+1U-->O
+1U-->Y
