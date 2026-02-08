@@ -37,124 +37,135 @@ end
 subgraph U["infrastructure"]
 subgraph V["api"]
 W["BoardGameApiRepository.ts"]
-X["FriendApiRepository.ts"]
-Y["GameSessionsApiRepository.ts"]
-Z["UserApiRepository.ts"]
-subgraph 10["dtos"]
-11["BoardGameDto.ts"]
+X["authFetch.ts"]
+Y["FriendApiRepository.ts"]
+Z["GameSessionsApiRepository.ts"]
+10["UserApiRepository.ts"]
+subgraph 11["dtos"]
+12["BoardGameDto.ts"]
 end
-subgraph 12["mappers"]
-13["BoardGameMapper.ts"]
+subgraph 13["mappers"]
+14["BoardGameMapper.ts"]
 end
 end
 end
-subgraph 14["navigation"]
-15["types.ts"]
+subgraph 15["navigation"]
+16["types.ts"]
 end
-subgraph 16["ui"]
-subgraph 17["auth"]
-18["AuthContext.tsx"]
-19["useAuth.ts"]
+subgraph 17["ui"]
+subgraph 18["auth"]
+19["AuthContext.tsx"]
+1A["useAuth.ts"]
 end
-subgraph 1A["components"]
-1B["FriendCard.tsx"]
-1F["GameList.tsx"]
-1H["Modal.tsx"]
-1I["SessionCard.tsx"]
-1K["Settings.tsx"]
-1L["SubmitForm.tsx"]
+subgraph 1B["components"]
+1C["FriendCard.tsx"]
+1G["GameList.tsx"]
+1I["Modal.tsx"]
+1J["SessionCard.tsx"]
+1L["Settings.tsx"]
+1M["SubmitForm.tsx"]
 end
-subgraph 1C["styles"]
-1D["friendStyles.tsx"]
-1E["theme.ts"]
-1G["gameCollectionStyles.tsx"]
-1J["GameSessionStyles.tsx"]
-1M["signUpStyles.tsx"]
-1V["homeStyles.tsx"]
-1X["MapStyles.tsx"]
-21["NewGameStyles.tsx"]
-23["profileStyles.tsx"]
-26["SearchStyles.tsx"]
+subgraph 1D["styles"]
+1E["friendStyles.tsx"]
+1F["theme.ts"]
+1H["gameCollectionStyles.tsx"]
+1K["GameSessionStyles.tsx"]
+1N["signUpStyles.tsx"]
+1Y["homeStyles.tsx"]
+20["MapStyles.tsx"]
+24["NewGameStyles.tsx"]
+26["profileStyles.tsx"]
+29["SearchStyles.tsx"]
 end
-subgraph 1N["screens"]
-1O["FriendsScreen.tsx"]
-1R["GameCollectionScreen.tsx"]
-1T["GameSessionsScreen.tsx"]
-1U["HomeScreen.tsx"]
-1W["MapScreen.tsx"]
-1Z["MapScreen.web.tsx"]
-20["NewGameScreen.tsx"]
-22["ProfileScreen.tsx"]
-25["SearchScreen.tsx"]
-28["SignUpScreen.tsx"]
+subgraph 1O["screens"]
+1P["AuthControls.tsx"]
+1S["FriendsScreen.tsx"]
+1U["GameCollectionScreen.tsx"]
+1W["GameSessionsScreen.tsx"]
+1X["HomeScreen.tsx"]
+1Z["MapScreen.tsx"]
+22["MapScreen.web.tsx"]
+23["NewGameScreen.tsx"]
+25["ProfileScreen.tsx"]
+28["SearchScreen.tsx"]
+2B["SearchScreenContainer.tsx"]
+2C["SignUpScreen.tsx"]
 end
-subgraph 1P["viewModels"]
-1Q["useFriendsViewModel.ts"]
-1S["useGameCollectionViewModel.ts"]
-1Y["useFavoriteLocationsViewModel.ts"]
-24["useProfileScreenViewModel.ts"]
-27["useSearchViewModel.ts"]
-29["useSignUpViewModel.ts"]
-2C["useGameSessionsViewModel.ts"]
-2D["useHomeScreenViewModel.ts"]
+subgraph 1Q["viewModels"]
+1R["useAuthViewModel.ts"]
+1T["useFriendsViewModel.ts"]
+1V["useGameCollectionViewModel.ts"]
+21["useFavoriteLocationsViewModel.ts"]
+27["useProfileScreenViewModel.ts"]
+2A["useSearchViewModel.ts"]
+2D["useSignUpViewModel.ts"]
+2G["useGameSessionsViewModel.ts"]
+2H["useHomeScreenViewModel.ts"]
 end
-subgraph 2A["services"]
-2B["location.ts"]
+subgraph 2E["services"]
+2F["location.ts"]
 end
 end
 end
 E-->H
 I-->H
-19-->18
-1B-->1D
-1D-->1E
-1F-->1G
-1G-->1E
-1H-->1E
-1I-->1J
-1J-->1E
-1L-->1M
-1M-->1E
-1O-->1D
-1O-->1Q
-1Q-->X
-1R-->1F
-1R-->1H
-1R-->1G
-1R-->1S
-1S-->5
-1S-->8
-1S-->B
-1S-->W
-1S-->19
-1T-->1I
-1T-->1J
+W-->X
+1A-->19
+1C-->1E
+1E-->1F
+1G-->1H
+1H-->1F
+1I-->1F
+1J-->1K
+1K-->1F
+1M-->1N
+1N-->1F
+1P-->1R
+1S-->1E
+1S-->1T
+1T-->Y
+1U-->1G
+1U-->1I
+1U-->1H
 1U-->1V
-1V-->1E
-1W-->1X
-1W-->1Y
-1X-->1E
-1Y-->Z
-1Z-->1X
-20-->21
-20-->1Y
-21-->1E
-22-->1B
-22-->1H
-22-->23
-22-->1Q
-22-->24
-23-->1E
-24-->6
-24-->Z
-24-->19
+1V-->5
+1V-->8
+1V-->B
+1V-->W
+1V-->1A
+1W-->1J
+1W-->1K
+1X-->1Y
+1X-->1R
+1Y-->1F
+1Z-->20
+1Z-->21
+20-->1F
+21-->10
+22-->20
+23-->24
+23-->21
+24-->1F
+25-->1C
+25-->1I
 25-->26
+25-->1T
 25-->27
-26-->1E
-28-->1L
-28-->1M
+26-->1F
+27-->6
+27-->10
+27-->1A
 28-->29
-29-->E
-29-->I
-29-->Z
-29-->19
+28-->2A
+29-->1F
+2B-->8
+2B-->W
+2B-->1R
+2B-->28
+2C-->1M
+2C-->1N
+2C-->2D
+2D-->E
+2D-->I
+2D-->10
+2D-->1A
