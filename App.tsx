@@ -15,15 +15,10 @@ import { colors } from './src/ui/styles/theme';
 import GameCollectionScreen from './src/ui/screens/GameCollectionScreen';
 import GameSessionsScreen from './src/ui/screens/GameSessionsScreen';
 import FriendsScreen from './src/ui/screens/FriendsScreen';
-import { AuthProvider } from './src/ui/auth/AuthContext';
 import { NewGameScreen } from './src/ui/screens/NewGameScreen';
 import { MapScreen } from './src/ui/screens/MapScreen';
 
-
-const Stack = createNativeStackNavigator<RootStackParamList>()
-
-const repo = new BoardGameApiRepository();
-const findBoardGames = new FindBoardGames(repo);
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
   return (
@@ -36,33 +31,37 @@ export default function App() {
         audience="api.gameknight.app"
         useDPoP={false}
       >
-      <NavigationContainer>
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#0F172A' }}>
-          <Stack.Navigator
-            screenOptions={{
-              headerStyle: { backgroundColor: colors.secondary },
-              headerTintColor: colors.textPrimary,
-              headerTitleStyle: { color: colors.textPrimary },
-            }}
-          >
-            <Stack.Screen name="Home" component={HomeScreen} />
-            <Stack.Screen name="Search">
-              {() => <SearchScreen findBoardGames={findBoardGames} />}
-            </Stack.Screen>
-            <Stack.Screen name="SignUp" component={SignUpScreen} />
-            <Stack.Screen name="Profile" component={ProfileScreen} />
-            <Stack.Screen name="GameCollection" component={GameCollectionScreen} />
-            <Stack.Screen name="GameSessions" component={GameSessionsScreen} />
-            <Stack.Screen name="Friends" component={FriendsScreen} />
-            <Stack.Screen name="NewGame" component={NewGameScreen} />
-            <Stack.Screen name="MapScreen" component={MapScreen} />
-
-          </Stack.Navigator>
-        </SafeAreaView>
-      </NavigationContainer>
+        <NavigationContainer>
+          <SafeAreaView style={{ flex: 1, backgroundColor: '#0F172A' }}>
+            <Stack.Navigator
+              screenOptions={{
+                headerStyle: { backgroundColor: colors.secondary },
+                headerTintColor: colors.textPrimary,
+                headerTitleStyle: { color: colors.textPrimary },
+              }}
+            >
+              <Stack.Screen name="Home" component={HomeScreen} />
+              <Stack.Screen name="Search">
+                {() => <SearchScreenContainer />}
+              </Stack.Screen>
+              <Stack.Screen name="SignUp" component={SignUpScreen} />
+              <Stack.Screen name="Profile" component={ProfileScreen} />
+              <Stack.Screen
+                name="GameCollection"
+                component={GameCollectionScreen}
+              />
+              <Stack.Screen
+                name="GameSessions"
+                component={GameSessionsScreen}
+              />
+              <Stack.Screen name="Friends" component={FriendsScreen} />
+              <Stack.Screen name="NewGame" component={NewGameScreen} />
+              <Stack.Screen name="MapScreen" component={MapScreen} />
+            </Stack.Navigator>
+          </SafeAreaView>
+        </NavigationContainer>
       </Auth0Provider>
       <StatusBar style="light" />
     </SafeAreaProvider>
-
   );
 }

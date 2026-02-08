@@ -1,6 +1,6 @@
 import { BoardGameRepository } from '../../domain/repositories/BoardGameRepository';
-import axios from "axios";
-import Constants from "expo-constants";
+import axios from 'axios';
+import Constants from 'expo-constants';
 import { BoardGame } from '../../domain/entities/BoardGame';
 
 import { authFetch } from './authFetch';
@@ -8,18 +8,18 @@ import { authFetch } from './authFetch';
 type AccessTokenProvider = () => Promise<string | null>;
 
 export class BoardGameApiRepository implements BoardGameRepository {
+  private apiUrl = Constants.expoConfig?.extra?.API_URL;
+
   constructor(private readonly getAccessToken: AccessTokenProvider) {}
 
-  async findByName(name: string) {
+  async findByName(name: string): Promise<BoardGame[]> {
     const res = await authFetch(
       this.getAccessToken,
       `${this.apiUrl}/boardgames?query=${encodeURIComponent(name)}`
     );
     console.log(res);
-    return res.json();
-
-  
-  private apiUrl = Constants.expoConfig?.extra?.API_URL
+    return (await res.json()) as BoardGame[];
+  }
 
   // TODO: function to add game to db
   async addGame(game: BoardGame): Promise<void> {
