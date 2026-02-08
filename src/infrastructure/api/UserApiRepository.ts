@@ -3,6 +3,7 @@ import axios from "axios";
 import { User } from "../../domain/entities/User";
 import Constants from "expo-constants";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import type { Location } from "../../domain/entities/Location";
 
 /*
     - UserApiRepository handles HTTP requests to the backend
@@ -14,7 +15,6 @@ export class UserApiRepository implements UserRepository {
 
     private apiUrl = Constants.expoConfig?.extra?.API_URL
 
-    
     // Checks if nickname is available
     async validateNickname(nickname: string): Promise<boolean> {
         // Debugging...
@@ -68,5 +68,25 @@ export class UserApiRepository implements UserRepository {
             throw e
         }
         
+    async getFavoriteLocations(userId: number): Promise<Location[]> {
+        const response = await axios.get(
+            `${this.apiUrl}/users/${userId}/favorite-locations`
+        );
+
+        return response.data;
+    }
+
+    async addFavoriteLocation(
+        userId: number,
+        location: {
+            name: string;
+            latitude: number;
+            longitude: number;
+        }
+    ): Promise<void> {
+        await axios.post(
+            `${this.apiUrl}/users/${userId}/favorite-locations`,
+            location
+        );
     }
 }
