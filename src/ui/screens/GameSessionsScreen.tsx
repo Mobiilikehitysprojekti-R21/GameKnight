@@ -3,7 +3,7 @@ import { styles } from '../styles/GameSessionStyles';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/types'
 import { SessionCard } from '../components/SessionCard';
-import { GameSession } from '../../domain/entities/GameSessions';
+import { GameSession } from '../../domain/entities/Session';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'GameSessions'>
 

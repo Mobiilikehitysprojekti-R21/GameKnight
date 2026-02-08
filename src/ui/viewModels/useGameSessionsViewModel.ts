@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import type { GameSession } from "../../domain/entities/GameSessions";
+import type { GameSession } from "../../domain/entities/Session";
 
 export function useGameSessionsViewModel() {
   const [sessions, setSessions] = useState<GameSession[]>([]);

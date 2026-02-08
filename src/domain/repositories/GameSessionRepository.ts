@@ -1,4 +1,4 @@
-import { GameSession } from '../entities/GameSessions';
+import { GameSession } from '../entities/Session';
 
 export interface GameSessionRepository {
   getSessions(): Promise<GameSession[]>

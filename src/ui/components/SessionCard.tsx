@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { View, Text } from "react-native";
-import type { GameSession } from "../../domain/entities/GameSessions";
+import type { GameSession } from "../../domain/entities/Session";
 import { styles } from "../styles/GameSessionStyles";
 
 function formatDateFI(date: Date | string) {
