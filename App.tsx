@@ -13,6 +13,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { colors } from './src/ui/styles/theme';
 import GameCollectionScreen from './src/ui/screens/GameCollectionScreen';
 import GameSessionsScreen from './src/ui/screens/GameSessionsScreen';
+import { AuthProvider } from './src/ui/auth/AuthContext';
 import { NewGameScreen } from './src/ui/screens/NewGameScreen';
 import { MapScreen } from './src/ui/screens/MapScreen';
 
@@ -25,6 +26,7 @@ const findBoardGames = new FindBoardGames(repo);
 export default function App() {
   return (
     <SafeAreaProvider>
+      <AuthProvider>
       <NavigationContainer>
         <SafeAreaView style={{ flex: 1, backgroundColor: '#0F172A' }}>
           <Stack.Navigator
@@ -48,6 +50,7 @@ export default function App() {
           </Stack.Navigator>
         </SafeAreaView>
       </NavigationContainer>
+      </AuthProvider>
       <StatusBar style="light" />
     </SafeAreaProvider>
   );

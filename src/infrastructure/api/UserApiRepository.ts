@@ -2,6 +2,7 @@ import { UserRepository } from "../../domain/repositories/UserRepository";
 import axios from "axios";
 import { User } from "../../domain/entities/User";
 import Constants from "expo-constants";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { Location } from "../../domain/entities/Location";
 
 /*
@@ -41,6 +42,32 @@ export class UserApiRepository implements UserRepository {
         await axios.post(`${this.apiUrl}/users/`, user)
     }
 
+    // Sign in user and store locally
+    async signIn(user: User): Promise<void> {
+        try {
+            await AsyncStorage.setItem('email', user.email)
+            await AsyncStorage.setItem('nickname', user.nickname)
+        } catch (e: any) {
+            console.error("Error storing data", e.response?.data)
+            console.error("Status:", e.response?.status)
+            throw e
+        }
+        
+    }
+
+    // Update user´s nickname
+    async changeNickname(nickname: string, auth0_id: string): Promise<void> {
+
+        try{
+            console.log("UserApiRepo ennen axios kutsua")
+            await axios.patch(`${this.apiUrl}/users/updateNickname`, { nickname, auth0_id })
+            console.log("UserApiRepossa: nick ja auth0: ", nickname, auth0_id)
+        } catch (e: any) {
+            console.error("changeNickname axios error", e.response?.data)
+            console.error("Status:", e.response?.status)
+            throw e
+        }
+        
     async getFavoriteLocations(userId: number): Promise<Location[]> {
         const response = await axios.get(
             `${this.apiUrl}/users/${userId}/favorite-locations`
