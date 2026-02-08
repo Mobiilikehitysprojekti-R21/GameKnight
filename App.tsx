@@ -1,10 +1,11 @@
 import React from 'react';
-import { BoardGameApiRepository } from './src/infrastructure/api/BoardGameApiRepository';
-import { FindBoardGames } from './src/application/FindBoardGames';
-import { SearchScreen } from './src/ui/screens/SearchScreen';
 import HomeScreen from './src/ui/screens/HomeScreen';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
+
+import { Auth0Provider } from 'react-native-auth0';
+import { SearchScreenContainer } from './src/ui/screens/SearchScreenContainer';
+import * as Linking from 'expo-linking';
 import SignUpScreen from './src/ui/screens/SignUpScreen';
 import ProfileScreen from './src/ui/screens/ProfileScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -27,7 +28,14 @@ const findBoardGames = new FindBoardGames(repo);
 export default function App() {
   return (
     <SafeAreaProvider>
-      <AuthProvider>
+      <Auth0Provider
+        domain={'gameknight.eu.auth0.com'}
+        clientId={'7fgZoHliyAcQanPFFr5fBgtq3vu1BTJe'}
+        scope="openid profile email offline_access"
+        redirectUri={Linking.createURL('/')}
+        audience="api.gameknight.app"
+        useDPoP={false}
+      >
       <NavigationContainer>
         <SafeAreaView style={{ flex: 1, backgroundColor: '#0F172A' }}>
           <Stack.Navigator
@@ -52,8 +60,9 @@ export default function App() {
           </Stack.Navigator>
         </SafeAreaView>
       </NavigationContainer>
-      </AuthProvider>
+      </Auth0Provider>
       <StatusBar style="light" />
     </SafeAreaProvider>
+
   );
 }
