@@ -1,31 +1,9 @@
-import { useEffect } from 'react';
+import { useState } from 'react';
 import { useAuth0 } from 'react-native-auth0';
-import jwtDecode from 'jwt-decode';
 
 export function useAuthViewModel() {
   const { user, error, authorize, clearSession, getCredentials } = useAuth0();
-
-  useEffect(() => {
-    const logCustomUsername = async () => {
-      try {
-        if (!user) {
-          return;
-        }
-        const credentials = await getCredentials();
-        if (credentials?.idToken) {
-          const decoded: any = jwtDecode(credentials.idToken);
-          console.log(
-            'Custom username claim:',
-            decoded['https://gameknight.app/username']
-          );
-        }
-      } catch (e) {
-        console.log('Error getting credentials', e);
-      }
-    };
-
-    logCustomUsername();
-  }, [user, getCredentials]);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
 
   const loggedIn = !!user;
   const displayName = (user as any)?.name ?? (user as any)?.email ?? '';
@@ -34,6 +12,13 @@ export function useAuthViewModel() {
   const login = async () => {
     try {
       await authorize();
+
+      const creds = await getCredentials();
+      console.log('access token:', creds.accessToken);
+
+      if (creds.accessToken) {
+        setAccessToken(creds.accessToken);
+      }
     } catch (e) {
       console.log('Login failed', e);
     }
@@ -44,6 +29,17 @@ export function useAuthViewModel() {
       await clearSession();
     } catch (e) {
       console.log('Logout failed', e);
+    } finally {
+      setAccessToken(null);
+    }
+  };
+
+  const getAccessToken = async (): Promise<string | null> => {
+    try {
+      const creds = await getCredentials();
+      return creds.accessToken ?? null;
+    } catch {
+      return null;
     }
   };
 
@@ -54,5 +50,6 @@ export function useAuthViewModel() {
     errorMessage,
     login,
     logout,
+    getAccessToken,
   };
 }
