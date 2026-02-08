@@ -1,7 +1,7 @@
 import { Router } from "express";
 import FindBoardgame from "../../../application/boardgame/FindBoardGame";
 import findBoardGameController from "../controllers/findBoardGameController";
-const { requiresAuth } = require("express-openid-connect");
+import { requireAuth } from "../middleware/auth";
 
 export interface BoardGameRoutesDeps {
   findBoardGame: FindBoardgame;
@@ -12,7 +12,7 @@ export default function userRoutes({
 }: BoardGameRoutesDeps): Router {
   const router = Router();
 
-  router.get("/", requiresAuth(), findBoardGameController(findBoardGame));
+  router.get("/", requireAuth, findBoardGameController(findBoardGame));
 
   return router;
 }

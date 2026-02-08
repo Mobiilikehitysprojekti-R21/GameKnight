@@ -3,6 +3,7 @@ import createUserController from "../controllers/createUserController";
 import CreateUser from "../../../application/user/CreateUser";
 import ValidateNickname from "../../../application/user/ValidateNickname";
 import validateNicknameController from "../controllers/validateNicknameController";
+import { requireAuth } from "../middleware/auth";
 
 export interface UserRoutesDeps {
   createUser: CreateUser;
@@ -12,8 +13,9 @@ export interface UserRoutesDeps {
 export default function userRoutes({ createUser, validateNickname }: UserRoutesDeps): Router {
   const router = Router();
 
-  router.post("/", createUserController(createUser));
-  router.post("/validateNickname", validateNicknameController(validateNickname))
+  // Protected routes - require valid JWT token
+  router.post("/", requireAuth, createUserController(createUser));
+  router.post("/validateNickname", requireAuth, validateNicknameController(validateNickname));
 
   return router;
 }
