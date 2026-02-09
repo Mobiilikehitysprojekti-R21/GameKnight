@@ -65,7 +65,7 @@ return (
                     placeholder={placeholder}
                     value={inputValue}
                     onChangeText={setInputValue}
-                    onEndEditing={checkValue}
+                    onSubmitEditing={checkValue}
                     />
                     { games && (
                       <FlatList
