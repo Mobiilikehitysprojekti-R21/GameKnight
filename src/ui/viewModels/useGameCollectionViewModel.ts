@@ -26,7 +26,7 @@ export function useGameCollectionViewModel(repo: BoardGameApiRepository) {
     // Load user´s game collection, set loading state
     const loadGames = async () => {
         try {
-            const gamelist = await getGameCollection.execute(6)
+            const gamelist = await getGameCollection.execute(1)
             setGames(gamelist)
         } catch (e) {
             console.error('Failed to load game collection', e)
