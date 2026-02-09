@@ -28,27 +28,9 @@ export default function GameCollectionScreen({ navigation }: Props) {
   // State to control modal visibility
   const [modalVisible, setModalVisible] = useState(false)
 
-  const [userNick, setUserNick] = useState('')  // state for user´s nickname
+  
   const [newGame, setNewgame] = useState('')    // input value for adding a new game
   const [search, setSearch] = useState('')      // input value for searching a game
-
-  // Load user´s nickname if user is logged in
-  /*useEffect(() => {
-    //if (!vm.isLoggedIn) return
-
-    const loadUserNick = async () => {
-      try {
-        const nick = await AsyncStorage.getItem('nickname')
-        if (nick) {
-          setUserNick(nick)
-        }
-      } catch (e) {
-        console.error('Failed to load nickname', e)
-      }
-    }
-
-    loadUserNick()
-  }, [vm.isLoggedIn])*/
 
 
   // Filter games based on input
@@ -65,7 +47,7 @@ export default function GameCollectionScreen({ navigation }: Props) {
       <GameList
         filteredItems={filteredItems}
         games={vm.games}
-        userNick={userNick}
+        userNick={auth.displayName}
         search={search}
         setSearch={setSearch}
         setGames={vm.handleDeleteGame}

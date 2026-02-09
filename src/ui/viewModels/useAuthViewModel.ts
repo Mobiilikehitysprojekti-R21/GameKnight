@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import * as AuthSession from 'expo-auth-session';
 import * as WebBrowser from 'expo-web-browser';
+import { AuthContext } from '../auth/AuthContext'
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -14,8 +15,10 @@ const discovery = {
 
 export function useAuthViewModel() {
   
-  const [accessToken, setAccessToken] = useState<string | null>(null);
-  const [user, setUser] = useState<any>(null)
+  const auth = useContext(AuthContext)
+  if (!auth) {
+    throw new Error('useAuthViewModel must be used within AuthProvider')
+  }
   const [errorMessage, setErrorMessage] = useState<string | undefined>()
 
   const redirectUri = AuthSession.makeRedirectUri()
@@ -49,16 +52,18 @@ export function useAuthViewModel() {
     discovery
   )
   .then((tokenResult) => {
-    setAccessToken(tokenResult.accessToken ?? null)
+    const token = tokenResult.accessToken ?? null
 
-    if (tokenResult.accessToken) {
+    if (token) {
       fetch(`https://${AUTH0_DOMAIN}/userinfo`, {
         headers: {
           Authorization: `Bearer ${tokenResult.accessToken}`,
         },
       })
       .then((res) => res.json())
-      .then(setUser)
+      .then((userData) => {
+        auth.login(token, userData)
+      })
     }
   })
   .catch((e) => {
@@ -68,8 +73,6 @@ export function useAuthViewModel() {
 
   }, [response])
 
-  const loggedIn = !!user;
-  const displayName = (user as any)?.name ?? (user as any)?.email ?? '';
 
   const login = async () => {
     setErrorMessage(undefined)
@@ -77,21 +80,16 @@ export function useAuthViewModel() {
   };
 
   const logout = async () => {
-    setAccessToken(null)
-    setUser(null)
-  };
-
-  const getAccessToken = async (): Promise<string | null> => {
-    return accessToken
+    auth.logout
   };
 
   return {
-    user,
-    loggedIn,
-    displayName,
+    user: auth.user,
+    loggedIn: auth.isLoggedIn,
+    displayName: auth.user?.nickname ?? '',
     errorMessage,
     login,
     logout,
-    getAccessToken,
+    getAccessToken: auth.getAccessToken,
   };
 }

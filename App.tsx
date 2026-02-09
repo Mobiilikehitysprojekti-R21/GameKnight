@@ -17,12 +17,14 @@ import GameSessionsScreen from './src/ui/screens/GameSessionsScreen';
 import FriendsScreen from './src/ui/screens/FriendsScreen';
 import { NewGameScreen } from './src/ui/screens/NewGameScreen';
 import { MapScreen } from './src/ui/screens/MapScreen';
+import { AuthProvider } from './src/ui/auth/AuthContext';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
   return (
     <SafeAreaProvider>
+      <AuthProvider>
         <NavigationContainer>
           <SafeAreaView style={{ flex: 1, backgroundColor: '#0F172A' }}>
             <Stack.Navigator
@@ -52,7 +54,7 @@ export default function App() {
             </Stack.Navigator>
           </SafeAreaView>
         </NavigationContainer>
-      
+      </AuthProvider>
       <StatusBar style="light" />
     </SafeAreaProvider>
   );

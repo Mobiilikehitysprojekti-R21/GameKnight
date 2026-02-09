@@ -80,7 +80,7 @@ export default function ProfileScreen({ navigation }: Props) {
         {/* OTSIKKO */}
         <View style={styles.header}>
           <Text style={styles.title}>Oma profiili</Text>
-          <Text style={styles.subtitle}>Hei, {userNick || 'tyyppi'}!</Text>
+          <Text style={styles.subtitle}>Hei, {authVm.displayName || 'tyyppi'}!</Text>
         </View>
 
         {/* ASETUKSET */}
@@ -88,7 +88,7 @@ export default function ProfileScreen({ navigation }: Props) {
           <Text style={styles.sectionTitle}>Asetukset</Text>
           <View style={styles.settings}>
             <Text style={styles.statText}>
-              Käyttäjänimi: {userNick || 'tuntematon'}
+              Käyttäjänimi: {authVm.displayName || 'tuntematon'}
             </Text>
             <TouchableOpacity
               style={styles.settingsButton}
