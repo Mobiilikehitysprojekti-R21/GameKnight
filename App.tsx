@@ -3,9 +3,9 @@ import HomeScreen from './src/ui/screens/HomeScreen';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 
-import { Auth0Provider } from 'react-native-auth0';
+
 import { SearchScreenContainer } from './src/ui/screens/SearchScreenContainer';
-import * as Linking from 'expo-linking';
+
 import SignUpScreen from './src/ui/screens/SignUpScreen';
 import ProfileScreen from './src/ui/screens/ProfileScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -23,14 +23,6 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function App() {
   return (
     <SafeAreaProvider>
-      <Auth0Provider
-        domain={'gameknight.eu.auth0.com'}
-        clientId={'7fgZoHliyAcQanPFFr5fBgtq3vu1BTJe'}
-        scope="openid profile email offline_access"
-        redirectUri={Linking.createURL('/')}
-        audience="api.gameknight.app"
-        useDPoP={false}
-      >
         <NavigationContainer>
           <SafeAreaView style={{ flex: 1, backgroundColor: '#0F172A' }}>
             <Stack.Navigator
@@ -60,7 +52,7 @@ export default function App() {
             </Stack.Navigator>
           </SafeAreaView>
         </NavigationContainer>
-      </Auth0Provider>
+      
       <StatusBar style="light" />
     </SafeAreaProvider>
   );

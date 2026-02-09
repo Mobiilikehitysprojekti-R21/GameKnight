@@ -1,11 +1,17 @@
 const config = {
     name: 'GameKnight',
     slug: 'GameKnight',
+    scheme: "gameknight",
     version: '1.0.0',
     orientation: 'portrait',
     icon: './assets/icon.png',
     userInterfaceStyle: 'light',
     newArchEnabled: true,
+    plugins: [
+      [
+        "expo-web-browser"
+      ]
+    ],
     splash: {
         image: './assets/splash-icon.png',
         resizeMode: 'contain',
@@ -28,6 +34,7 @@ const config = {
     extra: {
         API_URL: process.env.API_URL,
     },
+    
 };
 
 export default config;

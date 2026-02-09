@@ -1,46 +1,88 @@
-import { useState } from 'react';
-import { useAuth0 } from 'react-native-auth0';
+import { useEffect, useMemo, useState } from 'react';
+import * as AuthSession from 'expo-auth-session';
+import * as WebBrowser from 'expo-web-browser';
+
+WebBrowser.maybeCompleteAuthSession();
+
+const AUTH0_DOMAIN = 'gameknight.eu.auth0.com'
+const CLIENT_ID = '7fgZoHliyAcQanPFFr5fBgtq3vu1BTJe'
+
+const discovery = {
+  authorizationEndpoint: `https://${AUTH0_DOMAIN}/authorize`,
+  tokenEndpoint: `https://${AUTH0_DOMAIN}/oauth/token`,
+};
 
 export function useAuthViewModel() {
-  const { user, error, authorize, clearSession, getCredentials } = useAuth0();
+  
   const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [user, setUser] = useState<any>(null)
+  const [errorMessage, setErrorMessage] = useState<string | undefined>()
+
+  const redirectUri = AuthSession.makeRedirectUri()
+
+  console.log("redirect uri: ", redirectUri)
+
+  const [request, response, promptAsync] = AuthSession.useAuthRequest(
+    {
+      clientId: CLIENT_ID,
+      redirectUri,
+      usePKCE: true,
+      scopes: ['openid', 'profile', 'email', 'offline_access'],
+      responseType: AuthSession.ResponseType.Code,
+    },
+    discovery
+  )
+
+  useEffect(()=> {
+    if (response?.type === 'success') {
+      const { code } = response.params
+    
+    AuthSession.exchangeCodeAsync(
+      {
+      clientId: CLIENT_ID,
+      code,
+      redirectUri,
+      extraParams: {
+      code_verifier: request?.codeVerifier ?? '',
+    },
+        },
+    discovery
+  )
+  .then((tokenResult) => {
+    setAccessToken(tokenResult.accessToken ?? null)
+
+    if (tokenResult.accessToken) {
+      fetch(`https://${AUTH0_DOMAIN}/userinfo`, {
+        headers: {
+          Authorization: `Bearer ${tokenResult.accessToken}`,
+        },
+      })
+      .then((res) => res.json())
+      .then(setUser)
+    }
+  })
+  .catch((e) => {
+    setErrorMessage(e.message)
+  })
+  }
+
+  }, [response])
 
   const loggedIn = !!user;
   const displayName = (user as any)?.name ?? (user as any)?.email ?? '';
-  const errorMessage = (error as Error | undefined)?.message;
 
   const login = async () => {
-    try {
-      await authorize();
-
-      const creds = await getCredentials();
-      console.log('access token:', creds.accessToken);
-
-      if (creds.accessToken) {
-        setAccessToken(creds.accessToken);
-      }
-    } catch (e) {
-      console.log('Login failed', e);
-    }
+    setErrorMessage(undefined)
+    promptAsync()
   };
 
   const logout = async () => {
-    try {
-      await clearSession();
-    } catch (e) {
-      console.log('Logout failed', e);
-    } finally {
-      setAccessToken(null);
-    }
+    setAccessToken(null)
+    setUser(null)
   };
 
   const getAccessToken = async (): Promise<string | null> => {
-    try {
-      const creds = await getCredentials();
-      return creds.accessToken ?? null;
-    } catch {
-      return null;
-    }
+    return accessToken
   };
 
   return {
