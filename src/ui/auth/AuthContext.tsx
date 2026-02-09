@@ -23,17 +23,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [accessToken, setAccessToken] = useState<string | null>(null)
   const [user, setUser] = useState<any>(null)
 
+  // LOGIN
   const login = (token: string, userData: any) => {
-    setAccessToken(token)
-    setUser(userData)
-    console.log("userdata:", userData)
-    setIsLoggedIn(true)
+    setAccessToken(token)               // token is set
+    setUser(userData)                   // user data is stored
+    //console.log("userdata:", userData)
+    setIsLoggedIn(true)                 // boolean is set true ( user is logged in )
   }
 
+  // LOGOUT
   const logout = () => {
-    setAccessToken(null)
-    setUser(null)
-    setIsLoggedIn(false)
+    setAccessToken(null)    // token is set to null
+    setUser(null)           // user data is set to null
+    setIsLoggedIn(false)    // boolean is set false ( user has logged out )
   }
 
   const getAccessToken = async (): Promise<string | null> => {
