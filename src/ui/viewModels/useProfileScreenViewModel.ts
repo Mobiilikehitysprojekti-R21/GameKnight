@@ -9,7 +9,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const useProfileScreenViewModel = (onSuccess: () => void, onLogout: () => void) => {
  
-    const { isLoggedIn, logout } = useAuth()
+    //const { isLoggedIn, logout } = useAuth()
 
     const [nickname, setNickname] = useState("")
     const [isNickAvailable, setIsNickAvailable] = useState(false)   // state to track if the nickname is available
@@ -56,7 +56,7 @@ export const useProfileScreenViewModel = (onSuccess: () => void, onLogout: () =>
     const logoutUser = async() => {
         try {
             await AsyncStorage.clear()
-            logout()
+            //logout()
             Toast.show({
                 type: 'success',
                 text1: 'Kirjauduit ulos.',
@@ -82,7 +82,7 @@ export const useProfileScreenViewModel = (onSuccess: () => void, onLogout: () =>
         showCheck,
         checkNickname,
         changeNick,
-        isLoggedIn,
+        //isLoggedIn,
         logoutUser
     }
 

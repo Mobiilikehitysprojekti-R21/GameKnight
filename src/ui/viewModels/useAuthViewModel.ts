@@ -37,6 +37,7 @@ export function useAuthViewModel() {
   const getAccessToken = async (): Promise<string | null> => {
     try {
       const creds = await getCredentials();
+      console.log("accesstoken:", creds.accessToken)
       return creds.accessToken ?? null;
     } catch {
       return null;

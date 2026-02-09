@@ -16,6 +16,7 @@ import { FriendCard } from '../components/FriendCard';
 import { useFriendsViewModel } from '../viewModels/useFriendsViewModel';
 import { useState, useEffect } from 'react';
 import { useProfileScreenViewModel } from '../viewModels/useProfileScreenViewModel';
+import { useAuthViewModel } from '../viewModels/useAuthViewModel';
 
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -26,7 +27,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Profile'>;
 
 export default function ProfileScreen({ navigation }: Props) {
   // const vm = useProfileViewModel(() => navigation.navigate('Home'))
-  // const vm = useFriendsViewModel();
+  const friendsVm = useFriendsViewModel();
 
   function chunkArray<T>(arr: T[], size: number): T[][] {
     const res: T[][] = [];
@@ -43,6 +44,8 @@ export default function ProfileScreen({ navigation }: Props) {
     () => navigation.navigate('Home')
   );
 
+  const authVm = useAuthViewModel()
+
   // state to control modal visibility
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -51,7 +54,8 @@ export default function ProfileScreen({ navigation }: Props) {
 
   // Load user´s nickname if user is logged in
   useEffect(() => {
-    if (!vm.isLoggedIn) return;
+    //if (!vm.isLoggedIn) return;
+    if (!authVm.loggedIn) return
 
     const loadUserNick = async () => {
       try {
@@ -65,7 +69,7 @@ export default function ProfileScreen({ navigation }: Props) {
     };
 
     loadUserNick();
-  }, [vm.isLoggedIn]);
+  }, [authVm.loggedIn]);
 
   return (
     <>
@@ -133,12 +137,12 @@ export default function ProfileScreen({ navigation }: Props) {
         <View style={styles.card}>
           <Text style={styles.sectionTitle}>Kaverit</Text>
 
-          {vm.loading ? (
+          {friendsVm.loading ? (
             <ActivityIndicator />
-          ) : vm.friends.length === 0 ? (
+          ) : friendsVm.friends.length === 0 ? (
             <Text style={styles.statText}>Ei kavereita vielä.</Text>
           ) : (
-            chunkArray(vm.friends, 2).map((pair, idx) => (
+            chunkArray(friendsVm.friends, 2).map((pair, idx) => (
               <View
                 key={idx}
                 style={{

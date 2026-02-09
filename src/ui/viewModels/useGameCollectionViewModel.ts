@@ -8,9 +8,9 @@ import { GetGameCollection } from "../../application/GetGameCollection";
 
 // Viewmodel hook for game collection logic
 
-export function useGameCollectionViewModel() {
+export function useGameCollectionViewModel(repo: BoardGameApiRepository) {
 
-    const { isLoggedIn } = useAuth()    // authentication state
+    //const { isLoggedIn } = useAuth()    // authentication state
     const [games, setGames] = useState<BoardGame[]>([]) // user´s game collection
     const [searhedGame, setSearchedGame] = useState<BoardGame[]>()  // Search result of game search
     const [bggId, setBggId] = useState<BoardGame["bgg_id"]>()       // Selected game´s bgg_id
@@ -19,7 +19,6 @@ export function useGameCollectionViewModel() {
     const [isGameAdded, setIsGameAdded] = useState(false)           // Indicates if game has been successfully added to the collection
 
     // Repository and use cases
-    const repo = new BoardGameApiRepository()
     const findBoardgames = new FindBoardGames(repo)
     const addGameToCollection = new AddGameToCollection(repo)
     const getGameCollection = new GetGameCollection(repo)
@@ -27,7 +26,7 @@ export function useGameCollectionViewModel() {
     // Load user´s game collection, set loading state
     const loadGames = async () => {
         try {
-            const gamelist = await getGameCollection.execute(1)
+            const gamelist = await getGameCollection.execute(6)
             setGames(gamelist)
         } catch (e) {
             console.error('Failed to load game collection', e)
@@ -62,7 +61,7 @@ export function useGameCollectionViewModel() {
 
     // Add game to collection
     const addGame = async () => {
-        const userID = 1    // VAIHDA TÄHÄN oikea user_id !!!
+        const userID = 6    // VAIHDA TÄHÄN oikea user_id !!!
         try {
             await addGameToCollection.execute(userID, Number(bggId))
             await loadGames()   // update game collection
@@ -77,7 +76,7 @@ export function useGameCollectionViewModel() {
     return {
         games,
         loading,
-        isLoggedIn,
+        //isLoggedIn,
         setGames,
         handleDeleteGame,
         searhedGame,
