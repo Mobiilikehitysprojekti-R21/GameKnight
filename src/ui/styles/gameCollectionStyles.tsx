@@ -10,6 +10,10 @@ export const styles = StyleSheet.create({
     minHeight: '100%'
   },
 
+  swipeContainer: {
+    borderRadius: radius.lg,
+  },
+
   header: {
     alignItems: 'center',
     marginBottom: 40,
@@ -18,7 +22,6 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
-    paddingTop: 60,
     paddingHorizontal: 16,
     maxWidth: '100%'
   },
@@ -40,7 +43,8 @@ export const styles = StyleSheet.create({
   input: {
     flex: 1,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#eee',
+    backgroundColor: '#f9f9f9',
     borderRadius: 4,
     padding: 8,
     marginRight: 8,
@@ -48,17 +52,17 @@ export const styles = StyleSheet.create({
   },
 
   rowBack: {
-    backgroundColor: '#ddd',
+    backgroundColor: colors.background,
     flex: 1,
     alignItems: 'flex-end',
     justifyContent: 'center',
-    paddingRight: 20
+    paddingRight: 20,
   },
 
   rowFront: {
-    backgroundColor: '#f9f9f9',
+    backgroundColor: colors.surface,
     borderBottomWidth: 1,
-    borderColor: '#eee',
+    borderColor: colors.secondary,
     padding: 16
   },
 
@@ -68,6 +72,7 @@ export const styles = StyleSheet.create({
     color: '#CBD5E1',
     textAlign: 'center',
     maxWidth: 260,
+    paddingRight: 16,
   },
 
   card: {
@@ -94,7 +99,7 @@ export const styles = StyleSheet.create({
   statText: {
     color: colors.textSecondary,
     fontSize: 14,
-    marginBottom: 16,
+    marginBottom: 4,
   },
 
   settingsButton: {
@@ -103,7 +108,6 @@ export const styles = StyleSheet.create({
     paddingHorizontal: spacing.md,
     borderRadius: radius.md,
     alignItems: 'center',
-    marginBottom: spacing.sm,
   },
 
   settingsButtonText: {
@@ -133,5 +137,19 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#000',
+  },
+
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: colors.background,
+    margin: spacing.md
+  },
+
+  modalContainer: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: spacing.lg,
+    marginBottom: spacing.md,
   },
 });

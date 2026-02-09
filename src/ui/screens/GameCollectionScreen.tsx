@@ -1,84 +1,89 @@
-import { ScrollView, View, Text, TextInput, Button } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { styles } from '../styles/gameCollectionStyles';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/types'
-import { SwipeListView } from 'react-native-swipe-list-view';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useGameCollectionViewModel } from '../viewModels/useGameCollectionViewModel';
+import GameList from '../components/GameList';
+import ModalComponent from '../components/Modal';
 
+// Define navigation props for the screen
 type Props = NativeStackScreenProps<RootStackParamList, 'GameCollection'>
 
 export default function GameCollectionScreen({ navigation }: Props) {
-  interface Item {
-    id: string
-    name: string
-  }
 
-  const [games, setGames] = useState<Item[]>([
-    { id: '1', name: 'The Legend of Zelda: Breath of the Wild' },
-  { id: '2', name: 'God of War Ragnarök' },
-  { id: '3', name: 'Elden Ring' },
-  { id: '4', name: 'Red Dead Redemption 2' },
-  { id: '5', name: 'Cyberpunk 2077' },
-  ])
-  const [input, setInput] = useState('')
-  const [search, setSearch] = useState('')
+  // ViewModel that contains business logic and state
+  const vm = useGameCollectionViewModel()
 
+  // State to control modal visibility
+  const [modalVisible, setModalVisible] = useState(false)
+
+  const [userNick, setUserNick] = useState('')  // state for user´s nickname
+  const [newGame, setNewgame] = useState('')    // input value for adding a new game
+  const [search, setSearch] = useState('')      // input value for searching a game
+
+  // Load user´s nickname if user is logged in
+  useEffect(() => {
+    if (!vm.isLoggedIn) return
+
+    const loadUserNick = async () => {
+      try {
+        const nick = await AsyncStorage.getItem('nickname')
+        if (nick) {
+          setUserNick(nick)
+        }
+      } catch (e) {
+        console.error('Failed to load nickname', e)
+      }
+    }
+
+    loadUserNick()
+  }, [vm.isLoggedIn])
+
+
+  // Filter games based on input
   const filteredItems = search.trim()
-    ? games.filter(game =>
-        game.name.toLowerCase().includes(search.trim().toLowerCase())
-      )
-    : games
+    ? vm.games.filter(game =>
+      game.name.toLowerCase().includes(search.trim().toLowerCase())
+    )
+    : vm.games
 
   return (
-    <SwipeListView
-      data={filteredItems}
-      keyExtractor={item => item.id}
-      contentContainerStyle={styles.scrollContainer}
-      showsVerticalScrollIndicator={false}
+    <View
+      style={styles.scrollContainer}
+    >
+      <GameList
+        filteredItems={filteredItems}
+        games={vm.games}
+        userNick={userNick}
+        search={search}
+        setSearch={setSearch}
+        setGames={vm.handleDeleteGame}
+      />
+      <View style={styles.card}>
 
-      ListHeaderComponent={
-        <>
-          {/* HEADER */}
-          <View style={styles.header}>
-            <Text style={styles.title}>Oma pelikokoelma</Text>
-            <Text style={styles.subtitle}>Upea kokoelma, "nickname"!</Text>
-          </View>
+        <TouchableOpacity
+          style={styles.settingsButton}
+          onPress={() => setModalVisible(true)}>
+          <Text style={styles.settingsButtonText}>Lisää uusi peli</Text>
+        </TouchableOpacity>
+      </View>
 
-          <View style={styles.container}>
-            
-            <View style={styles.inputRow}>
-              <TextInput
-                style={styles.input}
-                value={input}
-                onChangeText={setSearch}
-                placeholder="Add Item"
-              />
-              <Button title="Search" onPress={() => {}} />
-            </View>
-          </View>
-        </>
-      }
-
-      renderItem={({ item }) => (
-        <View style={styles.rowFront}>
-          <Text>{item.name}</Text>
-        </View>
-      )}
-
-      renderHiddenItem={({ item }) => (
-        <View style={styles.rowBack}>
-          <Button
-            title="Delete"
-            color="#d11a2a"
-            onPress={() =>
-              setGames(prev => prev.filter(i => i.id !== item.id))
-            }
-          />
-        </View>
-      )}
-
-      rightOpenValue={-100}
-      disableRightSwipe
-    />
+      <ModalComponent
+        modalVisible={modalVisible}
+        setModalVisible={() => setModalVisible(false)}
+        header='Lisää uusi peli kokoelmaasi'
+        placeholder='Uusi peli'
+        inputValue={newGame}
+        setInputValue={setNewgame}
+        checkValue={() => vm.findGame(newGame)}
+        games={vm.searhedGame}
+        onSelected={vm.chooseGame}
+        isValueAvailable={vm.isGameChosen}
+        onPress={vm.addGame}
+        buttonText='Lisää'
+      />
+    </View>
   )
 }

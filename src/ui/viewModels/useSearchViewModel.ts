@@ -8,10 +8,15 @@ export function useSearchViewModel(findBoardGames: FindBoardGames) {
   const [loading, setLoading] = useState(false);
 
   async function search() {
-    setLoading(true);
-    const result = await findBoardGames.execute(query);
-    setGames(result);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const result = await findBoardGames.execute(query);
+      setGames(result);
+    } catch (e) {
+      console.error('Search failed', e);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return {

@@ -2,77 +2,169 @@ flowchart LR
 
 subgraph 0["src"]
 subgraph 1["application"]
-2["AddGameSession.ts"]
-3["FindBoardGames.ts"]
-4["GetGameSessions.ts"]
-5["SignUpUser.ts"]
+2["AcceptRequest.ts"]
+3["AddFriend.ts"]
+4["AddGameSession.ts"]
+5["AddGameToCollection.ts"]
+6["ChangeNickname.ts"]
+7["DeclineRequest.ts"]
+8["FindBoardGames.ts"]
+9["GetFriendRequest.ts"]
+A["GetFriends.ts"]
+B["GetGameCollection.ts"]
+C["GetGameSessions.ts"]
+D["InviteFriend.ts"]
+E["SignInUser.ts"]
+I["SignUpUser.ts"]
 end
-subgraph 6["domain"]
-subgraph 7["entities"]
-8["User.ts"]
-9["BoardGame.ts"]
-A["GameSessions.ts"]
+subgraph F["domain"]
+subgraph G["entities"]
+H["User.ts"]
+J["BoardGame.ts"]
+K["Friend.ts"]
+L["FriendInviteResult.ts"]
+M["FriendRequest.ts"]
+N["GameSessions.ts"]
+O["Location.ts"]
 end
-subgraph B["repositories"]
-C["BoardGameRepository.ts"]
-D["GameSessionRepository.ts"]
-E["UserRepository.ts"]
-end
-end
-subgraph F["infrastructure"]
-G["UserApiRepository.ts"]
-subgraph H["api"]
-I["BoardGameApiRepository.ts"]
-J["GameSessionsApiRepository.ts"]
-K["UserApiRepository.ts"]
+subgraph P["repositories"]
+Q["BoardGameRepository.ts"]
+R["FriendRepository.ts"]
+S["GameSessionRepository.ts"]
+T["UserRepository.ts"]
 end
 end
-subgraph L["navigation"]
-M["types.ts"]
+subgraph U["infrastructure"]
+subgraph V["api"]
+W["BoardGameApiRepository.ts"]
+X["authFetch.ts"]
+Y["FriendApiRepository.ts"]
+Z["GameSessionsApiRepository.ts"]
+10["UserApiRepository.ts"]
+subgraph 11["dtos"]
+12["BoardGameDto.ts"]
 end
-subgraph N["ui"]
-subgraph O["components"]
-P["SessionCard.tsx"]
-T["Settings.tsx"]
-end
-subgraph Q["styles"]
-R["GameSessionStyles.tsx"]
-S["theme.ts"]
-W["gameCollectionStyles.tsx"]
-Z["homeStyles.tsx"]
-11["profileStyles.tsx"]
-16["signUpStyles.tsx"]
-end
-subgraph U["screens"]
-V["GameCollectionScreen.tsx"]
-X["GameSessionsScreen.tsx"]
-Y["HomeScreen.tsx"]
-10["ProfileScreen.tsx"]
-12["SearchScreen.tsx"]
-15["SignUpScreen.tsx"]
-end
-subgraph 13["viewModels"]
-14["useSearchViewModel.ts"]
-17["useSignUpViewModel.ts"]
-18["useGameSessionsViewModel.ts"]
-19["useHomeScreenViewModel.ts"]
+subgraph 13["mappers"]
+14["BoardGameMapper.ts"]
 end
 end
 end
-5-->8
-P-->R
-R-->S
-V-->W
-W-->S
-X-->P
-X-->R
-Y-->Z
-Z-->S
-10-->11
-11-->S
-12-->14
-15-->16
-15-->17
-16-->S
-17-->5
-17-->G
+subgraph 15["navigation"]
+16["types.ts"]
+end
+subgraph 17["ui"]
+subgraph 18["auth"]
+19["AuthContext.tsx"]
+1A["useAuth.ts"]
+end
+subgraph 1B["components"]
+1C["FriendCard.tsx"]
+1G["GameList.tsx"]
+1I["Modal.tsx"]
+1J["SessionCard.tsx"]
+1L["Settings.tsx"]
+1M["SubmitForm.tsx"]
+end
+subgraph 1D["styles"]
+1E["friendStyles.tsx"]
+1F["theme.ts"]
+1H["gameCollectionStyles.tsx"]
+1K["GameSessionStyles.tsx"]
+1N["signUpStyles.tsx"]
+1Y["homeStyles.tsx"]
+20["MapStyles.tsx"]
+24["NewGameStyles.tsx"]
+26["profileStyles.tsx"]
+29["SearchStyles.tsx"]
+end
+subgraph 1O["screens"]
+1P["AuthControls.tsx"]
+1S["FriendsScreen.tsx"]
+1U["GameCollectionScreen.tsx"]
+1W["GameSessionsScreen.tsx"]
+1X["HomeScreen.tsx"]
+1Z["MapScreen.tsx"]
+22["MapScreen.web.tsx"]
+23["NewGameScreen.tsx"]
+25["ProfileScreen.tsx"]
+28["SearchScreen.tsx"]
+2B["SearchScreenContainer.tsx"]
+2C["SignUpScreen.tsx"]
+end
+subgraph 1Q["viewModels"]
+1R["useAuthViewModel.ts"]
+1T["useFriendsViewModel.ts"]
+1V["useGameCollectionViewModel.ts"]
+21["useFavoriteLocationsViewModel.ts"]
+27["useProfileScreenViewModel.ts"]
+2A["useSearchViewModel.ts"]
+2D["useSignUpViewModel.ts"]
+2G["useGameSessionsViewModel.ts"]
+2H["useHomeScreenViewModel.ts"]
+end
+subgraph 2E["services"]
+2F["location.ts"]
+end
+end
+end
+E-->H
+I-->H
+W-->X
+1A-->19
+1C-->1E
+1E-->1F
+1G-->1H
+1H-->1F
+1I-->1F
+1J-->1K
+1K-->1F
+1M-->1N
+1N-->1F
+1P-->1R
+1S-->1E
+1S-->1T
+1T-->Y
+1U-->1G
+1U-->1I
+1U-->1H
+1U-->1V
+1V-->5
+1V-->8
+1V-->B
+1V-->W
+1V-->1A
+1W-->1J
+1W-->1K
+1X-->1Y
+1X-->1R
+1Y-->1F
+1Z-->20
+1Z-->21
+20-->1F
+21-->10
+22-->20
+23-->24
+23-->21
+24-->1F
+25-->1C
+25-->1I
+25-->26
+25-->27
+26-->1F
+27-->6
+27-->10
+27-->1A
+28-->29
+28-->2A
+29-->1F
+2B-->8
+2B-->W
+2B-->1R
+2B-->28
+2C-->1M
+2C-->1N
+2C-->2D
+2D-->E
+2D-->I
+2D-->10
+2D-->1A

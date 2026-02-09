@@ -1,4 +1,4 @@
-import { GameSession } from '../domain/entities/Session';
+import { GameSession } from '../domain/entities/GameSessions';
 import { GameSessionRepository } from '../domain/repositories/GameSessionRepository';
 
 export class AddGameSession {
