@@ -23,7 +23,7 @@ type ModalProps = {
     showCheck?: boolean                         // boolean for showing check-text (optional)
     trueText?: string                           // text option for true (optional)
     falseText?: string                          // text option for false (optional)
-}
+  }
 
 const ModalComponent = ({
     modalVisible, 
@@ -40,7 +40,7 @@ const ModalComponent = ({
     buttonText,
     showCheck,
     trueText,
-    falseText
+    falseText,
 
 }: ModalProps) => {
 
@@ -103,6 +103,14 @@ return (
                     {isValueAvailable ? trueText : falseText}
                   </Text>
                 )}
+                <View style={styles.back}>
+                <TouchableOpacity
+                  style={styles.backButton}
+                  onPress={() => setModalVisible(false)}
+                >
+                  <Text style={styles.statText}>Poistu</Text>
+                </TouchableOpacity>
+                </View>
               </View>
             </View>
           </Modal>
@@ -198,6 +206,21 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
     fontSize: 14,
   },
+
+  back: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  backButton: {
+    backgroundColor: colors.secondary,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.md,
+    borderRadius: radius.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+    maxHeight: 60,
+  }
 })
 
 export default ModalComponent

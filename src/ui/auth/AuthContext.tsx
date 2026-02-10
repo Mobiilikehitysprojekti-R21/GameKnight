@@ -1,4 +1,5 @@
 import React, { createContext, useState } from 'react'
+import * as SecureStore from 'expo-secure-store';
 
 type AuthContextType = {
   isLoggedIn: boolean // tells if user is logged in
@@ -24,16 +25,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<any>(null)
 
   // LOGIN
-  const login = (token: string, userData: any) => {
+  const login = async (token: string, userData: any) => {
     setAccessToken(token)               // token is set
     setUser(userData)                   // user data is stored
+    //await SecureStore.setItemAsync("accessToken", token) EHKÄ REFRESH TOKEN MIELUMMIN? 
+    // TODO: userdatan säilöminen paikallisesti, elinkaari?
     setIsLoggedIn(true)                 // boolean is set true ( user is logged in )
   }
 
   // LOGOUT
-  const logout = () => {
+  const logout = async () => {
     setAccessToken(null)    // token is set to null
     setUser(null)           // user data is set to null
+    //await SecureStore.deleteItemAsync("accessToken")
     setIsLoggedIn(false)    // boolean is set false ( user has logged out )
   }
 

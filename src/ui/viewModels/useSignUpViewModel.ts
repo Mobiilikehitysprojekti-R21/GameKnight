@@ -11,7 +11,7 @@ export const useSignUpViewModel = (onSuccess: () => void) => {
 
 
     const [email, setEmail] = useState("")                          // state for email
-    //const [auth0_id, setAuth0_id] = useState("")                  // state for auth0 id
+    const [auth0_id, setAuth0_id] = useState("")                  // state for auth0 id
     const [nickname, setNickname] = useState("")                    // state for nickname
     const [isNickAvailable, setIsNickAvailable] = useState(false)   // state to track if the nickname is available
     const [showCheck, setShowCheck] = useState(false)               // state to handle user notification text about nickname´s availability
@@ -33,23 +33,29 @@ export const useSignUpViewModel = (onSuccess: () => void) => {
 
         try {
             // Execute signUp UseCase
-            await signUpUser.execute({ email, nickname })   // later needs auth0 email & auth0_id
+            await signUpUser.execute({ email, auth0_id, nickname })   // later needs auth0 email & auth0_id
             // clear all fields
             setEmail('')
             setNickname('')
 
             onSuccess()     // Notify parent component of success
         } catch (error: any) {
+            const status = error?.response?.status
+            if (status === 409) {
+                console.warn('User already exists (409), continuing login');
+                alert(`Käyttäjä on jo luotu, kirjaudutaan sisään`)
+                return;
+            }
             console.error("SignUp error:", error.message || error)
-            // Notify user about error in sign up
             alert(`Virhe tilin luomisessa: ${error.message || error}`)
+            throw new Error(`Signup failed: ${error.status}`)
         }
 
     }
 
     const signIn = async () => {
         try {
-            await signInUser.execute({ email, nickname })
+            await signInUser.execute({ email, auth0_id, nickname })
             //login()
             onSuccess()
         } catch (e: any) {

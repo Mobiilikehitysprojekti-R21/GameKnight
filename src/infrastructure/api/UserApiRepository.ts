@@ -50,7 +50,28 @@ export class UserApiRepository implements UserRepository {
   // Sign up user and store in the database
   async signUp(user: User): Promise<void> {
     console.log('rekisteröidytään....'); // debugging...
-    await axios.post(`${this.apiUrl}/users/`, user);
+    if (this.getAccessToken) {
+      const res = await authFetch(this.getAccessToken, `${this.apiUrl}/users/`, {
+        method: 'POST',
+        body: JSON.stringify(user),
+      });
+
+      if (!res.ok) {
+        const body = await res.text();
+        // If user already exists, data is not stored in db, login is done instead
+        if (res.status === 409) {
+          console.warn('User already exists (409) during signUp — continuing login');
+          return;
+        }
+
+        console.error('signUp failed:', res.status, body);
+
+        throw new Error(`Signup failed: ${res.status}`);
+      }
+
+      return;
+    }
+    
   }
 
   // Sign in user and store locally

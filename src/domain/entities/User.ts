@@ -2,7 +2,7 @@
 
 export type User = {
     email: string,
-    //auth0_id: string,   // added when using Auth0 for authentication
+    auth0_id: string,   
     nickname: string
     user_id?: number
 }
