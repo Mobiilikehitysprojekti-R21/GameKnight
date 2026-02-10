@@ -1,45 +1,36 @@
 import { View, Text, TouchableOpacity } from 'react-native';
 import { styles } from '../styles/gameCollectionStyles';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/types'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useGameCollectionViewModel } from '../viewModels/useGameCollectionViewModel';
 import GameList from '../components/GameList';
 import ModalComponent from '../components/Modal';
+import { useAuthViewModel } from '../viewModels/useAuthViewModel';
+import { BoardGameApiRepository } from '../../infrastructure/api/BoardGameApiRepository';
 
 // Define navigation props for the screen
 type Props = NativeStackScreenProps<RootStackParamList, 'GameCollection'>
 
 export default function GameCollectionScreen({ navigation }: Props) {
 
+  const auth = useAuthViewModel()
+
+  const repo = useMemo(
+    () => new BoardGameApiRepository(auth.getAccessToken),
+    [auth.getAccessToken]
+  )
+
   // ViewModel that contains business logic and state
-  const vm = useGameCollectionViewModel()
+  const vm = useGameCollectionViewModel(repo)
 
   // State to control modal visibility
   const [modalVisible, setModalVisible] = useState(false)
 
-  const [userNick, setUserNick] = useState('')  // state for user´s nickname
+  
   const [newGame, setNewgame] = useState('')    // input value for adding a new game
   const [search, setSearch] = useState('')      // input value for searching a game
-
-  // Load user´s nickname if user is logged in
-  useEffect(() => {
-    if (!vm.isLoggedIn) return
-
-    const loadUserNick = async () => {
-      try {
-        const nick = await AsyncStorage.getItem('nickname')
-        if (nick) {
-          setUserNick(nick)
-        }
-      } catch (e) {
-        console.error('Failed to load nickname', e)
-      }
-    }
-
-    loadUserNick()
-  }, [vm.isLoggedIn])
 
 
   // Filter games based on input
@@ -56,7 +47,7 @@ export default function GameCollectionScreen({ navigation }: Props) {
       <GameList
         filteredItems={filteredItems}
         games={vm.games}
-        userNick={userNick}
+        userNick={auth.displayName}
         search={search}
         setSearch={setSearch}
         setGames={vm.handleDeleteGame}

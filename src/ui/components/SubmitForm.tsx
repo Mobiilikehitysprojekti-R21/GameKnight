@@ -41,7 +41,7 @@ const SubmitForm = ({header, email, nickname, setEmail, setNickname, checkNickna
                 onChangeText={(text) => {
                   setNickname(text)
                 }}
-                onEndEditing={checkNickname}
+                onSubmitEditing={checkNickname}
                 placeholder='your name'
               />
             </View>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import type { BoardGame } from "../../domain/entities/BoardGame";
-import { useAuth } from "../auth/useAuth";
+//import { useAuth } from "../auth/useAuth";
 import { BoardGameApiRepository } from "../../infrastructure/api/BoardGameApiRepository";
 import { FindBoardGames } from "../../application/FindBoardGames";
 import { AddGameToCollection } from "../../application/AddGameToCollection";
@@ -8,9 +8,10 @@ import { GetGameCollection } from "../../application/GetGameCollection";
 
 // Viewmodel hook for game collection logic
 
-export function useGameCollectionViewModel() {
+export function useGameCollectionViewModel(repo: BoardGameApiRepository) {
 
-    const { isLoggedIn } = useAuth()    // authentication state
+    
+    //const { isLoggedIn } = useAuth()    // authentication state
     const [games, setGames] = useState<BoardGame[]>([]) // user´s game collection
     const [searhedGame, setSearchedGame] = useState<BoardGame[]>()  // Search result of game search
     const [bggId, setBggId] = useState<BoardGame["bgg_id"]>()       // Selected game´s bgg_id
@@ -19,7 +20,6 @@ export function useGameCollectionViewModel() {
     const [isGameAdded, setIsGameAdded] = useState(false)           // Indicates if game has been successfully added to the collection
 
     // Repository and use cases
-    const repo = new BoardGameApiRepository()
     const findBoardgames = new FindBoardGames(repo)
     const addGameToCollection = new AddGameToCollection(repo)
     const getGameCollection = new GetGameCollection(repo)
@@ -77,7 +77,7 @@ export function useGameCollectionViewModel() {
     return {
         games,
         loading,
-        isLoggedIn,
+        //isLoggedIn,
         setGames,
         handleDeleteGame,
         searhedGame,

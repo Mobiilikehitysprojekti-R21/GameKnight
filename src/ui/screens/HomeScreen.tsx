@@ -46,7 +46,7 @@ export default function HomeScreen({navigation}:Props) {
 
         <Text style={styles.statText}>
           {loggedIn
-            ? `Kirjautunut käyttäjänä ${displayName}`
+            ? `Kirjautunut käyttäjänä: ${displayName}`
             : 'Kirjaudu sisään tallentaaksesi pisteet ja tilastot'}
         </Text>
 

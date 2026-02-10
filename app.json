@@ -2,6 +2,7 @@
   "expo": {
     "name": "GameKnight",
     "slug": "GameKnight",
+    "scheme": "gameknight",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -9,10 +10,7 @@
     "newArchEnabled": true,
     "plugins": [
       [
-        "react-native-auth0",
-        {
-          "domain": "gameknight.eu.auth0.com"
-        }
+        "expo-web-browser"
       ]
     ],
     "splash": {
