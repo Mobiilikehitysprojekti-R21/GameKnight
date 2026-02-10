@@ -27,7 +27,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const login = (token: string, userData: any) => {
     setAccessToken(token)               // token is set
     setUser(userData)                   // user data is stored
-    //console.log("userdata:", userData)
     setIsLoggedIn(true)                 // boolean is set true ( user is logged in )
   }
 

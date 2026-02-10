@@ -15,7 +15,7 @@ export class BoardGameApiRepository implements BoardGameRepository {
   async findByName(name: string): Promise<BoardGame[]> {
     const res = await authFetch(
       this.getAccessToken,
-      `${this.apiUrl}/boardgames?query=${encodeURIComponent(name)}`
+      `${this.apiUrl}/boardgames/findByName/?query=${encodeURIComponent(name)}`
     );
     console.log(res);
     return (await res.json()) as BoardGame[];

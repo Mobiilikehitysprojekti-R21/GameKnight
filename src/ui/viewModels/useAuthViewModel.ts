@@ -9,6 +9,7 @@ WebBrowser.maybeCompleteAuthSession();
 // Auth0 config
 const AUTH0_DOMAIN = 'gameknight.eu.auth0.com'
 const CLIENT_ID = '7fgZoHliyAcQanPFFr5fBgtq3vu1BTJe'
+const AUTH0_AUDIENCE = 'api.gameknight.app' // Audience tells Auth0 which API the token is wanted for. Returns JWT(not JWE)
 
 // OAuth discovery endpoints
 const discovery = {
@@ -26,8 +27,13 @@ export function useAuthViewModel() {
   }
 
   const [errorMessage, setErrorMessage] = useState<string | undefined>()  // state for error messages
-
-  const redirectUri = AuthSession.makeRedirectUri() // redirect URI for OAuth callback
+  
+  
+  // redirect URI for OAuth callback
+  //!! Expo Go uses a custom scheme for deep linking
+  const redirectUri = AuthSession.makeRedirectUri({
+    scheme: 'gameknight'  // this needs to match app.json
+  }) 
 
   // console.log("redirect uri: ", redirectUri) TÄMÄ KANNATTAA TSEKATA JOS EI ALA TOIMIA, ja lisätä auth0 dashboardiin
 
@@ -39,6 +45,9 @@ export function useAuthViewModel() {
       usePKCE: true,  // enables PKCE (prevents stealing token)
       scopes: ['openid', 'profile', 'email', 'offline_access'],
       responseType: AuthSession.ResponseType.Code,
+      extraParams: {
+        audience: AUTH0_AUDIENCE, // This ensures Auth0 issues a JWT (RS256) for backend
+      }
     },
     discovery
   )
@@ -48,19 +57,21 @@ export function useAuthViewModel() {
     if (response?.type === 'success') {
       const { code } = response.params
     
-    // Exchange authorization code for access token
-    AuthSession.exchangeCodeAsync(
-      {
-      clientId: CLIENT_ID,
-      code,
-      redirectUri,
-      extraParams: {
-      code_verifier: request?.codeVerifier ?? '', // PKCE code verifier
-    },
+      // Exchange authorization code for access token
+      AuthSession.exchangeCodeAsync(
+        {
+          clientId: CLIENT_ID,
+          code,
+          redirectUri,
+          extraParams: {
+            code_verifier: request?.codeVerifier ?? '', // PKCE code verifier
+            audience: AUTH0_AUDIENCE, // This ensures Auth0 issues a JWT (RS256) for backend
+          },
         },
-    discovery
-  )
+        discovery
+      )
   .then((tokenResult) => {
+    //console.log("Result token:", tokenResult.accessToken) // debug: check JWT/JWE
     const token = tokenResult.accessToken ?? null
 
     // Fetch user profile from Auth0
