@@ -7,7 +7,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const useSignUpViewModel = (onSuccess: () => void) => {
 
-    const { login } = useAuth()
+    const { login, getAccessToken } = useAuth()
 
 
     const [email, setEmail] = useState("")                          // state for email
@@ -17,7 +17,7 @@ export const useSignUpViewModel = (onSuccess: () => void) => {
     const [showCheck, setShowCheck] = useState(false)               // state to handle user notification text about nickname´s availability
 
     // Repository and UseCase instances (application)
-    const repo = new UserApiRepository()
+    const repo = new UserApiRepository(getAccessToken)
     const signUpUser = new SignUpUser(repo)
     const signInUser = new SignInUser(repo)
 
@@ -50,7 +50,7 @@ export const useSignUpViewModel = (onSuccess: () => void) => {
     const signIn = async () => {
         try {
             await signInUser.execute({ email, nickname })
-            login()
+            //login()
             onSuccess()
         } catch (e: any) {
             console.error("SignIn error:", e.message || e)

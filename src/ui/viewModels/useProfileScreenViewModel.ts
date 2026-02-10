@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { UserApiRepository } from "../../infrastructure/api/UserApiRepository";
+import { useAuth } from "../auth/useAuth";
 import { ChangeNickname } from "../../application/ChangeNickname";
 import Toast from "react-native-toast-message";
 //import { useAuth } from "../auth/useAuth";
@@ -8,7 +9,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 // Viewmodel hook for profile screen logic
 
 export const useProfileScreenViewModel = (onSuccess: () => void, onLogout: () => void) => {
- 
+
     //const { isLoggedIn, logout } = useAuth()
 
     const [nickname, setNickname] = useState("")
@@ -16,7 +17,8 @@ export const useProfileScreenViewModel = (onSuccess: () => void, onLogout: () =>
     const [showCheck, setShowCheck] = useState(false)               // state to handle user notification text about nickname´s availability
 
     // Repository and UseCase instances (application)
-    const repo = new UserApiRepository()
+    const { getAccessToken } = useAuth()
+    const repo = new UserApiRepository(getAccessToken)
     const changeNewNickname = new ChangeNickname(repo)
 
     // Function to check if nickname is available
@@ -53,7 +55,7 @@ export const useProfileScreenViewModel = (onSuccess: () => void, onLogout: () =>
 
     // Function for logout user
     // TODO: logout with auth0???
-    const logoutUser = async() => {
+    const logoutUser = async () => {
         try {
             await AsyncStorage.clear()
             //logout()
@@ -67,11 +69,11 @@ export const useProfileScreenViewModel = (onSuccess: () => void, onLogout: () =>
             setTimeout(() => {
                 onLogout()
             }, 1500)
-            
+
         } catch (e: any) {
             console.log('Logged out.')
         }
-        
+
 
     }
 
