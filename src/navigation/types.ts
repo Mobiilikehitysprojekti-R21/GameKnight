@@ -2,15 +2,20 @@ import { FindBoardGames } from "../application/FindBoardGames";
 
 export type RootStackParamList = {
   Home: undefined
-  Search: {findBoardGames: FindBoardGames}
+  Search: { findBoardGames: FindBoardGames }
   SignUp: undefined
   Profile: undefined
   GameCollection: undefined
   GameSessions: undefined
-  Friends: undefined
   NewGame: undefined
   MapScreen: undefined;
-  MapScreen: undefined;
+  Friends: undefined
+  PlayerSearch: {
+    onSelect: (user: { id?: string; name: string; type: "USER" | "GUEST" }) => void;
+  };
+  ScoreEntry: {
+  session: { boardGame: any; players: any[]; location: any; startedAt: Date;
 
-
+  };
+};
 };
