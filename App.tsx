@@ -15,6 +15,7 @@ import GameCollectionScreen from './src/ui/screens/GameCollectionScreen';
 import GameSessionsScreen from './src/ui/screens/GameSessionsScreen';
 import { NewGameScreen } from './src/ui/screens/NewGameScreen';
 import { MapScreen } from './src/ui/screens/MapScreen';
+import { PlayerSearchScreen } from "./src/ui/screens/PlayerSearchScreen";
 
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
@@ -44,6 +45,7 @@ export default function App() {
             <Stack.Screen name="GameSessions" component={GameSessionsScreen} />
             <Stack.Screen name="NewGame" component={NewGameScreen} />
             <Stack.Screen name="MapScreen" component={MapScreen} />
+            <Stack.Screen name="PlayerSearch" component={PlayerSearchScreen} />
 
           </Stack.Navigator>
         </SafeAreaView>

@@ -1,11 +1,15 @@
 import { useState, useEffect } from 'react';
-import { View, Text, TextInput, Pressable, FlatList, } from 'react-native';
+import { View, Text, TextInput, Pressable, FlatList, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { BoardGame } from '../../domain/entities/BoardGame';
 import { styles } from '../styles/NewGameStyles';
 import { useRoute } from '@react-navigation/native';
 import type { Location } from '../../domain/entities/Location';
 import { useFavoriteLocationsViewModel } from '../viewModels/useFavoriteLocationsViewModel';
+import { FriendsPicker } from '../components/players/FriendsPicker';
+import { useFriendsViewModel } from '../viewModels/useFriendsViewModel';
+import { GuestPlayerModal } from '../components/players/GuestPlayerModal';
+import { PlayersList } from '../components/players/PlayersList';
 
 
 /* Types */
@@ -28,6 +32,10 @@ export const NewGameScreen = () => {
   const [gameLocation, setGameLocation] = useState<Location | null>(null);;
   const [favoriteLocations, setFavoriteLocations] = useState<Location[]>([]);
   const { favorites, loading: favoritesLoading, } = useFavoriteLocationsViewModel();
+  const { friends } = useFriendsViewModel();
+  const availableFriends = friends.filter(f => !players.some(p => p.id === f.id));
+  const [guestModalOpen, setGuestModalOpen] = useState(false);
+
 
   /* Paluu kartalta */
   useEffect(() => {
@@ -50,14 +58,36 @@ export const NewGameScreen = () => {
   };
 
   const addRegisteredPlayer = (user: { id: string; name: string }) => {
-    setPlayers(prev => [
-      ...prev,
-      { id: user.id, name: user.name, type: "USER" },
-    ]);
+    setPlayers(prev => {
+      const exists = prev.some(p => p.id === user.id);
+      if (exists) return prev;
+
+      return [...prev, { id: user.id, name: user.name, type: "USER" }];
+    });
   };
 
   const removePlayer = (index: number) => {
     setPlayers(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const movePlayerUp = (index: number) => {
+    if (index === 0) return;
+
+    setPlayers(prev => {
+      const copy = [...prev];
+      [copy[index - 1], copy[index]] = [copy[index], copy[index - 1]];
+      return copy;
+    });
+  };
+
+  const movePlayerDown = (index: number) => {
+    setPlayers(prev => {
+      if (index >= prev.length - 1) return prev;
+
+      const copy = [...prev];
+      [copy[index], copy[index + 1]] = [copy[index + 1], copy[index]];
+      return copy;
+    });
   };
 
   /* Aloita peli */
@@ -74,14 +104,17 @@ export const NewGameScreen = () => {
 
     console.log("Starting game:", gameSessionDraft);
 
-    // navigation.navigate("GameSessions", { session: gameSessionDraft });
   };
 
   /* Pelin valinta */
 
   if (!selectedGame) {
     return (
-      <View style={styles.container}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={{ paddingBottom: 40 }}
+        showsVerticalScrollIndicator={false}
+      >
         <Text style={styles.title}>Valitse peli</Text>
 
         <Pressable onPress={() => navigation.navigate("Search")}>
@@ -94,16 +127,20 @@ export const NewGameScreen = () => {
           }
           style={{ marginTop: 16 }}
         >
-          <Text>Valitse Dummy</Text>
+          <Text style={styles.link}>Valitse Dummy</Text>
         </Pressable>
-      </View>
+      </ScrollView>
     );
   }
 
   /* Peli valittu */
 
   return (
-    <View style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={{ paddingBottom: 40 }}
+      showsVerticalScrollIndicator={false}
+    >
       <Text style={styles.title}>{selectedGame.name}</Text>
 
       <Pressable onPress={() => setSelectedGame(null)}>
@@ -113,46 +150,38 @@ export const NewGameScreen = () => {
       {/* Pelaajat */}
       <Text style={styles.sectionTitle}>Pelaajat</Text>
 
+      <PlayersList
+        players={players}
+        onMoveUp={movePlayerUp}
+        onMoveDown={movePlayerDown}
+        onRemove={removePlayer}
+      />
+
+      <FriendsPicker
+        friends={availableFriends}
+        onSelect={addRegisteredPlayer}
+      />
+
       <Pressable
+        style={styles.secondaryButton}
         onPress={() =>
-          addRegisteredPlayer({
-            id: "u1",
-            name: "Rekisteröity Käyttäjä",
+          navigation.navigate("PlayerSearch", {
+            onSelect: (user: { id?: string; name: string; type: "USER" | "GUEST" }) => {
+              setPlayers(prev => {
+                const exists = prev.some(p => p.id === user.id);
+                if (exists) return prev;
+                return [...prev, user];
+              });
+            },
           })
         }
       >
-        <Text style={styles.link}>
-          Lisää rekisteröitynyt pelaaja
+        <Text style={styles.secondaryButtonText}>
+          + Lisää pelaaja
         </Text>
       </Pressable>
 
-      <View style={styles.row}>
-        <TextInput
-          style={styles.input}
-          placeholder="Vieraspelaajan nimi"
-          value={playerName}
-          onChangeText={setPlayerName}
-        />
 
-        <Pressable onPress={addGuestPlayer} style={styles.addButton}>
-          <Text>Lisää vieras</Text>
-        </Pressable>
-      </View>
-
-      <FlatList
-        data={players}
-        keyExtractor={(_, index) => index.toString()}
-        renderItem={({ item, index }) => (
-          <View style={styles.playerRow}>
-            <Text>
-              {item.name} {item.type === "GUEST" && "(vieras)"}
-            </Text>
-            <Pressable onPress={() => removePlayer(index)}>
-              <Text>Poista</Text>
-            </Pressable>
-          </View>
-        )}
-      />
 
       {/* Sijainti */}
       <Text style={styles.sectionTitle}>Sijainti</Text>
@@ -228,6 +257,14 @@ export const NewGameScreen = () => {
           Aloita peli
         </Text>
       </Pressable>
-    </View>
+
+      <GuestPlayerModal
+        visible={guestModalOpen}
+        onClose={() => setGuestModalOpen(false)}
+        onAdd={(name: string) =>
+          setPlayers(prev => [...prev, { name, type: "GUEST" as const }])
+        }
+      />
+    </ScrollView>
   );
 };
