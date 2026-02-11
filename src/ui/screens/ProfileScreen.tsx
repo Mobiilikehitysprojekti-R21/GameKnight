@@ -17,10 +17,11 @@ import { useFriendsViewModel } from '../viewModels/useFriendsViewModel';
 import { useState, useEffect } from 'react';
 import { useProfileScreenViewModel } from '../viewModels/useProfileScreenViewModel';
 import { useAuthViewModel } from '../viewModels/useAuthViewModel';
-
+import { colors } from '../styles/theme'
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ModalComponent from '../components/Modal';
+import DCModalComponent from '../components/DoubleCheckModal';
 
 // Define navigation props for the screen
 type Props = NativeStackScreenProps<RootStackParamList, 'Profile'>;
@@ -48,6 +49,7 @@ export default function ProfileScreen({ navigation }: Props) {
 
   // state to control modal visibility
   const [modalVisible, setModalVisible] = useState(false);
+  const [dcModalVisible, setDcModalVisible] = useState(false)
 
   // state for user´s nickname
   const [userNick, setUserNick] = useState('');
@@ -99,7 +101,7 @@ export default function ProfileScreen({ navigation }: Props) {
           </View>
           <View style={styles.settings}>
             <Text style={styles.statText}>Poista tili</Text>
-            <TouchableOpacity style={styles.deleteButton} onPress={() => {}}>
+            <TouchableOpacity style={styles.deleteButton} onPress={() => setDcModalVisible(true)}>
               <Text style={styles.settingsButtonText}>Poista</Text>
             </TouchableOpacity>
           </View>
@@ -198,6 +200,14 @@ export default function ProfileScreen({ navigation }: Props) {
           trueText="Nickname on vapaa"
           falseText="Nickname on varattu"
         />
+        <DCModalComponent
+          modalVisible={dcModalVisible}
+          setModalVisible={() => setDcModalVisible(false)}
+          header="Haluatko varmasti poistaa tilisi?"
+          onPress={vm.deleteUser}
+          buttonText='Poista tili'
+        />
+
       </ScrollView>
 
       {/* TOAST MESSAGE */}

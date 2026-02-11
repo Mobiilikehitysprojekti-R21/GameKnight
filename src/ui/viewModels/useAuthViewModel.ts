@@ -5,6 +5,7 @@ import { AuthContext } from '../auth/AuthContext'
 import { UserApiRepository } from '../../infrastructure/api/UserApiRepository';
 import { SignUpUser } from '../../application/SignUpUser';
 
+
 // Completes auth session when returning from the browser
 WebBrowser.maybeCompleteAuthSession();
 
@@ -29,7 +30,6 @@ export function useAuthViewModel() {
   }
 
   const [errorMessage, setErrorMessage] = useState<string | undefined>()  // state for error messages
-  
   
   // redirect URI for OAuth callback
   //!! Expo Go uses a custom scheme for deep linking

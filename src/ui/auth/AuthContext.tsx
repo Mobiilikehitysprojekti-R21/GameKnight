@@ -28,7 +28,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const login = async (token: string, userData: any) => {
     setAccessToken(token)               // token is set
     setUser(userData)                   // user data is stored
-    //await SecureStore.setItemAsync("accessToken", token) EHKÄ REFRESH TOKEN MIELUMMIN? 
+    await SecureStore.setItemAsync("auth0_id", userData.sub)
+    await SecureStore.setItemAsync("nickname", userData.nickname)
+    await SecureStore.setItemAsync("email", userData.email)
     // TODO: userdatan säilöminen paikallisesti, elinkaari?
     setIsLoggedIn(true)                 // boolean is set true ( user is logged in )
   }
@@ -37,7 +39,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const logout = async () => {
     setAccessToken(null)    // token is set to null
     setUser(null)           // user data is set to null
-    //await SecureStore.deleteItemAsync("accessToken")
+    await SecureStore.deleteItemAsync("auth0_id")
+    await SecureStore.deleteItemAsync("nickname")
+    await SecureStore.deleteItemAsync("email")
     setIsLoggedIn(false)    // boolean is set false ( user has logged out )
   }
 

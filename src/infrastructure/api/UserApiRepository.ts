@@ -110,6 +110,23 @@ export class UserApiRepository implements UserRepository {
       throw e;
     }
   }
+
+  async deleteUser(auth0_id: string): Promise<void> {
+    if (this.getAccessToken) {
+      const res = await authFetch(this.getAccessToken, `${this.apiUrl}/users/${auth0_id}`, {
+        method: "DELETE"
+      })
+      if (!res.ok) {
+        const body = await res.text();
+        
+        console.error('delete user failed:', res.status, body);
+
+        throw new Error(`Delete user failed: ${res.status}`);
+      }
+      return
+    }
+  }
+
   async getFavoriteLocations(userId: number): Promise<Location[]> {
     if (this.getAccessToken) {
       const res = await authFetch(this.getAccessToken, `${this.apiUrl}/users/${userId}/favorite-locations`);

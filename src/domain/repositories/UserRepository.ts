@@ -10,5 +10,5 @@ export interface UserRepository {
     signUp(user: User): Promise<void>                       // Registers a new user
     signIn(user: User): Promise<void>                       // Sign in user
     changeNickname(nickname: string, auth0_id: string): Promise<void>         // change nickname
-
+    deleteUser(auth0_id: string): Promise<void>
 }

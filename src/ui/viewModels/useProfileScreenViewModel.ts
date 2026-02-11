@@ -2,9 +2,10 @@ import { useState } from "react";
 import { UserApiRepository } from "../../infrastructure/api/UserApiRepository";
 import { useAuth } from "../auth/useAuth";
 import { ChangeNickname } from "../../application/ChangeNickname";
+import { DeleteUser } from "../../application/DeleteUser";
 import Toast from "react-native-toast-message";
-//import { useAuth } from "../auth/useAuth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from 'expo-secure-store';
 
 // Viewmodel hook for profile screen logic
 
@@ -17,9 +18,10 @@ export const useProfileScreenViewModel = (onSuccess: () => void, onLogout: () =>
     const [showCheck, setShowCheck] = useState(false)               // state to handle user notification text about nickname´s availability
 
     // Repository and UseCase instances (application)
-    const { getAccessToken } = useAuth()
+    const { getAccessToken, logout } = useAuth()
     const repo = new UserApiRepository(getAccessToken)
     const changeNewNickname = new ChangeNickname(repo)
+    const deleteUserAccount = new DeleteUser(repo)
 
     // Function to check if nickname is available
     const checkNickname = async () => {
@@ -73,8 +75,33 @@ export const useProfileScreenViewModel = (onSuccess: () => void, onLogout: () =>
         } catch (e: any) {
             console.log('Logged out.')
         }
+    }
 
+    // Function to delete account
+    const deleteUser = async () => {
 
+        const id = await SecureStore.getItemAsync("auth0_id")
+        if (!id) {
+            alert('Virhe: Auth0 ID:tä ei löytynyt.')
+            return
+        }
+        try {
+            await deleteUserAccount.execute(id)
+            Toast.show({
+                type: 'success',
+                text1: 'Tilisi on poistettu',
+                text2: `Tervetuloa takaisin!`,
+                position: 'top',
+                visibilityTime: 3000,
+            })
+            setTimeout(() => {
+                onLogout()
+            }, 1500)
+            logout()
+            onSuccess()
+        } catch (e: any) {
+            console.log('User deleted.')
+        }
     }
 
     return {
@@ -85,7 +112,8 @@ export const useProfileScreenViewModel = (onSuccess: () => void, onLogout: () =>
         checkNickname,
         changeNick,
         //isLoggedIn,
-        logoutUser
+        logoutUser,
+        deleteUser
     }
 
 }
