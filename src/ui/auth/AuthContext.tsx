@@ -1,5 +1,7 @@
 import React, { createContext, useState } from 'react'
 import * as SecureStore from 'expo-secure-store';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Toast from "react-native-toast-message";
 
 type AuthContextType = {
   isLoggedIn: boolean // tells if user is logged in
@@ -28,9 +30,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const login = async (token: string, userData: any) => {
     setAccessToken(token)               // token is set
     setUser(userData)                   // user data is stored
+    // Store user data locally
     await SecureStore.setItemAsync("auth0_id", userData.sub)
     await SecureStore.setItemAsync("nickname", userData.nickname)
     await SecureStore.setItemAsync("email", userData.email)
+    // REFRESH TOKEN?
     // TODO: userdatan säilöminen paikallisesti, elinkaari?
     setIsLoggedIn(true)                 // boolean is set true ( user is logged in )
   }
@@ -39,10 +43,20 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const logout = async () => {
     setAccessToken(null)    // token is set to null
     setUser(null)           // user data is set to null
+    // Clear locally stored data
     await SecureStore.deleteItemAsync("auth0_id")
     await SecureStore.deleteItemAsync("nickname")
     await SecureStore.deleteItemAsync("email")
+    await AsyncStorage.clear()
     setIsLoggedIn(false)    // boolean is set false ( user has logged out )
+    // Inform user about logout
+    Toast.show({
+                    type: 'success',
+                    text1: 'Kirjauduit ulos.',
+                    text2: `Nähdään taas pian!`,
+                    position: 'top',
+                    visibilityTime: 3000,
+    })
   }
 
   const getAccessToken = async (): Promise<string | null> => {

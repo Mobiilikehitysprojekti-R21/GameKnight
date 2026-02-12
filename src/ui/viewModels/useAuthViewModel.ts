@@ -6,6 +6,7 @@ import { UserApiRepository } from '../../infrastructure/api/UserApiRepository';
 import { SignUpUser } from '../../application/SignUpUser';
 
 
+
 // Completes auth session when returning from the browser
 WebBrowser.maybeCompleteAuthSession();
 

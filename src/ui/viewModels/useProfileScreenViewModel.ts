@@ -11,8 +11,6 @@ import * as SecureStore from 'expo-secure-store';
 
 export const useProfileScreenViewModel = (onSuccess: () => void, onLogout: () => void) => {
 
-    //const { isLoggedIn, logout } = useAuth()
-
     const [nickname, setNickname] = useState("")
     const [isNickAvailable, setIsNickAvailable] = useState(false)   // state to track if the nickname is available
     const [showCheck, setShowCheck] = useState(false)               // state to handle user notification text about nickname´s availability
@@ -59,19 +57,10 @@ export const useProfileScreenViewModel = (onSuccess: () => void, onLogout: () =>
     // TODO: logout with auth0???
     const logoutUser = async () => {
         try {
-            await AsyncStorage.clear()
-            //logout()
-            Toast.show({
-                type: 'success',
-                text1: 'Kirjauduit ulos.',
-                text2: `Nähdään taas pian!`,
-                position: 'top',
-                visibilityTime: 3000,
-            })
+            logout()
             setTimeout(() => {
                 onLogout()
             }, 1500)
-
         } catch (e: any) {
             console.log('Logged out.')
         }
