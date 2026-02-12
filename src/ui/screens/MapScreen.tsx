@@ -69,6 +69,41 @@ export const MapScreen = () => {
         onChangeText={setFavoriteName}
       />
 
+      <Pressable
+        style={styles.secondaryButton}
+        onPress={async () => {
+          if (!favoriteName.trim()) return;
+
+          await addFavorite({
+            name: favoriteName,
+            latitude: location.latitude,
+            longitude: location.longitude,
+          });
+
+          setFavoriteName("");
+        }}
+      >
+        <Text style={styles.secondaryButtonText}>
+          Tallenna suosikiksi
+        </Text>
+      </Pressable>
+
+      <View style={styles.header}>
+        <Text style={styles.headerText}>
+          Valitse sijainti kartalta
+        </Text>
+
+        <TextInput
+          style={{
+            backgroundColor: "#1E293B",
+            color: "#F8FAFC",
+            padding: 8,
+            borderRadius: 8,
+            marginTop: 8,
+          }}
+        />
+      </View>
+
       <Pressable style={styles.confirmButton} onPress={confirmLocation}>
         <Text style={styles.confirmButtonText}>
           Valitse sijainti

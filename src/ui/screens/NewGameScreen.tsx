@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+
 import { View, Text, TextInput, Pressable, FlatList, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { BoardGame } from '../../domain/entities/BoardGame';
@@ -10,6 +11,7 @@ import { FriendsPicker } from '../components/players/FriendsPicker';
 import { useFriendsViewModel } from '../viewModels/useFriendsViewModel';
 import { GuestPlayerModal } from '../components/players/GuestPlayerModal';
 import { PlayersList } from '../components/players/PlayersList';
+
 
 
 /* Types */
@@ -35,7 +37,6 @@ export const NewGameScreen = () => {
   const { friends } = useFriendsViewModel();
   const availableFriends = friends.filter(f => !players.some(p => p.id === f.id));
   const [guestModalOpen, setGuestModalOpen] = useState(false);
-
 
   /* Paluu kartalta */
   useEffect(() => {
@@ -103,6 +104,8 @@ export const NewGameScreen = () => {
     };
 
     console.log("Starting game:", gameSessionDraft);
+
+    // navigation.navigate("GameSessions", { session: gameSessionDraft });
 
   };
 

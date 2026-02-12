@@ -1,12 +1,15 @@
 import { ScrollView, View, Text, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { styles } from '../styles/homeStyles';
-import SignUpScreen from './SignUpScreen';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-type Props = NativeStackScreenProps<any>
+import { useAuthViewModel } from '../viewModels/useAuthViewModel';
 
+type Props = NativeStackScreenProps<any>
 export default function HomeScreen({navigation}:Props) {
+  const { loggedIn, displayName, errorMessage, login, logout } =
+    useAuthViewModel();
+
   return (
     <ScrollView
       contentContainerStyle={styles.scrollContainer}
@@ -42,12 +45,25 @@ export default function HomeScreen({navigation}:Props) {
         <Text style={styles.sectionTitle}>Käyttäjä</Text>
 
         <Text style={styles.statText}>
-          Kirjaudu sisään tallentaaksesi pisteet ja tilastot
+          {loggedIn
+            ? `Kirjautunut käyttäjänä: ${displayName}`
+            : 'Kirjaudu sisään tallentaaksesi pisteet ja tilastot'}
         </Text>
 
-        <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('SignUp')}>
-          <Text style={styles.loginButtonText}>Kirjaudu / Luo käyttäjä</Text>
+        <TouchableOpacity
+          style={styles.loginButton}
+          onPress={loggedIn ? logout : login}
+        >
+          <Text style={styles.loginButtonText}>
+            {loggedIn ? 'Kirjaudu ulos' : 'Kirjaudu / Luo käyttäjä'}
+          </Text>
         </TouchableOpacity>
+
+        {errorMessage && (
+          <Text style={[styles.statText, { color: 'red', marginTop: 8 }]}>
+            {errorMessage}
+          </Text>
+        )}
       </View>
 
     <View style={styles.card}>

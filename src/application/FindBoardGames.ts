@@ -5,6 +5,6 @@ export class FindBoardGames {
 
   async execute(query: string) {
     if (!query.trim()) return [];
-    return this.repo.findByName(query);
+    return this.repo.findByName(query);   // search boardgames from api by name
   }
 }

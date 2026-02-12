@@ -1,9 +1,15 @@
 import { useState } from "react";
-import { UserApiRepository } from "../../infrastructure/UserApiRepository";
+import { UserApiRepository } from "../../infrastructure/api/UserApiRepository";
 import { SignUpUser } from "../../application/SignUpUser";
+import { SignInUser } from "../../application/SignInUser";
+import { useAuth } from "../auth/useAuth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const useSignUpViewModel = (onSuccess: () => void) => {
-    
+
+    const { login } = useAuth()
+
+
     const [email, setEmail] = useState("")                          // state for email
     //const [auth0_id, setAuth0_id] = useState("")                  // state for auth0 id
     const [nickname, setNickname] = useState("")                    // state for nickname
@@ -13,6 +19,7 @@ export const useSignUpViewModel = (onSuccess: () => void) => {
     // Repository and UseCase instances (application)
     const repo = new UserApiRepository()
     const signUpUser = new SignUpUser(repo)
+    const signInUser = new SignInUser(repo)
 
     // Function to check if nickname is available
     const checkNickname = async () => {
@@ -37,7 +44,19 @@ export const useSignUpViewModel = (onSuccess: () => void) => {
             // Notify user about error in sign up
             alert(`Virhe tilin luomisessa: ${error.message || error}`)
         }
-        
+
+    }
+
+    const signIn = async () => {
+        try {
+            await signInUser.execute({ email, nickname })
+            login()
+            onSuccess()
+        } catch (e: any) {
+            console.error("SignIn error:", e.message || e)
+            // Notify user about error in sign up
+            alert(`Virhe sisäänkirjautumisessa: ${e.message || e}`)
+        }
     }
 
     return {
@@ -48,6 +67,8 @@ export const useSignUpViewModel = (onSuccess: () => void) => {
         setEmail,
         setNickname,
         checkNickname,
-        submit
+        submit,
+        signIn,
+
     }
 }

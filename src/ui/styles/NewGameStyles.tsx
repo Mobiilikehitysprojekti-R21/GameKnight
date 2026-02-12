@@ -69,6 +69,16 @@ export const styles = StyleSheet.create({
     borderRadius: radius.sm,
   },
 
+  playerRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: colors.surface,
+    padding: spacing.sm,
+    borderRadius: radius.sm,
+    marginTop: spacing.xs,
+  },
+
   locationInput: {
     backgroundColor: colors.surface,
     color: colors.textPrimary,

@@ -6,12 +6,7 @@ export const styles = StyleSheet.create({
   scrollContainer: {
     padding: 24,
     paddingBottom: 40,
-    backgroundColor: colors.background,
-    minHeight: '100%'
-  },
-
-  swipeContainer: {
-    borderRadius: radius.lg,
+    backgroundColor: colors.background
   },
 
   header: {
@@ -19,51 +14,41 @@ export const styles = StyleSheet.create({
     marginBottom: 40,
   },
 
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-    paddingHorizontal: 16,
-    maxWidth: '100%'
-  },
-
   title: {
     fontSize: 36,
     fontWeight: 'bold',
     color: '#F8FAFC',
     letterSpacing: 1,
-    
   },
 
-  inputRow: {
-    flexDirection: 'row',
-    marginBottom: 16,
-    maxWidth: '100%'
-  },
-
-  input: {
-    flex: 1,
+    inputColumn: {
+    flexDirection: 'column',
+    paddingVertical: spacing.md,
+    borderRadius: radius.md,
+    alignItems: 'center',
+    marginBottom: spacing.sm,
+    borderColor: '#ccc',
     borderWidth: 1,
-    borderColor: '#eee',
-    backgroundColor: '#f9f9f9',
+    padding: 8,
+    backgroundColor: '#fff',
+  },
+
+    inputRow: {
+    flexDirection: 'row',
+    maxWidth: '100%',
+    alignItems: 'center'
+  },
+
+    input: {
+    borderWidth: 1,
+    textAlign: 'center',
+    borderColor: '#ccc',
+    backgroundColor: '#fff',
     borderRadius: 4,
     padding: 8,
-    marginRight: 8,
-    maxWidth: '100%',
-  },
-
-  rowBack: {
-    backgroundColor: colors.background,
-    flex: 1,
-    alignItems: 'flex-end',
-    justifyContent: 'center',
-    paddingRight: 20,
-  },
-
-  rowFront: {
-    backgroundColor: colors.surface,
-    borderBottomWidth: 1,
-    borderColor: colors.secondary,
-    padding: 16
+    marginBottom: 16,
+    fontSize: 16,
+    minWidth: 200
   },
 
   subtitle: {
@@ -72,7 +57,6 @@ export const styles = StyleSheet.create({
     color: '#CBD5E1',
     textAlign: 'center',
     maxWidth: 260,
-    paddingRight: 16,
   },
 
   card: {
@@ -99,7 +83,7 @@ export const styles = StyleSheet.create({
   statText: {
     color: colors.textSecondary,
     fontSize: 14,
-    marginBottom: 4,
+    marginBottom: 16,
   },
 
   settingsButton: {
@@ -108,21 +92,13 @@ export const styles = StyleSheet.create({
     paddingHorizontal: spacing.md,
     borderRadius: radius.md,
     alignItems: 'center',
+    marginBottom: spacing.sm,
   },
 
   settingsButtonText: {
     fontSize: 14,
     fontWeight: '600',
     color: '#000',
-  },
-
-   deleteButton: {
-    backgroundColor: colors.danger,
-    paddingVertical: spacing.md,
-    paddingHorizontal: spacing.md,
-    borderRadius: radius.md,
-    alignItems: 'center',
-    marginBottom: spacing.sm,
   },
 
   primaryButton: {
@@ -133,23 +109,17 @@ export const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
 
+     deleteButton: {
+    backgroundColor: colors.danger,
+    paddingVertical: spacing.md,
+    borderRadius: radius.md,
+    alignItems: 'center',
+    marginBottom: spacing.sm,
+  },
+
   buttonText: {
     fontSize: 16,
     fontWeight: '600',
     color: '#000',
-  },
-
-  modalOverlay: {
-    flex: 1,
-    justifyContent: 'center',
-    backgroundColor: colors.background,
-    margin: spacing.md
-  },
-
-  modalContainer: {
-    backgroundColor: colors.surface,
-    borderRadius: radius.lg,
-    padding: spacing.lg,
-    marginBottom: spacing.md,
   },
 });

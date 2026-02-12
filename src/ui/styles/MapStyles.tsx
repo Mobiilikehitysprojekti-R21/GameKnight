@@ -28,6 +28,20 @@ export const styles = StyleSheet.create({
         fontWeight: "500",
     },
 
+    confirmButton: {
+        position: "absolute",
+        bottom: spacing.xl,
+        alignSelf: "center",
+        backgroundColor: colors.primary,
+        paddingVertical: spacing.md,
+        paddingHorizontal: spacing.xl,
+        borderRadius: radius.md,
+    },
+
+    confirmButtonText: {
+        color: colors.textPrimary,
+        fontWeight: "600",
+    },
 
     input: {
         backgroundColor: colors.surface,
