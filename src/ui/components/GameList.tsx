@@ -63,7 +63,7 @@ const GameList = ({filteredItems, games, userNick, search, setSearch, setGames}:
                   <Button
                     title="Delete"
                     color="#d11a2a"
-                    onPress={()=>setGames(item.game_id)}
+                    onPress={()=>setGames(item.bgg_id)}
                   />
                 </View>
               )}

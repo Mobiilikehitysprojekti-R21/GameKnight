@@ -73,6 +73,9 @@ export default function GameCollectionScreen({ navigation }: Props) {
         onSelected={vm.chooseGame}
         isValueAvailable={vm.isGameChosen}
         onPress={vm.addGame}
+        showCheck={vm.isGameAdded}
+        trueText=''
+        falseText='Peli on lisätty kokoelmaasi'
         buttonText='Lisää'
       />
     </View>

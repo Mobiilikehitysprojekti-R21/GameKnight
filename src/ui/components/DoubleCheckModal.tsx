@@ -8,72 +8,72 @@ import { BoardGame } from '../../domain/entities/BoardGame';
 
 type ModalProps = {
 
-    modalVisible: boolean                       // boolean for modal visibility
-    setModalVisible: (value: boolean) => void   // function to set boolean for modal visibility
-    header: string                              // Components header
-    onPress: () => void                         // submit function
-    buttonText: string                          // button´s text
-  }
+  modalVisible: boolean                       // boolean for modal visibility
+  setModalVisible: (value: boolean) => void   // function to set boolean for modal visibility
+  header: string                              // Components header
+  onPress: () => void                         // submit function
+  buttonText: string                          // button´s text
+}
 
 const DCModalComponent = ({
-    modalVisible, 
-    setModalVisible, 
-    header,
-    onPress,
-    buttonText,
+  modalVisible,
+  setModalVisible,
+  header,
+  onPress,
+  buttonText,
 }: ModalProps) => {
 
   return (
     <Modal
       animationType="slide"
-      transparent={false}
+      transparent={true}
       visible={modalVisible}
       onRequestClose={() => setModalVisible(false)}
     >
-            <View style={styles.modalOverlay}>
-              <View style={styles.modalContainer}>
-                <Text style={styles.sectionTitle}>
-                  {header}
-                </Text>
-                <View style={styles.inputRow}>
-                  <TouchableOpacity
-                    style={[
-                      styles.deleteButton,
-                    ]}
-                    onPress={onPress}
-                  >
-                    <Text style={styles.statText}>{buttonText}</Text>
-                  </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.backButton}
-                  onPress={() => setModalVisible(false)}
-                >
-                  <Text style={styles.statText}>Peruuta</Text>
-                </TouchableOpacity>
-                </View>
-              </View>
-            </View>
-          </Modal>
+      <View style={styles.modalOverlay}>
+        <View style={styles.modalContainer}>
+          <Text style={styles.sectionTitle}>
+            {header}
+          </Text>
+          <View style={styles.inputRow}>
+            <TouchableOpacity
+              style={[
+                styles.deleteButton,
+              ]}
+              onPress={onPress}
+            >
+              <Text style={styles.statText}>{buttonText}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.backButton}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={styles.statText}>Peruuta</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
   )
 }
 
 const styles = StyleSheet.create({
 
-   modalOverlay: {
-      flex: 1,
-      justifyContent: 'center',
-      backgroundColor: colors.background,
-      margin: spacing.md
-    },
-  
-    modalContainer: {
-      backgroundColor: colors.surface,
-      borderRadius: radius.lg,
-      padding: spacing.lg,
-      marginBottom: spacing.md,
-    },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: 'rgba(15,23,42,0.9)',
+    margin: spacing.md
+  },
 
-    sectionTitle: {
+  modalContainer: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: spacing.lg,
+    marginBottom: spacing.md,
+  },
+
+  sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
     textAlign: 'center',
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
 
-    inputRow: {
+  inputRow: {
     flexDirection: 'row',
     marginBottom: 16,
     marginTop: 16,

@@ -18,7 +18,6 @@ import { useState, useEffect } from 'react';
 import { useProfileScreenViewModel } from '../viewModels/useProfileScreenViewModel';
 import { useAuthViewModel } from '../viewModels/useAuthViewModel';
 import { colors } from '../styles/theme'
-import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ModalComponent from '../components/Modal';
 import DCModalComponent from '../components/DoubleCheckModal';
@@ -210,8 +209,7 @@ export default function ProfileScreen({ navigation }: Props) {
 
       </ScrollView>
 
-      {/* TOAST MESSAGE */}
-      <Toast />
+      {/* TOAST is mounted globally in App.tsx */}
     </>
   );
 }

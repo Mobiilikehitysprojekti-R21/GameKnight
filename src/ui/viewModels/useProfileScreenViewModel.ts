@@ -100,7 +100,7 @@ export const useProfileScreenViewModel = (onSuccess: () => void, onLogout: () =>
             logout()
             onSuccess()
         } catch (e: any) {
-            console.log('User deleted.')
+            console.log('User delete failed.')
         }
     }
 
