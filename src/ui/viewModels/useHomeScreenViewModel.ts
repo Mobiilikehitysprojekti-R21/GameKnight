@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import * as SecureStore from 'expo-secure-store';
+import { useAuth } from '../auth/useAuth';
 
 export function useHomeScreenViewModel() {
   // Create states etc needed in view
@@ -13,6 +14,7 @@ export function useHomeScreenViewModel() {
     const [nickname, setNickname] = useState<string | null>(null)
     const [auth0_id, setAuth0_id] = useState<string | null>(null)
     const [email, setEmail] = useState<string | null>(null)
+    const { isLoggedIn } = useAuth()
   
     // Fetch user info from secure store on mount
     useEffect(() => {
@@ -26,7 +28,7 @@ export function useHomeScreenViewModel() {
         console.log("homeVM: ", nickname, auth0_id, email)
       }
       fetchUser()
-    }, [])
+    }, [isLoggedIn])
 
   return {
     nickname, auth0_id, email
