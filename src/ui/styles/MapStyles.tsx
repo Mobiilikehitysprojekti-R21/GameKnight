@@ -28,6 +28,28 @@ export const styles = StyleSheet.create({
         fontWeight: "500",
     },
 
+    confirmButton: {
+        backgroundColor: colors.primary,
+        padding: spacing.md,
+        borderRadius: radius.md,
+        alignItems: "center",
+    },
+
+    confirmButtonText: {
+        color: colors.textPrimary,
+        fontWeight: "600",
+    },
+
+    bottomContainer: {
+        position: "absolute",
+        bottom: spacing.lg,
+        left: spacing.md,
+        right: spacing.md,
+        backgroundColor: colors.surface,
+        padding: spacing.md,
+        borderRadius: radius.md,
+        gap: spacing.sm,
+    },
 
     input: {
         backgroundColor: colors.surface,
@@ -50,19 +72,6 @@ export const styles = StyleSheet.create({
     secondaryButtonText: {
         color: colors.textPrimary,
         fontWeight: "600",
-    },
-
-    confirmButton: {
-        backgroundColor: colors.primary,
-        padding: spacing.md,
-        borderRadius: radius.md,
-        margin: spacing.md,
-        alignItems: "center",
-    },
-    confirmButtonText: {
-        color: colors.textPrimary,
-        fontWeight: "700",
-        fontSize: 16,
     },
 
     webFallback: {

@@ -111,15 +111,6 @@ export const styles = StyleSheet.create({
     color: colors.textPrimary,
   },
 
-  playerRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
-  },
-
   playerName: {
     fontSize: 16,
     color: colors.textPrimary,

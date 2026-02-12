@@ -35,7 +35,7 @@ export const NewGameScreen = () => {
   const [favoriteLocations, setFavoriteLocations] = useState<Location[]>([]);
   const { favorites, loading: favoritesLoading, } = useFavoriteLocationsViewModel();
   const { friends } = useFriendsViewModel();
-  const availableFriends = friends.filter(f => !players.some(p => p.id === f.id));
+  const availableFriends = friends.filter(f => f.id && !players.some(p => p.id === f.id));
   const [guestModalOpen, setGuestModalOpen] = useState(false);
 
   /* Paluu kartalta */
@@ -93,19 +93,17 @@ export const NewGameScreen = () => {
 
   /* Aloita peli */
 
-  const startGame = () => {
-    if (!selectedGame || players.length === 0) return;
+const startGame = () => {
+  if (!selectedGame || players.length === 0) return;
 
-    const gameSessionDraft = {
-      boardGame: selectedGame,
-      players,
-      location: gameLocation,
-      startedAt: new Date(),
-    };
+  const gameSessionDraft = {
+    boardGame: selectedGame,
+    players,
+    location: gameLocation,
+    startedAt: new Date(),
+  };
 
     console.log("Starting game:", gameSessionDraft);
-
-    // navigation.navigate("GameSessions", { session: gameSessionDraft });
 
   };
 

@@ -7,6 +7,7 @@ import { TextInput } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import type { Location } from '../../domain/entities/Location';
 import { useFavoriteLocationsViewModel } from '../viewModels/useFavoriteLocationsViewModel';
+import { colors } from '../styles/theme';
 
 export const MapScreen = () => {
   const navigation = useNavigation<any>();
@@ -62,18 +63,24 @@ export const MapScreen = () => {
         />
       </MapView>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Nimeä sijainti (esim. Koti)"
-        value={favoriteName}
-        onChangeText={setFavoriteName}
-      />
+      <View style={styles.bottomContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Nimeä sijainti"
+          placeholderTextColor={colors.textSecondary}
+          value={favoriteName}
+          onChangeText={setFavoriteName}
+        />
 
-      <Pressable style={styles.confirmButton} onPress={confirmLocation}>
-        <Text style={styles.confirmButtonText}>
-          Valitse sijainti
-        </Text>
-      </Pressable>
+        <Pressable
+          style={styles.confirmButton}
+          onPress={confirmLocation}
+        >
+          <Text style={styles.confirmButtonText}>
+            Valitse sijainti
+          </Text>
+        </Pressable>
+      </View>
     </View>
   );
 };

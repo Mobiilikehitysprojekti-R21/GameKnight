@@ -10,6 +10,7 @@ export type RootStackParamList = {
   NewGame: undefined
   MapScreen: undefined;
   Friends: undefined
+  Friends: undefined
   PlayerSearch: {
     onSelect: (user: { id?: string; name: string; type: "USER" | "GUEST" }) => void;
   };

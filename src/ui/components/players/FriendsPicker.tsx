@@ -1,10 +1,8 @@
 import { View, Text, Pressable } from 'react-native';
 import { styles } from '../../styles/NewGameStyles';
 
-type Friend = {
-    id: string;
-    nickname: string;
-};
+import type { Friend } from "../../../domain/entities/Friend";
+
 
 type Props = {
     friends: Friend[];
