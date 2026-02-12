@@ -45,7 +45,7 @@ export class BoardGameApiRepository implements BoardGameRepository {
      try {
       const res = await authFetch(
       this.getAccessToken,
-      `${this.apiUrl}/boardgames/getUserGameCollection/${user_id}`)
+      `${this.apiUrl}/boardgames/getUserGameCollection/${encodeURIComponent(user_id)}`)
       console.log('etsitään käyttäjän pelejä')
       return (await res.json()) as BoardGame[]
     } catch (e) {
@@ -54,9 +54,9 @@ export class BoardGameApiRepository implements BoardGameRepository {
     }
   }
 
-  async deleteBoardGame(bgg_id: number): Promise<void> {
+  async deleteBoardGame(bgg_id: number, auth0_id: string): Promise<void> {
     if (this.getAccessToken) {
-      const res = await authFetch(this.getAccessToken, `${this.apiUrl}/boardgames/${bgg_id}`, {
+      const res = await authFetch(this.getAccessToken, `${this.apiUrl}/boardgames/${encodeURIComponent(auth0_id)}/${bgg_id}`, {
         method: "DELETE"
       })
       if (!res.ok) {

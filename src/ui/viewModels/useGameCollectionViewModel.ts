@@ -101,7 +101,7 @@ export function useGameCollectionViewModel(repo: BoardGameApiRepository) {
     }, [games])
 
     // Remove a game from local state after deletion
-    const handleDeleteGame = async (gameId: number) => {
+    const handleDeleteGame = async (gameId: number, auth0_id: string) => {
         /*const newGames = games.filter(g => g.game_id !== gameId)
         setGames(newGames)*/
         if (!gameId) {
@@ -109,7 +109,7 @@ export function useGameCollectionViewModel(repo: BoardGameApiRepository) {
             return
         }
         try {
-            await deleteBoardGame.execute(gameId)
+            await deleteBoardGame.execute(gameId, auth0_id)
                 Toast.show({
                     type: 'success',
                     text1: 'Peli poistettu',
@@ -178,5 +178,6 @@ export function useGameCollectionViewModel(repo: BoardGameApiRepository) {
         chooseGame,
         isGameChosen,
         isGameAdded,
+        auth0_id
     }
 }

@@ -51,6 +51,7 @@ export default function GameCollectionScreen({ navigation }: Props) {
         search={search}
         setSearch={setSearch}
         setGames={vm.handleDeleteGame}
+        userid={String(vm.auth0_id)}
       />
       <View style={styles.card}>
 
