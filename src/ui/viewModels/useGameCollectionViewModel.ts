@@ -7,6 +7,7 @@ import { AddGameToCollection } from "../../application/AddGameToCollection";
 import { GetGameCollection } from "../../application/GetGameCollection";
 import { DeleteBoardGame } from "../../application/DeleteBoardGame";
 import Toast from "react-native-toast-message";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Viewmodel hook for game collection logic
 
@@ -43,6 +44,11 @@ export function useGameCollectionViewModel(repo: BoardGameApiRepository) {
     useEffect(() => {
         loadGames()
     }, [])
+
+    // Games from local storage
+    useEffect(() => {
+
+    })
 
     // Remove a game from local state after deletion
     const handleDeleteGame = async (gameId: number) => {

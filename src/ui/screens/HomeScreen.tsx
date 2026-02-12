@@ -31,7 +31,7 @@ export default function HomeScreen({navigation}:Props) {
         <Text style={styles.statText}>
           Mukava nähdä taas ❤️
         </Text>
-        </View>) : ''}
+        </View>) : <></>}
 
       {/* PÄÄTOIMINNOT */}
       <View style={styles.card}>

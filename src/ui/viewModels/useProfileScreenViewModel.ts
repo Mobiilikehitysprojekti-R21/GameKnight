@@ -5,7 +5,6 @@ import { ChangeNickname } from "../../application/ChangeNickname";
 import { DeleteUser } from "../../application/DeleteUser";
 import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as SecureStore from 'expo-secure-store';
 
 // Viewmodel hook for profile screen logic
 
@@ -69,7 +68,7 @@ export const useProfileScreenViewModel = (onSuccess: () => void, onLogout: () =>
     // Function to delete account
     const deleteUser = async () => {
 
-        const id = await SecureStore.getItemAsync("auth0_id")
+        const id = await AsyncStorage.getItem("auth0_id")
         if (!id) {
             alert('Virhe: Auth0 ID:tä ei löytynyt.')
             return

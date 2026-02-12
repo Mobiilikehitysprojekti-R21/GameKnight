@@ -3,7 +3,6 @@ import * as AuthSession from 'expo-auth-session';
 import * as WebBrowser from 'expo-web-browser';
 import { AuthContext } from '../auth/AuthContext'
 import { UserApiRepository } from '../../infrastructure/api/UserApiRepository';
-import { SignUpUser } from '../../application/SignUpUser';
 
 
 
