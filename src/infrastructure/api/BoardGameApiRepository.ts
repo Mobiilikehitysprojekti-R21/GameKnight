@@ -27,7 +27,7 @@ export class BoardGameApiRepository implements BoardGameRepository {
   }
 
   // Function to add game to user´s game collection
-  async addGameToCollection(user_id: number, bgg_id: BoardGame['bgg_id']): Promise<void> {
+  async addGameToCollection(user_id: string, bgg_id: BoardGame['bgg_id']): Promise<void> {
 
     try {
       const res = await axios.post(`${this.apiUrl}/boardgames/addToUser`, {userId: user_id, game: bgg_id})
@@ -40,7 +40,7 @@ export class BoardGameApiRepository implements BoardGameRepository {
   }
 
   // Function to fetch user´s game collection
-  async getGameCollection(user_id: number): Promise<BoardGame[]> {
+  async getGameCollection(user_id: string): Promise<BoardGame[]> {
     
      try {
       const res = await authFetch(
