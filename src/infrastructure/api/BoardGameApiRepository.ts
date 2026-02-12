@@ -1,5 +1,4 @@
 import { BoardGameRepository } from '../../domain/repositories/BoardGameRepository';
-import axios from 'axios';
 import Constants from 'expo-constants';
 import { BoardGame } from '../../domain/entities/BoardGame';
 
@@ -30,8 +29,20 @@ export class BoardGameApiRepository implements BoardGameRepository {
   async addGameToCollection(user_id: string, bgg_id: BoardGame['bgg_id']): Promise<void> {
 
     try {
-      const res = await axios.post(`${this.apiUrl}/boardgames/addToUser`, {userId: user_id, game: bgg_id})
-      console.log(res.data)  // debugging...
+      const res = await authFetch(
+        this.getAccessToken, `${this.apiUrl}/boardgames/addToUser`, {
+        method: "POST",
+        body: JSON.stringify({ userId: user_id, game: bgg_id })
+      })
+
+      if (!res.ok) {
+        const text = await res.text()
+        console.error('Add game failed:', res.status, text)
+        throw new Error(`Add game failed: ${res.status}`)
+      }
+
+      const data = await res.json()
+      console.log('Added game to collection:', data)
     } catch (e: any) {
       console.error("Error adding game to collection:", e.response?.data)
       console.error("Status:", e.response?.status)
