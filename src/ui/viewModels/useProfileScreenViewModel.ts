@@ -1,23 +1,24 @@
 import { useState } from "react";
 import { UserApiRepository } from "../../infrastructure/api/UserApiRepository";
+import { useAuth } from "../auth/useAuth";
 import { ChangeNickname } from "../../application/ChangeNickname";
+import { DeleteUser } from "../../application/DeleteUser";
 import Toast from "react-native-toast-message";
-//import { useAuth } from "../auth/useAuth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Viewmodel hook for profile screen logic
 
 export const useProfileScreenViewModel = (onSuccess: () => void, onLogout: () => void) => {
- 
-    //const { isLoggedIn, logout } = useAuth()
 
     const [nickname, setNickname] = useState("")
     const [isNickAvailable, setIsNickAvailable] = useState(false)   // state to track if the nickname is available
     const [showCheck, setShowCheck] = useState(false)               // state to handle user notification text about nickname´s availability
 
     // Repository and UseCase instances (application)
-    const repo = new UserApiRepository()
+    const { getAccessToken, logout } = useAuth()
+    const repo = new UserApiRepository(getAccessToken)
     const changeNewNickname = new ChangeNickname(repo)
+    const deleteUserAccount = new DeleteUser(repo)
 
     // Function to check if nickname is available
     const checkNickname = async () => {
@@ -53,26 +54,42 @@ export const useProfileScreenViewModel = (onSuccess: () => void, onLogout: () =>
 
     // Function for logout user
     // TODO: logout with auth0???
-    const logoutUser = async() => {
+    const logoutUser = async () => {
         try {
-            await AsyncStorage.clear()
-            //logout()
+            logout()
+            setTimeout(() => {
+                onLogout()
+            }, 1500)
+        } catch (e: any) {
+            console.log('Logged out.')
+        }
+    }
+
+    // Function to delete account
+    const deleteUser = async () => {
+
+        const id = await AsyncStorage.getItem("auth0_id")
+        if (!id) {
+            alert('Virhe: Auth0 ID:tä ei löytynyt.')
+            return
+        }
+        try {
+            await deleteUserAccount.execute(id)
             Toast.show({
                 type: 'success',
-                text1: 'Kirjauduit ulos.',
-                text2: `Nähdään taas pian!`,
+                text1: 'Tilisi on poistettu',
+                text2: `Tervetuloa takaisin!`,
                 position: 'top',
                 visibilityTime: 3000,
             })
             setTimeout(() => {
                 onLogout()
             }, 1500)
-            
+            logout()
+            onSuccess()
         } catch (e: any) {
-            console.log('Logged out.')
+            console.log('User delete failed.')
         }
-        
-
     }
 
     return {
@@ -83,7 +100,8 @@ export const useProfileScreenViewModel = (onSuccess: () => void, onLogout: () =>
         checkNickname,
         changeNick,
         //isLoggedIn,
-        logoutUser
+        logoutUser,
+        deleteUser
     }
 
 }

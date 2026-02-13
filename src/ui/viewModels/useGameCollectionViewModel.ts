@@ -5,6 +5,9 @@ import { BoardGameApiRepository } from "../../infrastructure/api/BoardGameApiRep
 import { FindBoardGames } from "../../application/FindBoardGames";
 import { AddGameToCollection } from "../../application/AddGameToCollection";
 import { GetGameCollection } from "../../application/GetGameCollection";
+import { DeleteBoardGame } from "../../application/DeleteBoardGame";
+import Toast from "react-native-toast-message";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Viewmodel hook for game collection logic
 
@@ -23,6 +26,7 @@ export function useGameCollectionViewModel(repo: BoardGameApiRepository) {
     const findBoardgames = new FindBoardGames(repo)
     const addGameToCollection = new AddGameToCollection(repo)
     const getGameCollection = new GetGameCollection(repo)
+    const deleteBoardGame = new DeleteBoardGame(repo)
 
     // Load user´s game collection, set loading state
     const loadGames = async () => {
@@ -41,11 +45,34 @@ export function useGameCollectionViewModel(repo: BoardGameApiRepository) {
         loadGames()
     }, [])
 
+    // Games from local storage
+    useEffect(() => {
+
+    })
+
     // Remove a game from local state after deletion
-    // TODO: remove game from database
-    const handleDeleteGame = (gameId: number) => {
-        const newGames = games.filter(g => g.game_id !== gameId)
-        setGames(newGames)
+    const handleDeleteGame = async (gameId: number) => {
+        /*const newGames = games.filter(g => g.game_id !== gameId)
+        setGames(newGames)*/
+        if (!gameId) {
+            alert('Virhe: pelin id:ta ei löytynyt.')
+            return
+        }
+        try {
+            await deleteBoardGame.execute(gameId)
+                Toast.show({
+                    type: 'success',
+                    text1: 'Peli poistettu',
+                    text2: `Peli poistettiin kokoelmastasi.`,
+                    position: 'top',
+                    visibilityTime: 3000,
+                })
+            await loadGames()
+            
+        } catch (e: any) {
+            console.error("Error deleting game from collection:", e)
+        }
+
     }
 
     // Search games by name
@@ -66,6 +93,17 @@ export function useGameCollectionViewModel(repo: BoardGameApiRepository) {
         try {
             await addGameToCollection.execute(userID, Number(bggId))
             await loadGames()   // update game collection
+            setIsGameAdded(true) // signal that the game was added successfully
+            setIsGameChosen(false)
+            setBggId(undefined)
+            setSearchedGame(undefined)
+            Toast.show({
+                    type: 'success',
+                    text1: 'Peli lisätty',
+                    text2: `Peli lisättiin kokoelmaasi.`,
+                    position: 'top',
+                    visibilityTime: 3000,
+                })
         } catch (e: any) {
             console.error("Error adding the game:", e.message || e)
             alert('Virhe pelin lisäämisessä')
@@ -85,6 +123,6 @@ export function useGameCollectionViewModel(repo: BoardGameApiRepository) {
         addGame,
         chooseGame,
         isGameChosen,
-        isGameAdded
+        isGameAdded,
     }
 }

@@ -2,6 +2,7 @@ import { SwipeListView } from "react-native-swipe-list-view"
 import { View, Text, TextInput, Button } from "react-native"
 import { BoardGame } from "../../domain/entities/BoardGame"
 import { styles } from "../styles/gameCollectionStyles"
+import { colors } from "../styles/theme"
 
 // Component for list of games
 
@@ -61,9 +62,14 @@ const GameList = ({filteredItems, games, userNick, search, setSearch, setGames}:
               renderHiddenItem={({ item }) => (
                 <View style={styles.rowBack}>
                   <Button
+                    title="Aloita peli"
+                    color={colors.primary}
+                    onPress={()=>{}}
+                  />
+                  <Button
                     title="Delete"
                     color="#d11a2a"
-                    onPress={()=>setGames(item.game_id)}
+                    onPress={()=>setGames(item.bgg_id)}
                   />
                 </View>
               )}

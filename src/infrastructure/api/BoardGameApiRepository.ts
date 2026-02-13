@@ -53,4 +53,21 @@ export class BoardGameApiRepository implements BoardGameRepository {
       throw e
     }
   }
+
+  async deleteBoardGame(bgg_id: number): Promise<void> {
+    if (this.getAccessToken) {
+      const res = await authFetch(this.getAccessToken, `${this.apiUrl}/boardgames/${bgg_id}`, {
+        method: "DELETE"
+      })
+      if (!res.ok) {
+        const body = await res.text();
+        
+        console.error('delete game from collection failed:', res.status, body);
+
+        throw new Error(`Delete game from collection failed: ${res.status}`);
+      }
+      return
+    }
+  }
+
 }

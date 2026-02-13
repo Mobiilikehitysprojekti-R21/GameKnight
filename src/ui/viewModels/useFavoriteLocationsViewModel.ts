@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { UserApiRepository } from "../../infrastructure/api/UserApiRepository";
 import type { Location } from "../../domain/entities/Location";
-
-const repo = new UserApiRepository();
+import { useAuth } from "../auth/useAuth";
 
 // dummy käyttäjä 
 const USER_ID = 1;
 
 export const useFavoriteLocationsViewModel = () => {
+  const { getAccessToken } = useAuth();
+  const repo = new UserApiRepository(getAccessToken);
   const [favorites, setFavorites] = useState<Location[]>([]);
   const [loading, setLoading] = useState(false);
 

@@ -11,7 +11,7 @@ export class SignUpUser {
 
     // Execute sign up process
     async execute(user: User) {
-        validateUser(user)              // Check if inputs are filled correctly -> validates user entity
+        //validateUser(user)              // Check if inputs are filled correctly -> validates user entity
         await this.repo.signUp(user)    // sign up user, save user in the database
     }
 }

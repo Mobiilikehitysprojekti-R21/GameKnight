@@ -9,7 +9,8 @@ const config = {
     newArchEnabled: true,
     plugins: [
       [
-        "expo-web-browser"
+        "expo-web-browser",
+        "expo-secure-store",
       ]
     ],
     splash: {

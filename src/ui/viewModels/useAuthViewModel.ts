@@ -2,6 +2,9 @@ import { useContext, useEffect, useState } from 'react';
 import * as AuthSession from 'expo-auth-session';
 import * as WebBrowser from 'expo-web-browser';
 import { AuthContext } from '../auth/AuthContext'
+import { UserApiRepository } from '../../infrastructure/api/UserApiRepository';
+
+
 
 // Completes auth session when returning from the browser
 WebBrowser.maybeCompleteAuthSession();
@@ -27,7 +30,6 @@ export function useAuthViewModel() {
   }
 
   const [errorMessage, setErrorMessage] = useState<string | undefined>()  // state for error messages
-  
   
   // redirect URI for OAuth callback
   //!! Expo Go uses a custom scheme for deep linking
@@ -82,8 +84,26 @@ export function useAuthViewModel() {
         },
       })
       .then((res) => res.json())
-      .then((userData) => {
+      .then(async (userData) => {
         auth.login(token, userData) // store token and user data in authContext
+        // Pass the new token to the repository so the signup request runs reliably
+        const userRepo = new UserApiRepository(async () => token)
+
+        // Signup and save user in the db
+        // If user is already in the db, continue with signin
+        try {
+          await userRepo.signUp({ auth0_id: userData.sub, email: userData.email, nickname: userData.nickname ?? '' })
+        } catch (error: any) {
+            
+            if (error === 409) {
+                console.warn('User already exists (409), continuing login');
+                alert(`Käyttäjä on jo luotu, kirjaudutaan sisään`)
+                return;
+            }
+            console.error("SignUp error:", error.message || error)
+            alert(`Virhe tilin luomisessa: ${error.message || error}`)
+        }
+        console.log("USER: ", userData) // debugging...
       })
     }
   })

@@ -2,13 +2,15 @@ import { ScrollView, View, Text, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { styles } from '../styles/homeStyles';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-
 import { useAuthViewModel } from '../viewModels/useAuthViewModel';
+import { useHomeScreenViewModel } from '../viewModels/useHomeScreenViewModel';
 
 type Props = NativeStackScreenProps<any>
 export default function HomeScreen({navigation}:Props) {
   const { loggedIn, displayName, errorMessage, login, logout } =
     useAuthViewModel();
+  
+  const vm = useHomeScreenViewModel()
 
   return (
     <ScrollView
@@ -20,6 +22,16 @@ export default function HomeScreen({navigation}:Props) {
         <Text style={styles.title}>GameKnight</Text>
         <Text style={styles.subtitle}>Remember every game night!</Text>
       </View>
+
+      {/*TERVEHDYS*/}
+      {loggedIn ? 
+      (<View style={styles.card}>
+        <Text style={styles.sectionTitle}>{`Hei, ${vm.nickname}!`}</Text>
+
+        <Text style={styles.statText}>
+          Mukava nähdä taas ❤️
+        </Text>
+        </View>) : <></>}
 
       {/* PÄÄTOIMINNOT */}
       <View style={styles.card}>
@@ -46,7 +58,7 @@ export default function HomeScreen({navigation}:Props) {
 
         <Text style={styles.statText}>
           {loggedIn
-            ? `Kirjautunut käyttäjänä: ${displayName}`
+            ? `Kirjautunut käyttäjänä: ${vm.nickname}`
             : 'Kirjaudu sisään tallentaaksesi pisteet ja tilastot'}
         </Text>
 
