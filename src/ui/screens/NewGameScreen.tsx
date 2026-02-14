@@ -32,8 +32,7 @@ export const NewGameScreen = () => {
   const [playerName, setPlayerName] = useState("");
   const [players, setPlayers] = useState<GamePlayer[]>([]);
   const [gameLocation, setGameLocation] = useState<Location | null>(null);;
-  const [favoriteLocations, setFavoriteLocations] = useState<Location[]>([]);
-  const { favorites, loading: favoritesLoading, } = useFavoriteLocationsViewModel();
+  const { favorites, addFavorite, loading: favoritesLoading } = useFavoriteLocationsViewModel();
   const { friends } = useFriendsViewModel();
   const availableFriends = friends.filter(f => f.id && !players.some(p => p.id === f.id));
   const [guestModalOpen, setGuestModalOpen] = useState(false);
@@ -93,15 +92,15 @@ export const NewGameScreen = () => {
 
   /* Aloita peli */
 
-const startGame = () => {
-  if (!selectedGame || players.length === 0) return;
+  const startGame = () => {
+    if (!selectedGame || players.length === 0) return;
 
-  const gameSessionDraft = {
-    boardGame: selectedGame,
-    players,
-    location: gameLocation,
-    startedAt: new Date(),
-  };
+    const gameSessionDraft = {
+      boardGame: selectedGame,
+      players,
+      location: gameLocation,
+      startedAt: new Date(),
+    };
 
     console.log("Starting game:", gameSessionDraft);
 
@@ -124,7 +123,12 @@ const startGame = () => {
 
         <Pressable
           onPress={() =>
-            setSelectedGame({ id: "1", name: "Dummy" } as BoardGame)
+            setSelectedGame({
+              name: "Dummy",
+              game_id: 1,
+              bgg_id: 0,
+              is_expansion: false,
+            })
           }
           style={{ marginTop: 16 }}
         >
@@ -191,7 +195,7 @@ const startGame = () => {
         onPickLocation: (location: Location) => {
           setGameLocation(location);
         },
-        favoriteLocations,
+
       })}>
         {/* Suosikkisijainnit */}
         {favorites.length > 0 && (
@@ -224,8 +228,8 @@ const startGame = () => {
 
       {gameLocation && (
         <Pressable
-          onPress={() => {
-            const exists = favoriteLocations.some(
+          onPress={async () => {
+            const exists = favorites.some(
               (l) =>
                 l.latitude === gameLocation.latitude &&
                 l.longitude === gameLocation.longitude
@@ -233,21 +237,18 @@ const startGame = () => {
 
             if (exists) return;
 
-            setFavoriteLocations((prev) => [...prev, gameLocation]);
+            await addFavorite({
+              name: gameLocation.label,
+              latitude: gameLocation.latitude,
+              longitude: gameLocation.longitude,
+            });
+
           }}
         >
           <Text style={styles.link}>Tallenna sijainti suosikiksi</Text>
         </Pressable>
       )}
 
-      {favoriteLocations.map((loc) => (
-        <Pressable
-          key={`${loc.latitude}-${loc.longitude}`}
-          onPress={() => setGameLocation(loc)}
-        >
-          <Text style={styles.link}>📍 {loc.label}</Text>
-        </Pressable>
-      ))}
 
       {/* Aloita peli */}
       <Pressable

@@ -86,4 +86,14 @@ export const styles = StyleSheet.create({
         color: colors.textSecondary,
         textAlign: "center",
     },
+
+    refreshButton: {
+        position: "absolute",
+        top: 60,
+        right: 20,
+        backgroundColor: "#000",
+        padding: 10,
+        borderRadius: 8,
+    }
+
 });
