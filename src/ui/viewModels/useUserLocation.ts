@@ -17,16 +17,22 @@ export const useUserLocation = () => {
       setError(null);
 
       const { status } =
-        await Location.requestForegroundPermissionsAsync();
+        await Location.getForegroundPermissionsAsync();
 
       if (status !== "granted") {
-        setError("Location permission denied");
-        setLoading(false);
-        return;
+        const request =
+          await Location.requestForegroundPermissionsAsync();
+
+        if (request.status !== "granted") {
+          setError("Location permission denied");
+          return;
+        }
       }
 
       const userLocation =
-        await Location.getCurrentPositionAsync({});
+        await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.High,
+        });
 
       setLocation({
         latitude: userLocation.coords.latitude,
@@ -35,7 +41,7 @@ export const useUserLocation = () => {
     } catch (err) {
       setError("Failed to fetch location");
     } finally {
-      setLoading(false);
+      setLoading(false); 
     }
   }, []);
 

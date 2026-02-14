@@ -4,13 +4,14 @@ import { View, Text, TextInput, Pressable, FlatList, ScrollView } from 'react-na
 import { useNavigation } from '@react-navigation/native';
 import { BoardGame } from '../../domain/entities/BoardGame';
 import { styles } from '../styles/NewGameStyles';
-import { useRoute } from '@react-navigation/native';
 import type { Location } from '../../domain/entities/Location';
 import { useFavoriteLocationsViewModel } from '../viewModels/useFavoriteLocationsViewModel';
 import { FriendsPicker } from '../components/players/FriendsPicker';
 import { useFriendsViewModel } from '../viewModels/useFriendsViewModel';
 import { GuestPlayerModal } from '../components/players/GuestPlayerModal';
 import { PlayersList } from '../components/players/PlayersList';
+import { useGameSessionDraftViewModel } from '../viewModels/useGameSessionDraftViewModel';
+
 
 
 
@@ -25,24 +26,14 @@ type GamePlayer = {
 /* Screen */
 
 export const NewGameScreen = () => {
-  const navigation = useNavigation<any>();
-  const route = useRoute<any>();
 
-  const [selectedGame, setSelectedGame] = useState<BoardGame | null>(null);
+  const navigation = useNavigation<any>();
   const [playerName, setPlayerName] = useState("");
-  const [players, setPlayers] = useState<GamePlayer[]>([]);
-  const [gameLocation, setGameLocation] = useState<Location | null>(null);;
   const { favorites, addFavorite, loading: favoritesLoading } = useFavoriteLocationsViewModel();
   const { friends } = useFriendsViewModel();
-  const availableFriends = friends.filter(f => f.id && !players.some(p => p.id === f.id));
   const [guestModalOpen, setGuestModalOpen] = useState(false);
-
-  /* Paluu kartalta */
-  useEffect(() => {
-    if (route.params?.pickedLocation) {
-      setGameLocation(route.params.pickedLocation);
-    }
-  }, [route.params]);
+  const { selectedGame, players, location: gameLocation, setSelectedGame, setPlayers, setLocation, } = useGameSessionDraftViewModel();
+  const availableFriends = friends.filter(f => f.id && !players.some(p => p.id === f.id));
 
   /* Pelaajat */
 
@@ -53,6 +44,7 @@ export const NewGameScreen = () => {
       ...prev,
       { name: playerName.trim(), type: "GUEST" },
     ]);
+
 
     setPlayerName("");
   };
@@ -66,14 +58,15 @@ export const NewGameScreen = () => {
     });
   };
 
+
   const removePlayer = (index: number) => {
     setPlayers(prev => prev.filter((_, i) => i !== index));
   };
 
   const movePlayerUp = (index: number) => {
-    if (index === 0) return;
-
     setPlayers(prev => {
+      if (index === 0) return prev;
+
       const copy = [...prev];
       [copy[index - 1], copy[index]] = [copy[index], copy[index - 1]];
       return copy;
@@ -90,183 +83,189 @@ export const NewGameScreen = () => {
     });
   };
 
-  /* Aloita peli */
+/* Aloita peli */
 
-  const startGame = () => {
-    if (!selectedGame || players.length === 0) return;
+const startGame = () => {
+  if (!selectedGame || players.length === 0) return;
 
-    const gameSessionDraft = {
-      boardGame: selectedGame,
-      players,
-      location: gameLocation,
-      startedAt: new Date(),
-    };
-
-    console.log("Starting game:", gameSessionDraft);
-
+  const gameSessionDraft = {
+    boardGame: selectedGame,
+    players,
+    location: gameLocation,
+    startedAt: new Date(),
   };
 
-  /* Pelin valinta */
+  console.log("Starting game:", gameSessionDraft);
 
-  if (!selectedGame) {
-    return (
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={{ paddingBottom: 40 }}
-        showsVerticalScrollIndicator={false}
-      >
-        <Text style={styles.title}>Valitse peli</Text>
+  navigation.navigate("ScoreEntry", {
+    sessionDraft: gameSessionDraft,
+  });
+};
 
-        <Pressable onPress={() => navigation.navigate("Search")}>
-          <Text style={styles.link}>Hae peli</Text>
-        </Pressable>
+/* Pelin valinta */
 
-        <Pressable
-          onPress={() =>
-            setSelectedGame({
-              name: "Dummy",
-              game_id: 1,
-              bgg_id: 0,
-              is_expansion: false,
-            })
-          }
-          style={{ marginTop: 16 }}
-        >
-          <Text style={styles.link}>Valitse Dummy</Text>
-        </Pressable>
-      </ScrollView>
-    );
-  }
-
-  /* Peli valittu */
-
+if (!selectedGame) {
   return (
     <ScrollView
       style={styles.container}
       contentContainerStyle={{ paddingBottom: 40 }}
       showsVerticalScrollIndicator={false}
     >
-      <Text style={styles.title}>{selectedGame.name}</Text>
+      <Text style={styles.title}>Valitse peli</Text>
 
-      <Pressable onPress={() => setSelectedGame(null)}>
-        <Text style={styles.link}>Vaihda peli</Text>
+      <Pressable onPress={() => navigation.navigate("Search")}>
+        <Text style={styles.link}>Hae peli</Text>
       </Pressable>
 
-      {/* Pelaajat */}
-      <Text style={styles.sectionTitle}>Pelaajat</Text>
-
-      <PlayersList
-        players={players}
-        onMoveUp={movePlayerUp}
-        onMoveDown={movePlayerDown}
-        onRemove={removePlayer}
-      />
-
-      <FriendsPicker
-        friends={availableFriends}
-        onSelect={addRegisteredPlayer}
-      />
-
       <Pressable
-        style={styles.secondaryButton}
         onPress={() =>
-          navigation.navigate("PlayerSearch", {
-            onSelect: (user: { id?: string; name: string; type: "USER" | "GUEST" }) => {
-              setPlayers(prev => {
-                const exists = prev.some(p => p.id === user.id);
-                if (exists) return prev;
-                return [...prev, user];
-              });
-            },
+          setSelectedGame({
+            name: "Dummy",
+            game_id: 1,
+            bgg_id: 0,
+            is_expansion: false,
           })
         }
+        style={{ marginTop: 16 }}
       >
-        <Text style={styles.secondaryButtonText}>
-          + Lisää pelaaja
-        </Text>
+        <Text style={styles.link}>Valitse Dummy</Text>
       </Pressable>
-
-
-
-      {/* Sijainti */}
-      <Text style={styles.sectionTitle}>Sijainti</Text>
-
-      <Pressable onPress={() => navigation.navigate("MapScreen", {
-        onPickLocation: (location: Location) => {
-          setGameLocation(location);
-        },
-
-      })}>
-        {/* Suosikkisijainnit */}
-        {favorites.length > 0 && (
-          <>
-            <Text style={styles.sectionSubtitle}>Suosikit</Text>
-
-            {favorites.map((loc) => (
-              <Pressable
-                key={`${loc.latitude}-${loc.longitude}`}
-                style={styles.favoriteLocation}
-                onPress={() => setGameLocation(loc)}
-              >
-                <Text style={styles.favoriteLocationText}>
-                  {loc.label}
-                </Text>
-              </Pressable>
-            ))}
-          </>
-        )}
-
-        <Text style={styles.link}>Valitse sijainti kartalta</Text>
-      </Pressable>
-
-      <TextInput
-        style={styles.locationInput}
-        placeholder="Valitse sijainti"
-        value={gameLocation?.label ?? ""}
-        editable={false}
-      />
-
-      {gameLocation && (
-        <Pressable
-          onPress={async () => {
-            const exists = favorites.some(
-              (l) =>
-                l.latitude === gameLocation.latitude &&
-                l.longitude === gameLocation.longitude
-            );
-
-            if (exists) return;
-
-            await addFavorite({
-              name: gameLocation.label,
-              latitude: gameLocation.latitude,
-              longitude: gameLocation.longitude,
-            });
-
-          }}
-        >
-          <Text style={styles.link}>Tallenna sijainti suosikiksi</Text>
-        </Pressable>
-      )}
-
-
-      {/* Aloita peli */}
-      <Pressable
-        style={styles.primaryButton}
-        onPress={startGame}
-      >
-        <Text style={styles.primaryButtonText}>
-          Aloita peli
-        </Text>
-      </Pressable>
-
-      <GuestPlayerModal
-        visible={guestModalOpen}
-        onClose={() => setGuestModalOpen(false)}
-        onAdd={(name: string) =>
-          setPlayers(prev => [...prev, { name, type: "GUEST" as const }])
-        }
-      />
     </ScrollView>
   );
+}
+
+/* Peli valittu */
+
+return (
+  <ScrollView
+    style={styles.container}
+    contentContainerStyle={{ paddingBottom: 40 }}
+    showsVerticalScrollIndicator={false}
+  >
+    <Text style={styles.title}>{selectedGame.name}</Text>
+
+    <Pressable onPress={() => setSelectedGame(null)}>
+      <Text style={styles.link}>Vaihda peli</Text>
+    </Pressable>
+
+    {/* Pelaajat */}
+    <Text style={styles.sectionTitle}>Pelaajat</Text>
+
+    <PlayersList
+      players={players}
+      onMoveUp={movePlayerUp}
+      onMoveDown={movePlayerDown}
+      onRemove={removePlayer}
+    />
+
+    <FriendsPicker
+      friends={availableFriends}
+      onSelect={addRegisteredPlayer}
+    />
+
+    <Pressable
+      style={styles.secondaryButton}
+      onPress={() =>
+        navigation.navigate("PlayerSearch", {
+          onSelect: (user: { id?: string; name: string; type: "USER" | "GUEST" }) => {
+            const exists = players.some(p => p.id === user.id);
+            if (exists) return;
+
+            setPlayers(prev => {
+              const exists = prev.some(p => p.id === user.id);
+              if (exists) return prev;
+
+              return [...prev, user];
+            });
+
+          },
+        })
+      }
+    >
+
+      <Text style={styles.secondaryButtonText}>
+        + Lisää pelaaja
+      </Text>
+    </Pressable>
+
+
+
+    {/* Sijainti */}
+    <Text style={styles.sectionTitle}>Sijainti</Text>
+
+    <Pressable onPress={() => navigation.navigate("MapScreen")
+
+    }>
+      {/* Suosikkisijainnit */}
+      {favorites.length > 0 && (
+        <>
+          <Text style={styles.sectionSubtitle}>Suosikit</Text>
+
+          {favorites.map((loc) => (
+            <Pressable
+              key={`${loc.latitude}-${loc.longitude}`}
+              style={styles.favoriteLocation}
+              onPress={() => setLocation(loc)}
+            >
+              <Text style={styles.favoriteLocationText}>
+                {loc.label}
+              </Text>
+            </Pressable>
+          ))}
+        </>
+      )}
+
+      <Text style={styles.link}>Valitse sijainti kartalta</Text>
+    </Pressable>
+
+    <TextInput
+      style={styles.locationInput}
+      placeholder="Valitse sijainti"
+      value={gameLocation?.label ?? ""}
+      editable={false}
+    />
+
+    {gameLocation && (
+      <Pressable
+        onPress={async () => {
+          const exists = favorites.some(
+            (l) =>
+              l.latitude === gameLocation.latitude &&
+              l.longitude === gameLocation.longitude
+          );
+
+          if (exists) return;
+
+          await addFavorite({
+            name: gameLocation.label,
+            latitude: gameLocation.latitude,
+            longitude: gameLocation.longitude,
+          });
+          console.log("Saved favorite");
+        }}
+      >
+        <Text style={styles.link}>Tallenna sijainti suosikiksi</Text>
+      </Pressable>
+    )}
+
+
+    {/* Aloita peli */}
+    <Pressable
+      style={styles.primaryButton}
+      onPress={startGame}
+    >
+      <Text style={styles.primaryButtonText}>
+        Aloita peli
+      </Text>
+    </Pressable>
+
+    <GuestPlayerModal
+      visible={guestModalOpen}
+      onClose={() => setGuestModalOpen(false)}
+      onAdd={(name: string) =>
+        setPlayers(prev => [...prev, { name, type: "GUEST" as const }])
+      }
+    />
+  </ScrollView>
+);
 };

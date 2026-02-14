@@ -2,15 +2,15 @@ import { useState, useMemo } from "react";
 import { View, Text, TextInput, ScrollView, Pressable } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { styles } from "../styles/ScoreEntryStyles";
+import { useGameSessionDraftViewModel } from "../viewModels/useGameSessionDraftViewModel";
 
 export const ScoreEntryScreen = () => {
-    const route = useRoute<any>();
-    const { session } = route.params;
+    const { selectedGame, players, location } = useGameSessionDraftViewModel();
     const navigation = useNavigation<any>();
 
     const handleSave = async () => {
         const resultPayload = {
-            game_id: session.boardGame.id,
+            game_id: selectedGame?.game_id,
             played_at: new Date(),
             players: rankedPlayers.map(p => ({
                 user_id: p.id ?? null,
@@ -24,7 +24,7 @@ export const ScoreEntryScreen = () => {
     };
 
     const [scores, setScores] = useState(
-        session.players.map((p: any) => ({
+        players.map((p: any) => ({
             ...p,
             score: 0,
         }))
@@ -53,7 +53,7 @@ export const ScoreEntryScreen = () => {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            <Text style={styles.title}>{session.boardGame.name}</Text>
+            <Text style={styles.title}>{selectedGame?.name}</Text>
 
             {winner && (
                 <View style={styles.winnerBanner}>

@@ -8,17 +8,22 @@ import { useRoute } from '@react-navigation/native';
 import type { Location as DomainLocation } from '../../domain/entities/Location';
 import { colors } from '../styles/theme';
 import { useUserLocation } from '../viewModels/useUserLocation';
+import { useFavoriteLocationsViewModel } from '../viewModels/useFavoriteLocationsViewModel';
+import { useGameSessionDraftViewModel } from "../viewModels/useGameSessionDraftViewModel";
+
 
 export const MapScreen = () => {
   const navigation = useNavigation<any>();
   const route = useRoute<any>();
-
+  const { favorites } = useFavoriteLocationsViewModel();
   const { location: userLocation, loading, error, refreshLocation } = useUserLocation();
   const mapRef = useRef<MapView>(null);
   const [selectedLocation, setSelectedLocation] = useState<{
     latitude: number;
     longitude: number;
   } | null>(null);
+  const { setLocation } = useGameSessionDraftViewModel();
+
 
   useEffect(() => {
     if (userLocation) {
@@ -46,26 +51,25 @@ export const MapScreen = () => {
     setSelectedLocation(event.nativeEvent.coordinate);
   };
 
-  const confirmLocation = () => {
-    if (!selectedLocation) return;
+const confirmLocation = () => {
+  if (!selectedLocation) return;
 
-    const pickedLocation: DomainLocation = {
-      label: favoriteName || "Valittu sijainti",
-      latitude: selectedLocation.latitude,
-      longitude: selectedLocation.longitude,
-    };
+  setLocation({
+    label: favoriteName || "Valittu sijainti",
+    latitude: selectedLocation.latitude,
+    longitude: selectedLocation.longitude,
+  });
 
-    route.params?.onPickLocation?.(pickedLocation);
-    navigation.goBack();
-  };
+  navigation.goBack();
+};
 
-  if (loading) {
+  if (loading)
     return (
       <View style={styles.container}>
         <Text>Haetaan sijaintia...</Text>
       </View>
     );
-  }
+
 
   if (error) {
     return (
@@ -100,6 +104,24 @@ export const MapScreen = () => {
         }}
         onPress={handleMapPress}
       >
+        {favorites.map((fav) => (
+          <Marker
+            key={`${fav.latitude}-${fav.longitude}`}
+            coordinate={{
+              latitude: fav.latitude,
+              longitude: fav.longitude,
+            }}
+            title={fav.label}
+            pinColor="gold"
+            onPress={() =>
+              setSelectedLocation({
+                latitude: fav.latitude,
+                longitude: fav.longitude,
+              })
+            }
+          />
+        ))}
+
         <Marker
           coordinate={selectedLocation}
           draggable
