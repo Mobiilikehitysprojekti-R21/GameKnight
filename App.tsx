@@ -17,9 +17,9 @@ import GameSessionsScreen from './src/ui/screens/GameSessionsScreen';
 import FriendsScreen from './src/ui/screens/FriendsScreen';
 import { NewGameScreen } from './src/ui/screens/NewGameScreen';
 import { MapScreen } from './src/ui/screens/MapScreen';
-import { AuthProvider } from './src/ui/auth/AuthContext';import { PlayerSearchScreen } from './src/ui/screens/PlayerSearchScreen';
 import { AuthProvider } from './src/ui/auth/AuthContext';
 import { ScoreEntryScreen } from './src/ui/screens/ScoreEntryScreen';
+import { PlayerSearchScreen } from './src/ui/screens/PlayerSearchScreen';
 
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
