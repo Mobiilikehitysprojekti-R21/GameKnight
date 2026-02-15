@@ -120,20 +120,6 @@ export default function ProfileScreen({ navigation }: Props) {
           </TouchableOpacity>
         </View>
 
-        {/* PELATUT PELIT */}
-        <View style={styles.card}>
-          <Text style={styles.sectionTitle}>Pelatut pelit</Text>
-          <Text style={styles.statText}>
-            Lista pelatuista peleistä? Ehkä jokin kuvaaja voitoista/häviöistä?
-          </Text>
-          <TouchableOpacity
-            style={styles.primaryButton}
-            onPress={() => navigation.navigate('GameSessions')}
-          >
-            <Text style={styles.buttonText}>Näytä pelikerrat</Text>
-          </TouchableOpacity>
-        </View>
-
         {/* YSTÄVÄT */}
         <View style={styles.card}>
           <Text style={styles.sectionTitle}>Kaverit</Text>

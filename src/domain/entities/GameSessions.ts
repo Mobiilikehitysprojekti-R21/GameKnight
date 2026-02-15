@@ -1,9 +1,3 @@
-export type SessionPlayer = {
-  user_id: number;
-  score?: number;
-  is_winner?: boolean;
-};
-
 export type GameSession = {
   session_id: number
   game_id: number
@@ -12,8 +6,9 @@ export type GameSession = {
   group_id?: number | null
   notes?: string
   players: {
-    user_id: string
+    user_id: number
     score?: number
     group_id?: number
+    is_winner?: boolean
   }[]
 }
