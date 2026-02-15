@@ -1,5 +1,5 @@
 export type Friend = {
-  user_id: string
+  user_id: number
   nickname: string
   email?: string;
   status?: "pending" | "accepted";

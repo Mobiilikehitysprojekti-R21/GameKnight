@@ -6,7 +6,7 @@ import Toast from 'react-native-toast-message';
 
 
 import { SearchScreenContainer } from './src/ui/screens/SearchScreenContainer';
-
+import StatsScreen from './src/ui/screens/StatsScreen';
 import SignUpScreen from './src/ui/screens/SignUpScreen';
 import ProfileScreen from './src/ui/screens/ProfileScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -52,6 +52,7 @@ export default function App() {
               <Stack.Screen name="Friends" component={FriendsScreen} />
               <Stack.Screen name="NewGame" component={NewGameScreen} />
               <Stack.Screen name="MapScreen" component={MapScreen} />
+              <Stack.Screen name="Stats" component={StatsScreen} />
             </Stack.Navigator>
           </SafeAreaView>
         </NavigationContainer>
