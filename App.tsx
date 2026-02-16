@@ -19,6 +19,8 @@ import FriendsScreen from './src/ui/screens/FriendsScreen';
 import { NewGameScreen } from './src/ui/screens/NewGameScreen';
 import { MapScreen } from './src/ui/screens/MapScreen';
 import { AuthProvider } from './src/ui/auth/AuthContext';
+import { PlayerSearchScreen } from './src/ui/screens/PlayerSearchScreen';
+import { ScoreEntryScreen } from './src/ui/screens/ScoreEntryScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -53,6 +55,9 @@ export default function App() {
               <Stack.Screen name="NewGame" component={NewGameScreen} />
               <Stack.Screen name="MapScreen" component={MapScreen} />
               <Stack.Screen name="Stats" component={StatsScreen} />
+              <Stack.Screen name="PlayerSearch" component={PlayerSearchScreen} />
+              <Stack.Screen name="ScoreEntry" component={ScoreEntryScreen} />
+              
             </Stack.Navigator>
           </SafeAreaView>
         </NavigationContainer>
