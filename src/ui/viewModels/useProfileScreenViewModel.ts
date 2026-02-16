@@ -120,6 +120,7 @@ export const useProfileScreenViewModel = (onSuccess: () => void, onLogout: () =>
     const selectProfileImage = async () => {
         try {
             const uri = await pickImageFromGallery();
+            console.log(uri)
             if (uri) setImageUri(uri);
         } catch (e) {
             setError("Kuvagallerian käyttö estetty");

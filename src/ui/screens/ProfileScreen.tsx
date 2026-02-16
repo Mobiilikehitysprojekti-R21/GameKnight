@@ -104,7 +104,7 @@ export default function ProfileScreen({ navigation }: Props) {
             {vm.imageUri && (
               <Image
                 source={{ uri: vm.imageUri }}
-                style={{ width: 150, height: 150, borderRadius: 75 }}
+                style={{ width: 100, height: 100, borderRadius: 75 }}
               />
             )}
 
