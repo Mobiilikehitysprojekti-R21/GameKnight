@@ -14,10 +14,11 @@ type GameListProps = {
   setSearch: (input: string) => void  // function for search
   setGames: (id: number, userid: string) => void      // function for updating gamelist after removal
   userid: string
+  onNewGamePress: () => void          // navigate to NewGame screen
 
 }
 
-const GameList = ({ filteredItems, games, userNick, search, setSearch, setGames, userid }: GameListProps) => {
+const GameList = ({ filteredItems, games, userNick, search, setSearch, setGames, userid, onNewGamePress }: GameListProps) => {
 
   return (
     <SwipeListView
@@ -63,7 +64,7 @@ const GameList = ({ filteredItems, games, userNick, search, setSearch, setGames,
       renderHiddenItem={({ item }) => (
         <View style={styles.rowBack}>
           <View style={styles.rowBackButtons}>
-            <TouchableOpacity style={styles.rowBackIconButton} onPress={() => { }}>
+            <TouchableOpacity style={styles.rowBackIconButton} onPress={onNewGamePress}>
               <Text style={styles.rowBackIcon}>🎲</Text>
             </TouchableOpacity>
             <TouchableOpacity

@@ -46,6 +46,7 @@ export default function GameCollectionScreen({ navigation }: Props) {
     >
       <GameList
         filteredItems={filteredItems}
+        onNewGamePress={() => navigation.navigate('NewGame')}
         games={vm.games}
         userNick={auth.displayName}
         search={search}
