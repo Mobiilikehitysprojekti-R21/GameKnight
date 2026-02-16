@@ -10,6 +10,7 @@ type AuthContextType = {
   login: (token: string, userData: any) => void   // function to set login state true (aka login)
   logout: () => void  // function to set login state false (aka logout)
   getAccessToken: () => Promise<string | null>
+  updateUser: (userData: any) => Promise<void>  // update userdata after changes
 }
 
 // Create auth context for authentication
@@ -29,14 +30,31 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   // LOGIN
   const login = async (token: string, userData: any) => {
     setAccessToken(token)               // token is set
-    setUser(userData)                   // user data is stored
+    // Ensure nickname exists: prefer profile.nickname, fallback to profile.username
+    const nicknameToStore = userData.nickname ?? userData.username ?? ''
+    // user data is stored (with ensured nickname)
+    const userWithNickname = { ...(userData ?? {}), nickname: nicknameToStore }
+    setUser(userWithNickname)                   
     // Store user data locally
-    await AsyncStorage.setItem("auth0_id", userData.sub)
-    await AsyncStorage.setItem("nickname", userData.nickname)
-    await AsyncStorage.setItem("email", userData.email)
-    // REFRESH TOKEN?
-    // TODO: userdatan säilöminen paikallisesti, elinkaari?
+    await AsyncStorage.setItem("auth0_id", userWithNickname.sub)
+    await AsyncStorage.setItem("nickname", nicknameToStore)
+    await AsyncStorage.setItem("email", userWithNickname.email)
+    if (userWithNickname.user_id !== undefined && userWithNickname.user_id !== null) {
+      await AsyncStorage.setItem("user_id", String(userWithNickname.user_id))
+    }
+    
     setIsLoggedIn(true)                 // boolean is set true ( user is logged in )
+  }
+
+  // Update user (partial) and persist changed fields locally
+  const updateUser = async (userData: any) => {
+    setUser((prev: any) => ({ ...(prev ?? {}), ...userData }))
+    if (userData.nickname !== undefined) await AsyncStorage.setItem('nickname', userData.nickname)
+    if (userData.email !== undefined) await AsyncStorage.setItem('email', userData.email)
+    if (userData.sub !== undefined) await AsyncStorage.setItem('auth0_id', userData.sub)
+    if (userData.user_id !== undefined && userData.user_id !== null) {
+      await AsyncStorage.setItem('user_id', String(userData.user_id))
+    }
   }
 
   // LOGOUT
@@ -66,7 +84,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   // return context to all children components
   return (
-    <AuthContext.Provider value={{ isLoggedIn, accessToken, user, login, logout, getAccessToken }}>
+    <AuthContext.Provider value={{ isLoggedIn, accessToken, user, login, logout, getAccessToken, updateUser }}>
       {children}
     </AuthContext.Provider>
   )

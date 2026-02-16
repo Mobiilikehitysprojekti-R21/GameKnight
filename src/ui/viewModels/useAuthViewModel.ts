@@ -104,6 +104,24 @@ export function useAuthViewModel() {
             alert(`Virhe tilin luomisessa: ${error.message || error}`)
         }
         console.log("USER: ", userData) // debugging...
+        // Fetch latest user data from backend
+        try {
+          const fetched = await userRepo.fetchUser(userData.sub)
+          if (fetched) {
+            // Normalize fetched data to match AuthContext expectation (sub/nickname/email)
+            const mapped = {
+              ...fetched,
+              sub: fetched.auth0_id ?? userData.sub,
+              nickname: fetched.nickname ?? userData.nickname ?? userData.username ?? '',
+              user_id: fetched.user_id ?? ''
+            }
+            console.log(mapped)
+            // update auth context so UI sees correct nickname immediately
+            await auth.updateUser(mapped)
+          }
+        } catch (e) {
+          console.warn('Failed to fetch user after login:', e)
+        }
       })
     }
   })

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../auth/useAuth';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function useHomeScreenViewModel() {
   // Create states etc needed in view
@@ -14,21 +13,15 @@ export function useHomeScreenViewModel() {
     const [nickname, setNickname] = useState<string | null>(null)
     const [auth0_id, setAuth0_id] = useState<string | null>(null)
     const [email, setEmail] = useState<string | null>(null)
-    const { isLoggedIn } = useAuth()
-  
-    // Fetch user info from secure store on mount
+    const auth = useAuth()
+
+    // Sync user info from AuthContext
     useEffect(() => {
-      const fetchUser = async () => {
-        const storedNickname = await AsyncStorage.getItem("nickname")
-        setNickname(storedNickname)
-        const storedAuth0_id = await AsyncStorage.getItem("auth0_id")
-        setAuth0_id(storedAuth0_id)
-        const storedEmail = await AsyncStorage.getItem("email")
-        setEmail(storedEmail)
-        console.log("homeVM: ", nickname, auth0_id, email)
-      }
-      fetchUser()
-    }, [isLoggedIn])
+      setNickname(auth.user?.nickname ?? null)
+      setAuth0_id(auth.user?.sub ?? null)
+      setEmail(auth.user?.email ?? null)
+      console.log("homeVM: ", auth.user?.nickname, auth.user?.sub, auth.user?.email)
+    }, [auth.user, auth.isLoggedIn])
 
   return {
     nickname, auth0_id, email

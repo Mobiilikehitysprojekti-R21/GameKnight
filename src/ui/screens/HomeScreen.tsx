@@ -26,7 +26,7 @@ export default function HomeScreen({navigation}:Props) {
       {/*TERVEHDYS*/}
       {loggedIn ? 
       (<View style={styles.card}>
-        <Text style={styles.sectionTitle}>{`Hei, ${vm.nickname}!`}</Text>
+        <Text style={styles.sectionTitle}>{`Hei, ${displayName}!`}</Text>
 
         <Text style={styles.statText}>
           Mukava nähdä taas ❤️

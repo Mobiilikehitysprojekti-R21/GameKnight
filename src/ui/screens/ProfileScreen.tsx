@@ -4,20 +4,17 @@ import {
   Text,
   TouchableOpacity,
   ActivityIndicator,
-  FlatList,
-  TextInput,
-  Modal,
+  Button,
+  Image
 } from 'react-native';
 import { styles } from '../styles/profileStyles';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/types';
-import GameCollectionScreen from './GameCollectionScreen';
 import { FriendCard } from '../components/FriendCard';
 import { useFriendsViewModel } from '../viewModels/useFriendsViewModel';
 import { useState, useEffect } from 'react';
 import { useProfileScreenViewModel } from '../viewModels/useProfileScreenViewModel';
 import { useAuthViewModel } from '../viewModels/useAuthViewModel';
-import { colors } from '../styles/theme'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ModalComponent from '../components/Modal';
 import DCModalComponent from '../components/DoubleCheckModal';
@@ -26,7 +23,6 @@ import DCModalComponent from '../components/DoubleCheckModal';
 type Props = NativeStackScreenProps<RootStackParamList, 'Profile'>;
 
 export default function ProfileScreen({ navigation }: Props) {
-  // const vm = useProfileViewModel(() => navigation.navigate('Home'))
   const friendsVm = useFriendsViewModel();
 
   function chunkArray<T>(arr: T[], size: number): T[][] {
@@ -81,7 +77,7 @@ export default function ProfileScreen({ navigation }: Props) {
         {/* OTSIKKO */}
         <View style={styles.header}>
           <Text style={styles.title}>Oma profiili</Text>
-          <Text style={styles.subtitle}>Hei, {userNick || 'tyyppi'}!</Text>
+          <Text style={styles.subtitle}>Hei, {authVm.displayName || 'tyyppi'}!</Text>
         </View>
 
         {/* ASETUKSET */}
@@ -89,7 +85,7 @@ export default function ProfileScreen({ navigation }: Props) {
           <Text style={styles.sectionTitle}>Asetukset</Text>
           <View style={styles.settings}>
             <Text style={styles.statText}>
-              Käyttäjänimi: {userNick || 'tuntematon'}
+              Käyttäjänimi: {authVm.displayName || 'tuntematon'}
             </Text>
             <TouchableOpacity
               style={styles.settingsButton}
@@ -104,7 +100,20 @@ export default function ProfileScreen({ navigation }: Props) {
               <Text style={styles.settingsButtonText}>Poista</Text>
             </TouchableOpacity>
           </View>
+          <View>
+            {vm.imageUri && (
+              <Image
+                source={{ uri: vm.imageUri }}
+                style={{ width: 150, height: 150, borderRadius: 75 }}
+              />
+            )}
+
+            <Button title="Valitse profiilikuva" onPress={vm.selectProfileImage} />
+
+            {vm.error && <Text>{vm.error}</Text>}
+          </View>
         </View>
+        
 
         {/* OMAT PELIT */}
         <View style={styles.card}>
