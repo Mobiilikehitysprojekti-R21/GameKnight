@@ -5,6 +5,6 @@ export class AddGameSession {
   constructor(private repo: GameSessionRepository) {}
 
   execute(session: GameSession) {
-    return this.repo.addSession(session);
+    return this.repo.createSession(session);
   }
 }
