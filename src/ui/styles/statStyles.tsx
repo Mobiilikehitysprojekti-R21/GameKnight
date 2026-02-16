@@ -122,4 +122,19 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#000',
   },
+
+  chartContainer: {
+    marginVertical: spacing.lg,
+    paddingHorizontal: spacing.md,
+    backgroundColor: colors.background,
+    borderRadius: radius.md,
+    paddingVertical: spacing.md,
+    fontFamily: 'Arial',
+},
+chartTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: spacing.sm,
+    color: colors.textPrimary,
+},
 });

@@ -5,6 +5,7 @@ import { useAuthViewModel } from '../viewModels/useAuthViewModel';
 import { calculateUserStats, calculateGeneralStats } from '../utils/statsCalculator';
 import { RootStackParamList } from '../../navigation/types';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { StatsCharts } from '../utils/statsVisualization';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Stats'>;
 
@@ -47,11 +48,12 @@ export default function StatsScreen({ navigation }: Props) {
                                 <Text style={styles.statText}>Ei pelejä saatavilla</Text>
                             )}
                         </View>
+                        <StatsCharts generalStats={generalStats} />
                     </>
                 )}
             </View>
 
-           {/* KÄYTTÄJÄN TILASTOT - näytetään jos on kirjautunnut sisään */}
+            {/* KÄYTTÄJÄN TILASTOT - näytetään jos on kirjautunnut sisään */}
             {user && userStats && (
                 <View style={styles.card}>
                     {loading ? (
@@ -63,19 +65,20 @@ export default function StatsScreen({ navigation }: Props) {
                             <Text style={styles.statText}>Voittoprosentti: {userStats.gamesWonPercentage}%</Text>
                             <Text style={styles.statText}>Eniten pelattu peli: {userStats.mostPlayedGame}</Text>
                             <Text style={styles.statText}>Vastustajien lukumäärä: {userStats.opponentsCount}</Text>
+                           <StatsCharts userStats={userStats} />
                         </View>
                     )}
 
-            {/* OMAT PELIKERRAt */}
-            <View style={styles.card}>
-                <TouchableOpacity
-                    style={styles.primaryButton}
-                    onPress={() => navigation.navigate('GameSessions')}
-                >
-                    <Text style={styles.buttonText}>Näytä kaikki omat pelikerrat</Text>
-                </TouchableOpacity>
-            </View>
-              </View>
+                    {/* OMAT PELIKERRAt */}
+                    <View style={styles.card}>
+                        <TouchableOpacity
+                            style={styles.primaryButton}
+                            onPress={() => navigation.navigate('GameSessions')}
+                        >
+                            <Text style={styles.buttonText}>Näytä kaikki omat pelikerrat</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
             )}
 
         </ScrollView>
