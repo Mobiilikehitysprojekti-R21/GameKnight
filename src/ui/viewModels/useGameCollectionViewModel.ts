@@ -112,7 +112,10 @@ export function useGameCollectionViewModel(repo: BoardGameApiRepository) {
                 position: 'top',
                 visibilityTime: 3000,
             })
-            await loadGames()
+            // update gamelist
+            const gamelist = await getGameCollection.execute(auth0_id)
+            console.log('pelilista: ', gamelist)
+            setGames(gamelist)
 
         } catch (e: any) {
             console.error("Error deleting game from collection:", e)

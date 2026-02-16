@@ -31,7 +31,7 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#F8FAFC',
     letterSpacing: 1,
-    
+
   },
 
   inputRow: {
@@ -57,6 +57,35 @@ export const styles = StyleSheet.create({
     alignItems: 'flex-end',
     justifyContent: 'center',
     paddingRight: 20,
+  },
+
+  rowBackButtons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+  },
+
+  rowBackIconButton: {
+    width: 36,
+    height: 36,
+    backgroundColor: colors.primary,
+    borderRadius: radius.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  rowBackIconButtonDanger: {
+    width: 36,
+    height: 36,
+    backgroundColor: colors.danger,
+    borderRadius: radius.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  rowBackIcon: {
+    fontSize: 16,
+    color: '#000',
   },
 
   rowFront: {
@@ -116,7 +145,7 @@ export const styles = StyleSheet.create({
     color: '#000',
   },
 
-   deleteButton: {
+  deleteButton: {
     backgroundColor: colors.danger,
     paddingVertical: spacing.md,
     paddingHorizontal: spacing.md,
