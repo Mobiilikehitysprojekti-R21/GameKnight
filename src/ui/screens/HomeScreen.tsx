@@ -23,24 +23,74 @@ export default function HomeScreen({ navigation }: Props) {
         <Text style={styles.subtitle}>Remember every game night!</Text>
       </View>
 
-      {/*TERVEHDYS*/}
-      {loggedIn && 
-      (<View style={styles.card}>
+      {!loggedIn && (
+        <View style={styles.card}>
+        <Text style={styles.sectionTitle}>{`TERVETULOA!`}</Text>
+
+        <Text style={styles.statText}>
+          Pelaaminen on parasta kavereiden kanssa.
+        </Text>
+        <Text style={styles.statText}>
+          Liityhän siis mukaan joukkoomme!
+        </Text>
+        
+        </View>
+      )}
+
+        {loggedIn && (
+        <>
+        {/*TERVEHDYS*/}
+        <View style={styles.card}>
         <Text style={styles.sectionTitle}>{`Hei, ${displayName}!`}</Text>
 
         <Text style={styles.statText}>
           Mukava nähdä taas ❤️
         </Text>
-        </View>) }
+        </View>
 
-      {/* PÄÄTOIMINNOT */}
+          {/* PROFIILI */}
+          < View style={styles.card}>
+            <TouchableOpacity style={styles.primaryButton} onPress={() => navigation.navigate('NewGame')}>
+              <Text style={styles.buttonText}>Aloita uusi peli</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.secondaryButton}>
+              <Text style={styles.buttonText}>Jatka peliä</Text>
+            </TouchableOpacity>
+          </View>
+
+
+          {/* PROFIILI */}
+          <View style={styles.card}>
+            <Text style={styles.sectionTitle}>Profiili</Text>
+
+            <Text style={styles.statText}>
+              Siirry profiilisivulle
+            </Text>
+
+            <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('Profile')}>
+              <Text style={styles.loginButtonText}>Profiilisivu</Text>
+            </TouchableOpacity>
+          </View>
+        </>
+      )
+      }
+
+      {/* TILASTOT */}
       <View style={styles.card}>
-        <TouchableOpacity style={styles.primaryButton} onPress={() => navigation.navigate('NewGame')}>
-          <Text style={styles.buttonText}>Aloita uusi peli</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.secondaryButton}>
-          <Text style={styles.buttonText}>Jatka peliä</Text>
+        <Text style={styles.sectionTitle}>Tilastot</Text>
+        <Text style={styles.statText}>
+          {loggedIn
+            ? 'Tarkastele omia pelitilastojasi.'
+            : 'Katso yleisiä pelitilastoja. Kirjaudu sisään nähdäksesi omat tilastosi!'}
+        </Text>
+        <TouchableOpacity
+          style={styles.loginButton}
+          onPress={() => navigation.navigate('Stats')}
+        >
+          <Text style={styles.loginButtonText}>
+            {'Tarkastele pelattuja pelejä'}
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -69,50 +119,6 @@ export default function HomeScreen({ navigation }: Props) {
           </Text>
         )}
       </View>
-
-      {/* PÄÄTOIMINNOT */}
-      <View style={styles.card}>
-        <TouchableOpacity style={styles.primaryButton} onPress={() => navigation.navigate('NewGame')}>
-          <Text style={styles.buttonText}>Aloita uusi peli</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.secondaryButton}>
-          <Text style={styles.buttonText}>Jatka peliä</Text>
-        </TouchableOpacity>
-      </View>
-
-      
-      {/* PROFIILI */}
-      <View style={styles.card}>
-        <Text style={styles.sectionTitle}>Profiili</Text>
-
-        <Text style={styles.statText}>
-          Siirry profiilisivulle
-        </Text>
-
-        <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('Profile')}>
-          <Text style={styles.loginButtonText}>Profiilisivu</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* TILASTOT */}
-      <View style={styles.card}>
-        <Text style={styles.sectionTitle}>Tilastot</Text>
-        <Text style={styles.statText}>
-          {loggedIn
-            ? 'Tarkastele omia pelitilastojasi.'
-            : 'Katso yleisiä pelitilastoja. Kirjaudu sisään nähdäksesi omat tilastosi!'}
-        </Text>
-        <TouchableOpacity
-          style={styles.loginButton}
-          onPress={() => navigation.navigate('Stats')}
-        >
-          <Text style={styles.loginButtonText}>
-            {'Tarkastele pelattuja pelejä'}
-          </Text>
-        </TouchableOpacity>
-      </View>
-
 
     </ScrollView>
   );
