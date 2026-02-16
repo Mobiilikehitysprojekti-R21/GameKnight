@@ -11,5 +11,7 @@ export type RootStackParamList = {
   NewGame: undefined
   MapScreen: undefined;
   Stats: undefined
+  PlayerSearch: undefined;   
+  ScoreEntry: undefined;
 
 };

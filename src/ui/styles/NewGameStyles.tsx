@@ -100,4 +100,44 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
+
+  friendRow: {
+    padding: 12,
+    borderBottomWidth: 1,
+    borderColor: "#ddd",
+  },
+
+  friendName: {
+    fontSize: 16,
+  },
+
+  secondaryButton: {
+    padding: 12,
+    backgroundColor: "#ccc",
+    borderRadius: 8,
+  },
+
+  secondaryButtonText: {
+    fontSize: 16,
+  },
+
+  playerName: {
+    fontSize: 16,
+  },
+  playerActions: {
+    flexDirection: "row",
+    gap: 8,
+  },
+  iconButton: {
+    padding: 6,
+  },
+  deleteButton: {
+    backgroundColor: "#ffdddd",
+  },
+
+  addIcon: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+
 });
