@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../auth/useAuth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function useHomeScreenViewModel() {
   // Create states etc needed in view

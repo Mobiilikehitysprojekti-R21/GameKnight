@@ -6,7 +6,7 @@ import Toast from 'react-native-toast-message';
 
 
 import { SearchScreenContainer } from './src/ui/screens/SearchScreenContainer';
-
+import StatsScreen from './src/ui/screens/StatsScreen';
 import SignUpScreen from './src/ui/screens/SignUpScreen';
 import ProfileScreen from './src/ui/screens/ProfileScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -19,6 +19,8 @@ import FriendsScreen from './src/ui/screens/FriendsScreen';
 import { NewGameScreen } from './src/ui/screens/NewGameScreen';
 import { MapScreen } from './src/ui/screens/MapScreen';
 import { AuthProvider } from './src/ui/auth/AuthContext';
+import { PlayerSearchScreen } from './src/ui/screens/PlayerSearchScreen';
+import { ScoreEntryScreen } from './src/ui/screens/ScoreEntryScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -52,6 +54,10 @@ export default function App() {
               <Stack.Screen name="Friends" component={FriendsScreen} />
               <Stack.Screen name="NewGame" component={NewGameScreen} />
               <Stack.Screen name="MapScreen" component={MapScreen} />
+              <Stack.Screen name="Stats" component={StatsScreen} />
+              <Stack.Screen name="PlayerSearch" component={PlayerSearchScreen} />
+              <Stack.Screen name="ScoreEntry" component={ScoreEntryScreen} />
+              
             </Stack.Navigator>
           </SafeAreaView>
         </NavigationContainer>

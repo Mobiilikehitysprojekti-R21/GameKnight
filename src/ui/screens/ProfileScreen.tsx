@@ -15,6 +15,7 @@ import { useFriendsViewModel } from '../viewModels/useFriendsViewModel';
 import { useState, useEffect } from 'react';
 import { useProfileScreenViewModel } from '../viewModels/useProfileScreenViewModel';
 import { useAuthViewModel } from '../viewModels/useAuthViewModel';
+import { colors } from '../styles/theme'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ModalComponent from '../components/Modal';
 import DCModalComponent from '../components/DoubleCheckModal';
@@ -77,7 +78,7 @@ export default function ProfileScreen({ navigation }: Props) {
         {/* OTSIKKO */}
         <View style={styles.header}>
           <Text style={styles.title}>Oma profiili</Text>
-          <Text style={styles.subtitle}>Hei, {authVm.displayName || 'tyyppi'}!</Text>
+          <Text style={styles.subtitle}>Hei, {userNick || 'tyyppi'}!</Text>
         </View>
 
         {/* ASETUKSET */}
@@ -85,7 +86,7 @@ export default function ProfileScreen({ navigation }: Props) {
           <Text style={styles.sectionTitle}>Asetukset</Text>
           <View style={styles.settings}>
             <Text style={styles.statText}>
-              Käyttäjänimi: {authVm.displayName || 'tuntematon'}
+              Käyttäjänimi: {userNick || 'tuntematon'}
             </Text>
             <TouchableOpacity
               style={styles.settingsButton}
@@ -126,20 +127,6 @@ export default function ProfileScreen({ navigation }: Props) {
             onPress={() => navigation.navigate('GameCollection')}
           >
             <Text style={styles.buttonText}>Siirry pelikokoelmaan</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* PELATUT PELIT */}
-        <View style={styles.card}>
-          <Text style={styles.sectionTitle}>Pelatut pelit</Text>
-          <Text style={styles.statText}>
-            Lista pelatuista peleistä? Ehkä jokin kuvaaja voitoista/häviöistä?
-          </Text>
-          <TouchableOpacity
-            style={styles.primaryButton}
-            onPress={() => navigation.navigate('GameSessions')}
-          >
-            <Text style={styles.buttonText}>Näytä pelikerrat</Text>
           </TouchableOpacity>
         </View>
 

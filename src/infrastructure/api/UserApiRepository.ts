@@ -71,7 +71,6 @@ export class UserApiRepository implements UserRepository {
 
       return;
     }
-
   }
 
   // Sign in user and store locally
@@ -145,7 +144,6 @@ export class UserApiRepository implements UserRepository {
       })
       if (!res.ok) {
         const body = await res.text();
-
         console.error('delete user failed:', res.status, body);
 
         throw new Error(`Delete user failed: ${res.status}`);

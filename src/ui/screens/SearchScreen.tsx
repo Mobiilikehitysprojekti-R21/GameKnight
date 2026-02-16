@@ -32,7 +32,7 @@ export function SearchScreen({ findBoardGames }: SearchScreenProps) {
 
       <FlatList<BoardGame>
         data={vm.games}
-        keyExtractor={(g) => g.id}
+        keyExtractor={(g) => g.bgg_id.toString()}
         renderItem={({ item }) => (
         <View style={styles.listItem}>
           <Text style={styles.listItemText}>

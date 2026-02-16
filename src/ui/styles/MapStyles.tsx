@@ -1,3 +1,4 @@
+
 import { StyleSheet } from "react-native";
 import { colors, spacing, radius } from "./theme";
 
@@ -29,18 +30,26 @@ export const styles = StyleSheet.create({
     },
 
     confirmButton: {
-        position: "absolute",
-        bottom: spacing.xl,
-        alignSelf: "center",
         backgroundColor: colors.primary,
-        paddingVertical: spacing.md,
-        paddingHorizontal: spacing.xl,
+        padding: spacing.md,
         borderRadius: radius.md,
+        alignItems: "center",
     },
 
     confirmButtonText: {
         color: colors.textPrimary,
         fontWeight: "600",
+    },
+
+    bottomContainer: {
+        position: "absolute",
+        bottom: spacing.lg,
+        left: spacing.md,
+        right: spacing.md,
+        backgroundColor: colors.surface,
+        padding: spacing.md,
+        borderRadius: radius.md,
+        gap: spacing.sm,
     },
 
     input: {
@@ -66,19 +75,6 @@ export const styles = StyleSheet.create({
         fontWeight: "600",
     },
 
-    confirmButton: {
-        backgroundColor: colors.primary,
-        padding: spacing.md,
-        borderRadius: radius.md,
-        margin: spacing.md,
-        alignItems: "center",
-    },
-    confirmButtonText: {
-        color: colors.textPrimary,
-        fontWeight: "700",
-        fontSize: 16,
-    },
-
     webFallback: {
         flex: 1,
         justifyContent: "center",
@@ -91,4 +87,14 @@ export const styles = StyleSheet.create({
         color: colors.textSecondary,
         textAlign: "center",
     },
+
+    refreshButton: {
+        position: "absolute",
+        top: 60,
+        right: 20,
+        backgroundColor: "#000",
+        padding: 10,
+        borderRadius: 8,
+    }
+
 });

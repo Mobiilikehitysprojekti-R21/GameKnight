@@ -7,6 +7,7 @@ import { FindBoardGames } from "../../application/FindBoardGames";
 import { AddGameToCollection } from "../../application/AddGameToCollection";
 import { GetGameCollection } from "../../application/GetGameCollection";
 import { DeleteBoardGame } from "../../application/DeleteBoardGame";
+import { useHomeScreenViewModel } from "./useHomeScreenViewModel";
 import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -70,6 +71,31 @@ export function useGameCollectionViewModel(repo: BoardGameApiRepository) {
         setEmail(auth.user?.email ?? null)
         console.log("GCVM: ", auth.user?.nickname, auth.user?.sub, auth.user?.email)
     }, [auth.user])
+
+    // Load game collection when user info is set
+    useEffect(() => {
+        console.log("auth0 selvitetty: ", auth0_id)
+        if (!auth0_id) return
+
+        loadGames()
+    }, [auth0_id])
+
+
+    // Save gamelist to local storage
+    useEffect(() => {
+        const storeGames = async () => {
+            if (loading) return; // älä tallenna ennen kuin lataus on valmis
+            try {
+                console.log('Tallennetaan pelejä', games);
+                await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(games));
+            } catch (e) {
+                console.error("Failed to store games", e);
+            }
+        };
+
+        storeGames();
+    }, [games, loading]);
+
 
     // Load game collection when user info is set
     useEffect(() => {
