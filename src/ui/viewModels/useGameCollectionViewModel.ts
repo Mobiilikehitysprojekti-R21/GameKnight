@@ -6,7 +6,6 @@ import { FindBoardGames } from "../../application/FindBoardGames";
 import { AddGameToCollection } from "../../application/AddGameToCollection";
 import { GetGameCollection } from "../../application/GetGameCollection";
 import { DeleteBoardGame } from "../../application/DeleteBoardGame";
-import { useHomeScreenViewModel } from "./useHomeScreenViewModel";
 import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -147,7 +146,10 @@ export function useGameCollectionViewModel(repo: BoardGameApiRepository) {
         }
         try {
             await addGameToCollection.execute(auth0_id, Number(bggId))
-            await loadGames()   // update game collection
+            
+            const gamelist = await getGameCollection.execute(auth0_id)
+            setGames(gamelist)
+            
             setIsGameAdded(true) // signal that the game was added successfully
             setIsGameChosen(false)
             setBggId(undefined)
