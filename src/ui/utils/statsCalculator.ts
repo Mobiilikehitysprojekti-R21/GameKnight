@@ -39,6 +39,8 @@ export const calculateUserStats = (sessions: GameSession[], userId: number) => {
     };
 };
 
+// ...existing code...
+
 export const calculateGeneralStats = (sessions: GameSession[]) => {
     const userIds = new Set<number>();
     const groups = new Set<number>();
@@ -75,8 +77,15 @@ export const calculateGeneralStats = (sessions: GameSession[]) => {
         .slice(0, 5)
         .map(([game]) => game);
 
+    // suosituimmat
+    const gameFrequencies = Object.entries(gameFrequency)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5)
+        .map(([_, count]) => count);
+
     return {
         mostPlayedGames,
+        gameFrequencies, 
         userCount: userIds.size,
         groupCount: groups.size,
         mostWinningPlayer,
