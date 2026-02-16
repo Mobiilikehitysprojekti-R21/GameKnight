@@ -112,9 +112,10 @@ subgraph 1X["viewModels"]
 end
 subgraph 2O["utils"]
 2P["statsCalculator.ts"]
+2Q["statsVisualization.tsx"]
 end
-subgraph 2Q["services"]
-2R["location.ts"]
+subgraph 2R["services"]
+2S["location.ts"]
 end
 end
 end
@@ -197,5 +198,8 @@ G-->J
 2M-->1E
 2N-->1S
 2N-->2P
+2N-->2Q
 2N-->1Y
 2N-->24
+2Q-->1S
+2Q-->1I
