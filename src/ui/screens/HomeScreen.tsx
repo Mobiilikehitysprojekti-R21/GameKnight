@@ -9,6 +9,8 @@ type Props = NativeStackScreenProps<any>
 export default function HomeScreen({ navigation }: Props) {
   const { loggedIn, displayName, errorMessage, login, logout } =
     useAuthViewModel();
+  
+  const vm = useHomeScreenViewModel()
 
   const vm = useHomeScreenViewModel()
 
@@ -24,9 +26,25 @@ export default function HomeScreen({ navigation }: Props) {
       </View>
 
       {/*TERVEHDYS*/}
-      {loggedIn ?
-        (<View style={styles.card}>
-          <Text style={styles.sectionTitle}>{`Hei, ${vm.nickname}!`}</Text>
+      {loggedIn ? 
+      (<View style={styles.card}>
+        <Text style={styles.sectionTitle}>{`Hei, ${vm.nickname}!`}</Text>
+
+        <Text style={styles.statText}>
+          Mukava nähdä taas ❤️
+        </Text>
+        </View>) : <></>}
+
+      {/* PÄÄTOIMINNOT */}
+      <View style={styles.card}>
+        <TouchableOpacity style={styles.primaryButton} onPress={() => navigation.navigate('NewGame')}>
+          <Text style={styles.buttonText}>Aloita uusi peli</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.secondaryButton}>
+          <Text style={styles.buttonText}>Jatka peliä</Text>
+        </TouchableOpacity>
+      </View>
 
           <Text style={styles.statText}>
             Mukava nähdä taas ❤️

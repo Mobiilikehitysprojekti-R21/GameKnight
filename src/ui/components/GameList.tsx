@@ -12,11 +12,12 @@ type GameListProps = {
     userNick: string                    // user´s nickname
     search: string                      // search input
     setSearch: (input: string) => void  // function for search
-    setGames: (id: number) => void      // function for updating gamelist after removal
+    setGames: (id: number, userid: string) => void      // function for updating gamelist after removal
+    userid: string
 
 }
 
-const GameList = ({filteredItems, games, userNick, search, setSearch, setGames}: GameListProps) => {
+const GameList = ({filteredItems, games, userNick, search, setSearch, setGames, userid}: GameListProps) => {
 
     return (
         <SwipeListView
@@ -69,7 +70,7 @@ const GameList = ({filteredItems, games, userNick, search, setSearch, setGames}:
                   <Button
                     title="Delete"
                     color="#d11a2a"
-                    onPress={()=>setGames(item.bgg_id)}
+                    onPress={()=>setGames(item.bgg_id, userid)}
                   />
                 </View>
               )}
