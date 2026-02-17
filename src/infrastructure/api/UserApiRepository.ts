@@ -71,7 +71,6 @@ export class UserApiRepository implements UserRepository {
 
       return;
     }
-    
   }
 
   // Sign in user and store locally
@@ -111,6 +110,33 @@ export class UserApiRepository implements UserRepository {
     }
   }
 
+  // Fetch user data from database
+  async fetchUser(auth0_id: string): Promise<User | null> {
+    try {
+      if (this.getAccessToken) {
+        const res = await authFetch(this.getAccessToken, `${this.apiUrl}/users/fetchUserNickname`, {
+          method: 'POST',
+          body: JSON.stringify({ auth0_id }),
+        })
+
+        if (!res.ok) {
+          console.error('fetchUser failed', res.status, await res.text())
+          return null
+        }
+
+        const data = await res.json()
+        return data as User
+      }
+
+      // Fallback to axios if no token provider
+      const response = await axios.post(`${this.apiUrl}/users/fetchUserNickname`, { auth0_id })
+      return response.data as User
+    } catch (e) {
+      console.error('fetchUser error', e)
+      return null
+    }
+  }
+
   async deleteUser(auth0_id: string): Promise<void> {
     if (this.getAccessToken) {
       const res = await authFetch(this.getAccessToken, `${this.apiUrl}/users/${auth0_id}`, {
@@ -118,7 +144,6 @@ export class UserApiRepository implements UserRepository {
       })
       if (!res.ok) {
         const body = await res.text();
-        
         console.error('delete user failed:', res.status, body);
 
         throw new Error(`Delete user failed: ${res.status}`);

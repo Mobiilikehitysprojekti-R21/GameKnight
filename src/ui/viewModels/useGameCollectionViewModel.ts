@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useAuth } from "../auth/useAuth";
 import type { BoardGame } from "../../domain/entities/BoardGame";
 //import { useAuth } from "../auth/useAuth";
 import { BoardGameApiRepository } from "../../infrastructure/api/BoardGameApiRepository";
@@ -34,6 +35,7 @@ export function useGameCollectionViewModel(repo: BoardGameApiRepository) {
     const [nickname, setNickname] = useState<string | null>(null)
     const [auth0_id, setAuth0_id] = useState<string | null>(null)
     const [email, setEmail] = useState<string | null>(null)
+    const auth = useAuth()
 
 
     // Load user´s game collection, set loading state
@@ -64,18 +66,36 @@ export function useGameCollectionViewModel(repo: BoardGameApiRepository) {
 
     //  fetch user info when the ViewModel is mounted
     useEffect(() => {
-        const fetchUser = async () => {
-            const storedNickname = await AsyncStorage.getItem("nickname")
-            const storedAuth0_id = await AsyncStorage.getItem("auth0_id")
-            const storedEmail = await AsyncStorage.getItem("email")
+        setNickname(auth.user?.nickname ?? null)
+        setAuth0_id(auth.user?.sub ?? null)
+        setEmail(auth.user?.email ?? null)
+        console.log("GCVM: ", auth.user?.nickname, auth.user?.sub, auth.user?.email)
+    }, [auth.user])
 
-            setNickname(storedNickname)
-            setAuth0_id(storedAuth0_id)
-            setEmail(storedEmail)
-        }
-        fetchUser()
-        console.log("GCVM: ", nickname, auth0_id, email)
-    }, [])
+    // Load game collection when user info is set
+    useEffect(() => {
+        console.log("auth0 selvitetty: ", auth0_id)
+        if (!auth0_id) return
+
+        loadGames()
+    }, [auth0_id])
+
+
+    // Save gamelist to local storage
+    useEffect(() => {
+        const storeGames = async () => {
+            if (loading) return; // älä tallenna ennen kuin lataus on valmis
+            try {
+                console.log('Tallennetaan pelejä', games);
+                await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(games));
+            } catch (e) {
+                console.error("Failed to store games", e);
+            }
+        };
+
+        storeGames();
+    }, [games, loading]);
+
 
     // Load game collection when user info is set
     useEffect(() => {
@@ -118,7 +138,10 @@ export function useGameCollectionViewModel(repo: BoardGameApiRepository) {
                 position: 'top',
                 visibilityTime: 3000,
             })
-            await loadGames()
+            // update gamelist
+            const gamelist = await getGameCollection.execute(auth0_id)
+            console.log('pelilista: ', gamelist)
+            setGames(gamelist)
 
         } catch (e: any) {
             console.error("Error deleting game from collection:", e)
@@ -147,7 +170,10 @@ export function useGameCollectionViewModel(repo: BoardGameApiRepository) {
         }
         try {
             await addGameToCollection.execute(auth0_id, Number(bggId))
-            await loadGames()   // update game collection
+            
+            const gamelist = await getGameCollection.execute(auth0_id)
+            setGames(gamelist)
+            
             setIsGameAdded(true) // signal that the game was added successfully
             setIsGameChosen(false)
             setBggId(undefined)
