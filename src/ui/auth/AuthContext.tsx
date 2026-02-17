@@ -42,6 +42,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     if (userWithNickname.user_id !== undefined && userWithNickname.user_id !== null) {
       await AsyncStorage.setItem("user_id", String(userWithNickname.user_id))
     }
+    if (userWithNickname.avatar_url !== undefined && userWithNickname.avatar_url !== null) {
+      await AsyncStorage.setItem("avatar_url", userWithNickname.avatar_url)
+    }
     
     setIsLoggedIn(true)                 // boolean is set true ( user is logged in )
   }
@@ -54,6 +57,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     if (userData.sub !== undefined) await AsyncStorage.setItem('auth0_id', userData.sub)
     if (userData.user_id !== undefined && userData.user_id !== null) {
       await AsyncStorage.setItem('user_id', String(userData.user_id))
+    }
+    if (userData.avatar_url !== undefined && userData.avatar_url !== null) {
+      await AsyncStorage.setItem('avatar_url', String(userData.avatar_url))
     }
   }
 

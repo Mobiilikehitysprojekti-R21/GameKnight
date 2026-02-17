@@ -42,6 +42,7 @@ export const useProfileScreenViewModel = (onSuccess: () => void, onLogout: () =>
         setUserNickname(auth.user?.nickname ?? null)
         setAuth0_id(auth.user?.sub ?? null)
         setEmail(auth.user?.email ?? null)
+        setImageUri(auth.user?.avatar_url ?? null)
         console.log("ProfileVM: ", auth.user.nickname, auth.user.auth0_id, auth.user.email)
     }, [])
 
