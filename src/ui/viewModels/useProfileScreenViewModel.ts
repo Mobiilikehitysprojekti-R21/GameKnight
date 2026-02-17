@@ -7,6 +7,7 @@ import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { pickImageFromGallery } from "../services/imageService";
 import { uploadProfileImage } from "../services/uploadService";
+import Constants from 'expo-constants';
 
 // Viewmodel hook for profile screen logic
 
@@ -140,8 +141,25 @@ export const useProfileScreenViewModel = (onSuccess: () => void, onLogout: () =>
 
         try {
             if (!token) return
-            await uploadProfileImage(imageUri, auth.getAccessToken)
+            const newAvatarUrl = await uploadProfileImage(imageUri, auth.getAccessToken)
+            console.log('1. Backend returned avatar URL:', newAvatarUrl)
+
+            // Normalize avatar URL (add API base if relative path)
+            const apiBaseUrl = Constants.expoConfig?.extra?.API_URL ?? ''
+            let normalizedUrl = newAvatarUrl
+            if (newAvatarUrl && !/^https?:\/\//i.test(newAvatarUrl)) {
+                const base = apiBaseUrl.endsWith('/') ? apiBaseUrl.slice(0, -1) : apiBaseUrl
+                const path = newAvatarUrl.startsWith('/') ? newAvatarUrl : `/${newAvatarUrl}`
+                normalizedUrl = `${base}${path}`
+            }
+            console.log('2. Normalized URL:', normalizedUrl)
+            console.log('3. Current auth.user:', auth.user)
+
+            // Update AuthContext with normalized avatar_url
+            await auth.updateUser({ avatar_url: normalizedUrl })
+            console.log('4. AuthContext updated')
         } catch (e: any) {
+            console.error('saveProfileImage error:', e)
             setError("kuvan tallennus epäonnistui")
         } finally {
             setIsUploading(false)

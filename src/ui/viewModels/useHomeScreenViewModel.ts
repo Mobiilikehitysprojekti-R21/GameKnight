@@ -19,10 +19,13 @@ export function useHomeScreenViewModel() {
 
   // Sync user info from AuthContext
   useEffect(() => {
+    console.log('[HomeScreenViewModel] auth.user changed:', auth.user)
     setNickname(auth.user?.nickname ?? null)
     setAuth0_id(auth.user?.sub ?? null)
     setEmail(auth.user?.email ?? null)
-    setAvatar_url(auth.user?.avatar_url ?? null)
+    const newAvatarUrl = auth.user?.avatar_url ?? null
+    console.log('[HomeScreenViewModel] Setting avatar_url:', newAvatarUrl)
+    setAvatar_url(newAvatarUrl)
   }, [auth.user, auth.isLoggedIn])
 
   return {

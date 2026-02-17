@@ -10,7 +10,7 @@ type Props = NativeStackScreenProps<any>
 export default function HomeScreen({ navigation }: Props) {
   const { loggedIn, displayName, errorMessage, login, logout } =
     useAuthViewModel();
-  
+
   const vm = useHomeScreenViewModel()
 
   return (
@@ -26,40 +26,41 @@ export default function HomeScreen({ navigation }: Props) {
 
       {!loggedIn && (
         <View style={styles.card}>
-        <Text style={styles.sectionTitle}>{`TERVETULOA!`}</Text>
+          <Text style={styles.sectionTitle}>{`TERVETULOA!`}</Text>
 
-        <Text style={styles.statText}>
-          Pelaaminen on parasta kavereiden kanssa.
-        </Text>
-        <Text style={styles.statText}>
-          Liityhän siis mukaan joukkoomme!
-        </Text>
-        
+          <Text style={styles.statText}>
+            Pelaaminen on parasta kavereiden kanssa.
+          </Text>
+          <Text style={styles.statText}>
+            Liityhän siis mukaan joukkoomme!
+          </Text>
+
         </View>
       )}
 
-        {loggedIn && (
+      {loggedIn && (
         <>
-        {/*TERVEHDYS*/}
-        <View style={styles.card}>
-          <View style={styles.greetingRow}>
-          <View >
-          <Text style={styles.sectionTitle}>{`Hei, ${displayName}!`}</Text>
-          <Text style={styles.statText}>
-            Mukava nähdä taas ❤️
-          </Text>
-      
+          {/*TERVEHDYS*/}
+          <View style={styles.card}>
+            <View style={styles.greetingRow}>
+              <View >
+                <Text style={styles.sectionTitle}>{`Hei, ${displayName}!`}</Text>
+                <Text style={styles.statText}>
+                  Mukava nähdä taas ❤️
+                </Text>
+
+              </View>
+              {vm.avatar_url && (
+                <Image
+                  key={vm.avatar_url}
+                  source={{ uri: vm.avatar_url }}
+                  style={styles.avatarImage}
+                />
+
+              )}
+
+            </View>
           </View>
-          {vm.avatar_url && (
-            <Image
-              source={{ uri: vm.avatar_url }}
-              style={styles.avatarImage}
-            />
-            
-          )}
-          
-          </View>
-        </View>
 
           {/* PROFIILI */}
           < View style={styles.card}>
