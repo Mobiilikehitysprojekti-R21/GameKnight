@@ -114,7 +114,7 @@ export function useAuthViewModel() {
                   console.error("SignUp error:", error.message || error)
                   alert(`Virhe tilin luomisessa: ${error.message || error}`)
                 }
-                console.log("USER: ", userData) // debugging...
+              
                 // Fetch latest user data from backend
                 try {
                   const fetched = await userRepo.fetchUser(userData.sub)

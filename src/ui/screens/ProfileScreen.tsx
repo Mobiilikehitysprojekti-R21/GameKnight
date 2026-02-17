@@ -95,24 +95,27 @@ export default function ProfileScreen({ navigation }: Props) {
               <Text style={styles.settingsButtonText}>Muuta</Text>
             </TouchableOpacity>
           </View>
+          <View style={styles.avatar}>
+            <View style={styles.avatarContent}>
+              {vm.imageUri && (
+                <Image
+                  source={{ uri: vm.imageUri }}
+                  style={{ width: 100, height: 100, borderRadius: 75, }}
+                />
+              )}</View>
+            
+            <TouchableOpacity style={styles.settingsButton} onPress={vm.selectProfileImage}>
+              <Text style={styles.settingsButtonText}>Vaihda kuva</Text>
+            </TouchableOpacity>
+            {vm.error && <Text>{vm.error}</Text>}
+          </View>
           <View style={styles.settings}>
             <Text style={styles.statText}>Poista tili</Text>
             <TouchableOpacity style={styles.deleteButton} onPress={() => setDcModalVisible(true)}>
               <Text style={styles.settingsButtonText}>Poista</Text>
             </TouchableOpacity>
           </View>
-          <View>
-            {vm.imageUri && (
-              <Image
-                source={{ uri: vm.imageUri }}
-                style={{ width: 100, height: 100, borderRadius: 75 }}
-              />
-            )}
-
-            <Button title="Valitse profiilikuva" onPress={vm.selectProfileImage} />
-
-            {vm.error && <Text>{vm.error}</Text>}
-          </View>
+          
         </View>
         
 

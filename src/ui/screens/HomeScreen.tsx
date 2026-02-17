@@ -1,9 +1,10 @@
-import { ScrollView, View, Text, TouchableOpacity } from 'react-native';
+import { ScrollView, View, Text, TouchableOpacity, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { styles } from '../styles/homeStyles';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useAuthViewModel } from '../viewModels/useAuthViewModel';
 import { useHomeScreenViewModel } from '../viewModels/useHomeScreenViewModel';
+import { useProfileScreenViewModel } from '../viewModels/useProfileScreenViewModel';
 
 type Props = NativeStackScreenProps<any>
 export default function HomeScreen({ navigation }: Props) {
@@ -41,11 +42,23 @@ export default function HomeScreen({ navigation }: Props) {
         <>
         {/*TERVEHDYS*/}
         <View style={styles.card}>
-        <Text style={styles.sectionTitle}>{`Hei, ${displayName}!`}</Text>
-
-        <Text style={styles.statText}>
-          Mukava nähdä taas ❤️
-        </Text>
+          <View style={styles.greetingRow}>
+          <View >
+          <Text style={styles.sectionTitle}>{`Hei, ${displayName}!`}</Text>
+          <Text style={styles.statText}>
+            Mukava nähdä taas ❤️
+          </Text>
+      
+          </View>
+          {vm.avatar_url && (
+            <Image
+              source={{ uri: vm.avatar_url }}
+              style={styles.avatarImage}
+            />
+            
+          )}
+          
+          </View>
         </View>
 
           {/* PROFIILI */}

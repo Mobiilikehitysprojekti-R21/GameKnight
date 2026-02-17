@@ -11,20 +11,21 @@ export function useHomeScreenViewModel() {
   //   const user = await getUserInfo.execute()
   // }
 
-    const [nickname, setNickname] = useState<string | null>(null)
-    const [auth0_id, setAuth0_id] = useState<string | null>(null)
-    const [email, setEmail] = useState<string | null>(null)
-    const auth = useAuth()
+  const [nickname, setNickname] = useState<string | null>(null)
+  const [auth0_id, setAuth0_id] = useState<string | null>(null)
+  const [email, setEmail] = useState<string | null>(null)
+  const [avatar_url, setAvatar_url] = useState<string | null>(null)
+  const auth = useAuth()
 
-    // Sync user info from AuthContext
-    useEffect(() => {
-      setNickname(auth.user?.nickname ?? null)
-      setAuth0_id(auth.user?.sub ?? null)
-      setEmail(auth.user?.email ?? null)
-      console.log("homeVM: ", auth.user?.nickname, auth.user?.sub, auth.user?.email)
-    }, [auth.user, auth.isLoggedIn])
+  // Sync user info from AuthContext
+  useEffect(() => {
+    setNickname(auth.user?.nickname ?? null)
+    setAuth0_id(auth.user?.sub ?? null)
+    setEmail(auth.user?.email ?? null)
+    setAvatar_url(auth.user?.avatar_url ?? null)
+  }, [auth.user, auth.isLoggedIn])
 
   return {
-    nickname, auth0_id, email
+    nickname, auth0_id, email, avatar_url
   };
 }
