@@ -6,7 +6,7 @@ export interface FriendRepository {
   getFriends(): Promise<Friend[]>
 
   inviteFriend(email: string): Promise<FriendInviteResult>
-  addFriend(nickname: string): Promise<void>
+  addFriend(user_id: number, nickname: string): Promise<void>
   
   getFriendRequests(): Promise<FriendRequest[]>
   acceptRequest(request_id: string): Promise<void>;
