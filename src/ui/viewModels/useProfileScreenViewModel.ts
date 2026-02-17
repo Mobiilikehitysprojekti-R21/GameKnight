@@ -6,6 +6,7 @@ import { DeleteUser } from "../../application/DeleteUser";
 import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { pickImageFromGallery } from "../services/imageService";
+import { uploadProfileImage } from "../services/uploadService";
 
 // Viewmodel hook for profile screen logic
 
@@ -17,12 +18,14 @@ export const useProfileScreenViewModel = (onSuccess: () => void, onLogout: () =>
 
     // Image
     const [imageUri, setImageUri] = useState<string | null>(null);
+    const [isUploadin, setIsUploading] = useState(false)
     const [error, setError] = useState<string | null>(null);
 
     // user
     const [userNickname, setUserNickname] = useState<string | null>(null)
     const [auth0_id, setAuth0_id] = useState<string | null>(null)
     const [email, setEmail] = useState<string | null>(null)
+    const [token, setToken] = useState<string | null>(null)
 
     // Repository and UseCase instances (application)
     const auth = useAuth()
@@ -43,7 +46,7 @@ export const useProfileScreenViewModel = (onSuccess: () => void, onLogout: () =>
         setAuth0_id(auth.user?.sub ?? null)
         setEmail(auth.user?.email ?? null)
         setImageUri(auth.user?.avatar_url ?? null)
-        console.log("ProfileVM: ", auth.user.nickname, auth.user.auth0_id, auth.user.email)
+        setToken(auth.accessToken)
     }, [])
 
     // Function to change Nickname
@@ -128,6 +131,23 @@ export const useProfileScreenViewModel = (onSuccess: () => void, onLogout: () =>
         }
     };
 
+    // Upload image to backend
+    const saveProfileImage = async () => {
+        if (!imageUri) return
+
+        setIsUploading(true)
+        setError(null)
+
+        try {
+            if (!token) return
+            await uploadProfileImage(imageUri, auth.getAccessToken)
+        } catch (e: any) {
+            setError("kuvan tallennus epäonnistui")
+        } finally {
+            setIsUploading(false)
+        }
+    }
+
     return {
         nickname,
         setNickname,
@@ -135,12 +155,14 @@ export const useProfileScreenViewModel = (onSuccess: () => void, onLogout: () =>
         showCheck,
         checkNickname,
         changeNick,
-        //isLoggedIn,
+        token,
         logoutUser,
         deleteUser,
         imageUri,
         error,
-        selectProfileImage
+        selectProfileImage,
+        saveProfileImage,
+        isUploadin
     }
 
 }

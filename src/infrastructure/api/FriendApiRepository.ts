@@ -3,7 +3,7 @@ import type { Friend } from "../../domain/entities/Friend";
 import type { FriendInviteResult } from "../../domain/entities/FriendInviteResult";
 import type { FriendRequest } from "../../domain/entities/FriendRequest";
 
-const API_BASE = "http://localhost:3000/";
+const API_BASE = "http://localhost:3000";
 
 export class FriendApiRepository implements FriendRepository {
 

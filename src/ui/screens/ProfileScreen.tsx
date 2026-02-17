@@ -4,7 +4,6 @@ import {
   Text,
   TouchableOpacity,
   ActivityIndicator,
-  Button,
   Image
 } from 'react-native';
 import { styles } from '../styles/profileStyles';
@@ -107,8 +106,12 @@ export default function ProfileScreen({ navigation }: Props) {
             <TouchableOpacity style={styles.settingsButton} onPress={vm.selectProfileImage}>
               <Text style={styles.settingsButtonText}>Vaihda kuva</Text>
             </TouchableOpacity>
-            {vm.error && <Text>{vm.error}</Text>}
+            <TouchableOpacity style={styles.settingsButton} onPress={vm.saveProfileImage}>
+              <Text style={styles.settingsButtonText}>💾</Text>
+            </TouchableOpacity>
           </View>
+          {vm.isUploadin && <ActivityIndicator />}
+          {vm.error && <Text>{vm.error}</Text>}
           <View style={styles.settings}>
             <Text style={styles.statText}>Poista tili</Text>
             <TouchableOpacity style={styles.deleteButton} onPress={() => setDcModalVisible(true)}>

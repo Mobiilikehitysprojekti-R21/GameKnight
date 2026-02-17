@@ -48,7 +48,7 @@ export function useAuthViewModel() {
     scheme: 'gameknight'  // this needs to match app.json
   })
 
-  // console.log("redirect uri: ", redirectUri) TÄMÄ KANNATTAA TSEKATA JOS EI ALA TOIMIA, ja lisätä auth0 dashboardiin
+   console.log("redirect uri: ", redirectUri) //TÄMÄ KANNATTAA TSEKATA JOS EI ALA TOIMIA, ja lisätä auth0 dashboardiin
 
   // Create authentication request using Expo AuthSession
   const [request, response, promptAsync] = AuthSession.useAuthRequest(
