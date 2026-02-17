@@ -5,15 +5,13 @@ import { View, Text, TextInput, Pressable, FlatList, ScrollView } from 'react-na
 import { useNavigation } from '@react-navigation/native';
 import { BoardGame } from '../../domain/entities/BoardGame';
 import { styles } from '../styles/NewGameStyles';
-import type { Location } from '../../domain/entities/Location';
 import { useFavoriteLocationsViewModel } from '../viewModels/useFavoriteLocationsViewModel';
 import { FriendsPicker } from '../components/players/FriendsPicker';
 import { useFriendsViewModel } from '../viewModels/useFriendsViewModel';
 import { GuestPlayerModal } from '../components/players/GuestPlayerModal';
 import { PlayersList } from '../components/players/PlayersList';
-import { useGameSessionDraftViewModel } from '../viewModels/useGameSessionDraftViewModel';
 import { useAuth } from '../auth/useAuth';
-
+import { useGameSessionDraft } from '../context/GameSessionDraftContext';
 
 
 
@@ -31,31 +29,31 @@ export const NewGameScreen = () => {
 
   const navigation = useNavigation<any>();
   const { favorites, addFavorite } = useFavoriteLocationsViewModel();
-  const { friends } = useFriendsViewModel();
+  const { friends } = useFriendsViewModel(); 
   const [guestModalOpen, setGuestModalOpen] = useState(false);
-  const { selectedGame, players, location: gameLocation, setSelectedGame, setPlayers, setLocation, } = useGameSessionDraftViewModel();
+  const { selectedGame, players, location, setSelectedGame, setPlayers, setLocation,} = useGameSessionDraft();
   const availableFriends = friends.filter(f => f.user_id && !players.some(p => p.id?.toString() === f.user_id.toString()));
   const { user } = useAuth();
 
   /* Pelaajat */
 
   useEffect(() => {
-    if (!user) return;
+    if (!user?.sub) return;
 
     setPlayers(prev => {
-      const alreadyExists = prev.some(p => p.id === user.id);
-      if (alreadyExists) return prev;
+      const exists = prev.some(p => p.id === user.sub);
+      if (exists) return prev;
 
       return [
         ...prev,
         {
-          id: user.id,
-          name: user.name,
+          id: user.sub,
+          name: user.nickname ?? user.name,
           type: "USER",
         },
       ];
     });
-  }, [user, setPlayers]);
+  }, [user?.sub]);
 
   console.log("Auth user:", user);
 
@@ -64,9 +62,14 @@ export const NewGameScreen = () => {
 
     setPlayers(prev => [
       ...prev,
-      { name: name.trim(), type: "GUEST" },
+      {
+        id: `guest-${Date.now()}-${Math.random()}`,
+        name: name.trim(),
+        type: "GUEST"
+      },
     ]);
   };
+
 
   const addRegisteredPlayer = (user: { id: string; name: string }) => {
     setPlayers(prev => {
@@ -110,15 +113,13 @@ export const NewGameScreen = () => {
     const gameSessionDraft = {
       boardGame: selectedGame,
       players,
-      location: gameLocation,
+      location,
       startedAt: new Date(),
     };
 
     console.log("Starting game:", gameSessionDraft);
 
-    navigation.navigate("ScoreEntry", {
-      sessionDraft: gameSessionDraft,
-    });
+    navigation.navigate("ScoreEntry");
   };
 
   /* Pelin valinta */
@@ -187,8 +188,6 @@ export const NewGameScreen = () => {
         onPress={() =>
           navigation.navigate("PlayerSearch", {
             onSelect: (user: { id?: string; name: string; type: "USER" | "GUEST" }) => {
-              const exists = players.some(p => p.id === user.id);
-              if (exists) return;
 
               setPlayers(prev => {
                 const exists = prev.some(p => p.id === user.id);
@@ -206,8 +205,6 @@ export const NewGameScreen = () => {
           + Lisää pelaaja
         </Text>
       </Pressable>
-
-
 
       {/* Sijainti */}
       <Text style={styles.sectionTitle}>Sijainti</Text>
@@ -240,25 +237,25 @@ export const NewGameScreen = () => {
       <TextInput
         style={styles.locationInput}
         placeholder="Valitse sijainti"
-        value={gameLocation?.label ?? ""}
+        value={location?.label ?? ""}
         editable={false}
       />
 
-      {gameLocation && (
+      {location && (
         <Pressable
           onPress={async () => {
             const exists = favorites.some(
               (l) =>
-                l.latitude === gameLocation.latitude &&
-                l.longitude === gameLocation.longitude
+                l.latitude === location.latitude &&
+                l.longitude === location.longitude
             );
 
             if (exists) return;
 
             await addFavorite({
-              name: gameLocation.label,
-              latitude: gameLocation.latitude,
-              longitude: gameLocation.longitude,
+              name: location.label,
+              latitude: location.latitude,
+              longitude: location.longitude,
             });
             console.log("Saved favorite");
           }}

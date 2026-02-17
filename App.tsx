@@ -21,6 +21,7 @@ import { MapScreen } from './src/ui/screens/MapScreen';
 import { AuthProvider } from './src/ui/auth/AuthContext';
 import { PlayerSearchScreen } from './src/ui/screens/PlayerSearchScreen';
 import { ScoreEntryScreen } from './src/ui/screens/ScoreEntryScreen';
+import { GameSessionDraftProvider } from './src/ui/context/GameSessionDraftContext';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -29,6 +30,7 @@ export default function App() {
     <SafeAreaProvider>
       <AuthProvider>
         <NavigationContainer>
+          <GameSessionDraftProvider>
           <SafeAreaView style={{ flex: 1, backgroundColor: '#0F172A' }}>
             <Stack.Navigator
               screenOptions={{
@@ -60,6 +62,7 @@ export default function App() {
               
             </Stack.Navigator>
           </SafeAreaView>
+          </GameSessionDraftProvider>
         </NavigationContainer>
       </AuthProvider>
       <StatusBar style="light" />

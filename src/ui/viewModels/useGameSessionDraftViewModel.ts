@@ -8,51 +8,21 @@ type GamePlayer = {
     type: "USER" | "GUEST";
 };
 
-let draftState: {
-    selectedGame: BoardGame | null;
-    players: GamePlayer[];
-    location: Location | null;
-} = {
-    selectedGame: null,
-    players: [],
-    location: null,
-};
-
 export const useGameSessionDraftViewModel = () => {
-    const [, forceUpdate] = useState({});
-
-    const setSelectedGame = (game: BoardGame | null) => {
-        draftState.selectedGame = game;
-        forceUpdate({});
-    };
-
-    const setPlayers = (updater: GamePlayer[] | ((prev: GamePlayer[]) => GamePlayer[])) => {
-        if (typeof updater === "function") {
-            draftState.players = updater(draftState.players);
-        } else {
-            draftState.players = updater;
-        }
-        forceUpdate({});
-    };
-
-    const setLocation = (location: Location | null) => {
-        draftState.location = location;
-        forceUpdate({});
-    };
+    const [selectedGame, setSelectedGame] = useState<BoardGame | null>(null);
+    const [players, setPlayers] = useState<GamePlayer[]>([]);
+    const [location, setLocation] = useState<Location | null>(null);
 
     const resetDraft = () => {
-        draftState = {
-            selectedGame: null,
-            players: [],
-            location: null,
-        };
-        forceUpdate({});
+        setSelectedGame(null);
+        setPlayers([]);
+        setLocation(null);
     };
 
     return {
-        selectedGame: draftState.selectedGame,
-        players: draftState.players,
-        location: draftState.location,
+        selectedGame,
+        players,
+        location,
         setSelectedGame,
         setPlayers,
         setLocation,
