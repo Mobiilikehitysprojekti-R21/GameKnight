@@ -13,6 +13,5 @@ export type RootStackParamList = {
   Stats: undefined
   PlayerSearch: undefined;   
   ScoreEntry: undefined;
-  NotificationTest: undefined;
 
 };
