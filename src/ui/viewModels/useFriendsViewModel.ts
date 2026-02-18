@@ -3,10 +3,15 @@ import { useFocusEffect } from "@react-navigation/native";
 import type { Friend } from "../../domain/entities/Friend";
 import type { FriendRequest } from "../../domain/entities/FriendRequest";
 import { FriendApiRepository } from "../../infrastructure/api/FriendApiRepository";
-
-const friendRepository = new FriendApiRepository();
+import { useAuth } from "../auth/useAuth";
+import { sendLocalNotification } from "../../ui/services/notifications"; 
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export function useFriendsViewModel() {
+
+    const { getAccessToken, user } = useAuth();
+    const friendRepository = new FriendApiRepository(() => getAccessToken());
+
     const [friends, setFriends] = useState<Friend[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -59,18 +64,29 @@ export function useFriendsViewModel() {
 
     // Lisää kaveri nicknamellä, kaveri-sivulla
     async function addFriend() {
+        let user_id = user?.user_id;
+        if (!user_id) {
+            const storedId = await AsyncStorage.getItem("user_id");
+            if (storedId) user_id = Number(storedId);
+        }
         setNicknameError("");
         setNicknameInfo("");
         setError(null);
         setInfo(null);
 
+        if (!user_id) {
+            setNicknameError("Not logged in");
+            return;
+        }
+
         const value = nickname.trim();
+        console.log("addFriend payload:", { user_id, nickname: value });
         if (!value) {
             setNicknameError("Syötä käyttäjätunnus");
             return;
         }
         try {
-            await friendRepository.addFriend(value);
+            await friendRepository.addFriend(user_id, value);
 
             setNickname("");
             setNicknameInfo(`Kaveripyyntö lähetetty: ${value}`);
@@ -125,6 +141,13 @@ export function useFriendsViewModel() {
             await refresh();
 
             setInfo("Kaveripyyntö hyväksytty");
+
+             await sendLocalNotification({
+              type: 'friend_request',
+              title: '✓ Kaveri lisätty',
+              body: `${req?.from_nickname} on nyt kaverisi!`,
+              data: { requestId: request_id, requesterNickname: req?.from_nickname }
+            });
 
         } catch (e: any) {
             // rollback: palauta pyyntö jos epäonnistui

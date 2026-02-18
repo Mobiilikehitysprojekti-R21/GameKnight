@@ -34,6 +34,7 @@ export function useGameCollectionViewModel(repo: BoardGameApiRepository) {
     const [nickname, setNickname] = useState<string | null>(null)
     const [auth0_id, setAuth0_id] = useState<string | null>(null)
     const [email, setEmail] = useState<string | null>(null)
+    const auth = useAuth()
 
     // Auth from context
     const auth = useAuth()

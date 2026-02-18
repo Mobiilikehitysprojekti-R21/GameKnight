@@ -10,7 +10,7 @@ type Props = NativeStackScreenProps<any>
 export default function HomeScreen({ navigation }: Props) {
   const { loggedIn, displayName, errorMessage, login, logout } =
     useAuthViewModel();
-
+  
   const vm = useHomeScreenViewModel()
 
   return (
@@ -62,7 +62,7 @@ export default function HomeScreen({ navigation }: Props) {
             </View>
           </View>
 
-          {/* PROFIILI */}
+          {/* PELI -TOIMINNALLISUUS */}
           < View style={styles.card}>
             <TouchableOpacity style={styles.primaryButton} onPress={() => navigation.navigate('NewGame')}>
               <Text style={styles.buttonText}>Aloita uusi peli</Text>

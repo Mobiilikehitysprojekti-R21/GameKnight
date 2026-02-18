@@ -4,6 +4,7 @@ import {
   Text,
   TouchableOpacity,
   ActivityIndicator,
+  Button,
   Image
 } from 'react-native';
 import { styles } from '../styles/profileStyles';

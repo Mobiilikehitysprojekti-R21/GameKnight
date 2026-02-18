@@ -77,4 +77,15 @@ export class BoardGameApiRepository implements BoardGameRepository {
     }
   }
 
+    async getGameById(game_id: number): Promise<BoardGame | undefined> {
+    const res = await authFetch(
+      this.getAccessToken,
+      `${this.apiUrl}/boardgames/${encodeURIComponent(game_id)}`
+    );
+    if (res.status === 404) {
+      return undefined;
+    }
+    return (await res.json()) as BoardGame;
+  }
+
 }
