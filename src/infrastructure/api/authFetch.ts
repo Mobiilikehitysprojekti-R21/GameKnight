@@ -54,7 +54,6 @@ export async function authFetchMultipart(
 
   const headers = new Headers(options.headers);
   headers.set('Authorization', `Bearer ${token}`);
-  // Do NOT set Content-Type for multipart; let Fetch set it with boundary
 
   return fetch(url, {
     ...options,

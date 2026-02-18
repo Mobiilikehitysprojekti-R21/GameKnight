@@ -13,16 +13,17 @@ import Constants from 'expo-constants';
 
 export const useProfileScreenViewModel = (onSuccess: () => void, onLogout: () => void) => {
 
+    // Nickname editing state
     const [nickname, setNickname] = useState("")
     const [isNickAvailable, setIsNickAvailable] = useState(false)   // state to track if the nickname is available
     const [showCheck, setShowCheck] = useState(false)               // state to handle user notification text about nickname´s availability
 
-    // Image
+    // Profile image state
     const [imageUri, setImageUri] = useState<string | null>(null);
     const [isUploadin, setIsUploading] = useState(false)
     const [error, setError] = useState<string | null>(null);
 
-    // user
+    // Cached user fields for the view
     const [userNickname, setUserNickname] = useState<string | null>(null)
     const [auth0_id, setAuth0_id] = useState<string | null>(null)
     const [email, setEmail] = useState<string | null>(null)
@@ -34,14 +35,14 @@ export const useProfileScreenViewModel = (onSuccess: () => void, onLogout: () =>
     const changeNewNickname = new ChangeNickname(repo)
     const deleteUserAccount = new DeleteUser(repo)
 
-    // Function to check if nickname is available
+    // Check if nickname is available
     const checkNickname = async () => {
         const available = await repo.validateNickname(nickname)
         setIsNickAvailable(available)
         setShowCheck(true)  // notify user if nickname is available or not
     }
 
-    //  fetch user info when the ViewModel is mounted
+    // Fetch user info when the ViewModel is mounted
     useEffect(() => {
         setUserNickname(auth.user?.nickname ?? null)
         setAuth0_id(auth.user?.sub ?? null)
@@ -50,7 +51,7 @@ export const useProfileScreenViewModel = (onSuccess: () => void, onLogout: () =>
         setToken(auth.accessToken)
     }, [])
 
-    // Function to change Nickname
+    // Change nickname and update local auth state
     const changeNick = async () => {
         try {
 
@@ -60,9 +61,9 @@ export const useProfileScreenViewModel = (onSuccess: () => void, onLogout: () =>
                 return
             }
             await changeNewNickname.execute(nickname, auth0_id)
-            await auth.updateUser({ nickname })
+            await auth.updateUser({ nickname }) // user data is updated via auth
 
-
+            // Toast to inform user
             Toast.show({
                 type: 'success',
                 text1: 'Nimimerkki vaihdettu!',
@@ -81,12 +82,11 @@ export const useProfileScreenViewModel = (onSuccess: () => void, onLogout: () =>
         }
     }
 
-    // Function for logout user
-    // TODO: logout with auth0???
+    // Logout and return to auth screen after toast delay
     const logoutUser = async () => {
         try {
             auth.logout()
-            setTimeout(() => {
+            setTimeout(() => {  // delay navigation to HomeScreen
                 onLogout()
             }, 1500)
         } catch (e: any) {
@@ -94,7 +94,7 @@ export const useProfileScreenViewModel = (onSuccess: () => void, onLogout: () =>
         }
     }
 
-    // Function to delete account
+    // Delete account and clean up local state
     const deleteUser = async () => {
 
         const id = await AsyncStorage.getItem("auth0_id")
@@ -121,18 +121,17 @@ export const useProfileScreenViewModel = (onSuccess: () => void, onLogout: () =>
         }
     }
 
-    // Select image for profilepic
+    // Select image for profile pic
     const selectProfileImage = async () => {
         try {
             const uri = await pickImageFromGallery();
-            console.log(uri)
             if (uri) setImageUri(uri);
         } catch (e) {
             setError("Kuvagallerian käyttö estetty");
         }
     };
 
-    // Upload image to backend
+    // Upload image to backend and update avatar URL
     const saveProfileImage = async () => {
         if (!imageUri) return
 
@@ -142,22 +141,27 @@ export const useProfileScreenViewModel = (onSuccess: () => void, onLogout: () =>
         try {
             if (!token) return
             const newAvatarUrl = await uploadProfileImage(imageUri, auth.getAccessToken)
-            console.log('1. Backend returned avatar URL:', newAvatarUrl)
 
             // Normalize avatar URL (add API base if relative path)
             const apiBaseUrl = Constants.expoConfig?.extra?.API_URL ?? ''
             let normalizedUrl = newAvatarUrl
             if (newAvatarUrl && !/^https?:\/\//i.test(newAvatarUrl)) {
-                const base = apiBaseUrl.endsWith('/') ? apiBaseUrl.slice(0, -1) : apiBaseUrl
-                const path = newAvatarUrl.startsWith('/') ? newAvatarUrl : `/${newAvatarUrl}`
+                const base = apiBaseUrl.endsWith('/') ? apiBaseUrl.slice(0, -1) : apiBaseUrl    // Ensure no double slashes when joining base and path
+                const path = newAvatarUrl.startsWith('/') ? newAvatarUrl : `/${newAvatarUrl}`   // Ensure path starts with a single slash
                 normalizedUrl = `${base}${path}`
             }
-            console.log('2. Normalized URL:', normalizedUrl)
-            console.log('3. Current auth.user:', auth.user)
 
             // Update AuthContext with normalized avatar_url
             await auth.updateUser({ avatar_url: normalizedUrl })
-            console.log('4. AuthContext updated')
+
+            // Toast to inform user
+            Toast.show({
+                type: 'success',
+                text1: 'Profiilikuva vaihdettu',
+                text2: `Onpa kaunista!`,
+                position: 'top',
+                visibilityTime: 3000,
+            })
         } catch (e: any) {
             console.error('saveProfileImage error:', e)
             setError("kuvan tallennus epäonnistui")

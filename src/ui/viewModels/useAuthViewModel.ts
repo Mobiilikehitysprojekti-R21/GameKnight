@@ -32,7 +32,10 @@ export function useAuthViewModel() {
 
   const [errorMessage, setErrorMessage] = useState<string | undefined>()  // state for error messages
 
+
   const apiBaseUrl = Constants.expoConfig?.extra?.API_URL ?? ''
+
+  // Helper to build absolute avatar URLs from relative paths
   const normalizeAvatarUrl = (avatarUrl?: string) => {
     if (!avatarUrl) return ''
     if (/^https?:\/\//i.test(avatarUrl)) return avatarUrl
@@ -48,7 +51,7 @@ export function useAuthViewModel() {
     scheme: 'gameknight'  // this needs to match app.json
   })
 
-   console.log("redirect uri: ", redirectUri) //TÄMÄ KANNATTAA TSEKATA JOS EI ALA TOIMIA, ja lisätä auth0 dashboardiin
+  //console.log("redirect uri: ", redirectUri) //CHECK THIS IF YOU ARE FACING PROBLEMS WITH NATIVE (redirect uri needs to be added on auth0 dashboardiin)
 
   // Create authentication request using Expo AuthSession
   const [request, response, promptAsync] = AuthSession.useAuthRequest(
@@ -114,7 +117,7 @@ export function useAuthViewModel() {
                   console.error("SignUp error:", error.message || error)
                   alert(`Virhe tilin luomisessa: ${error.message || error}`)
                 }
-              
+
                 // Fetch latest user data from backend
                 try {
                   const fetched = await userRepo.fetchUser(userData.sub)
@@ -148,12 +151,12 @@ export function useAuthViewModel() {
   // LOGIN
   const login = async () => {
     setErrorMessage(undefined)
-    promptAsync()
+    promptAsync()             // Launch Auth0 login in browser
   };
 
   // LOGOUT !! 
   const logout = async () => {
-    auth.logout()
+    auth.logout()       // Clear context + local storage via AuthContext
   };
 
   return {

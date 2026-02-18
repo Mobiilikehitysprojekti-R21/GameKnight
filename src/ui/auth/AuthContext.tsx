@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     // user data is stored (with ensured nickname)
     const userWithNickname = { ...(userData ?? {}), nickname: nicknameToStore }
     setUser(userWithNickname)
-    // Store user data locally
+    // Persist core user fields for fast app start and offline access
     await AsyncStorage.setItem("auth0_id", userWithNickname.sub)
     await AsyncStorage.setItem("nickname", nicknameToStore)
     await AsyncStorage.setItem("email", userWithNickname.email)
@@ -46,9 +46,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       await AsyncStorage.setItem("avatar_url", userWithNickname.avatar_url)
     }
 
-    setIsLoggedIn(true)                 // boolean is set true ( user is logged in )
+    setIsLoggedIn(true)   // boolean is set true ( user is logged in )
   }
 
+  //UPDATE USER DATA
   // Update user (partial) and persist changed fields locally
   const updateUser = async (userData: any) => {
     console.log('[AuthContext] updateUser called with:', userData)
@@ -61,6 +62,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setUser(newUser)
     console.log('[AuthContext] setUser called')
 
+    // Only persist fields that are actually provided in this update
     if (userData.nickname !== undefined) await AsyncStorage.setItem('nickname', userData.nickname)
     if (userData.email !== undefined) await AsyncStorage.setItem('email', userData.email)
     if (userData.sub !== undefined) await AsyncStorage.setItem('auth0_id', userData.sub)
@@ -78,7 +80,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const logout = async () => {
     setAccessToken(null)    // token is set to null
     setUser(null)           // user data is set to null
-    // Clear locally stored data
+    // Clear locally stored auth/user data
     AsyncStorage.removeItem
     await AsyncStorage.clear()
     setIsLoggedIn(false)    // boolean is set false ( user has logged out )

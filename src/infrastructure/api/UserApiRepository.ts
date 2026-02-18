@@ -137,6 +137,7 @@ export class UserApiRepository implements UserRepository {
     }
   }
 
+  // Delete user
   async deleteUser(auth0_id: string): Promise<void> {
     if (this.getAccessToken) {
       const res = await authFetch(this.getAccessToken, `${this.apiUrl}/users/${auth0_id}`, {

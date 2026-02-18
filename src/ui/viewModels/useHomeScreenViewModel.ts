@@ -3,13 +3,6 @@ import { useAuth } from '../auth/useAuth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function useHomeScreenViewModel() {
-  // Create states etc needed in view
-
-  // Create functions needed in view
-  // Don't call api's. Create and use classes in application
-  // async function getUser() {
-  //   const user = await getUserInfo.execute()
-  // }
 
   const [nickname, setNickname] = useState<string | null>(null)
   const [auth0_id, setAuth0_id] = useState<string | null>(null)
