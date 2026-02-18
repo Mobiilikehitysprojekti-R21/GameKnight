@@ -45,6 +45,7 @@ export class FriendApiRepository implements FriendRepository {
   }
 
   async acceptRequest(request_id: string): Promise<void> {
+
     const res = await authFetch(this.getAccessToken, `${API_BASE}/friendships/requests/accept`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
