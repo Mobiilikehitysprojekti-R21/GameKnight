@@ -76,17 +76,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     console.log('[AuthContext] updateUser completed')
   }
 
-  // Update user (partial) and persist changed fields locally
-  const updateUser = async (userData: any) => {
-    setUser((prev: any) => ({ ...(prev ?? {}), ...userData }))
-    if (userData.nickname !== undefined) await AsyncStorage.setItem('nickname', userData.nickname)
-    if (userData.email !== undefined) await AsyncStorage.setItem('email', userData.email)
-    if (userData.sub !== undefined) await AsyncStorage.setItem('auth0_id', userData.sub)
-    if (userData.user_id !== undefined && userData.user_id !== null) {
-      await AsyncStorage.setItem('user_id', String(userData.user_id))
-    }
-  }
-
   // LOGOUT
   const logout = async () => {
     setAccessToken(null)    // token is set to null
