@@ -8,6 +8,12 @@ export const styles = StyleSheet.create({
     padding: spacing.md,
   },
 
+  menuContainer: {
+    flex: 1,
+    backgroundColor: colors.background,
+    padding: spacing.md,
+  },
+
   title: {
     fontSize: 24,
     fontWeight: "600",
@@ -138,6 +144,28 @@ export const styles = StyleSheet.create({
   addIcon: {
     fontSize: 18,
     fontWeight: "bold",
+  },
+
+  settings: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    maxWidth: '100%'
+  },
+
+  settingsButton: {
+    backgroundColor: colors.primary,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.md,
+    borderRadius: radius.md,
+    alignItems: 'center',
+    marginTop: 16,
+  },
+
+  settingsButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#000',
   },
 
 });
