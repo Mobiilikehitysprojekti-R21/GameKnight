@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { styles } from '../styles/MapStyles';
 import { TextInput } from 'react-native';
-import type { Location as DomainLocation } from '../../domain/entities/Location';
 import { colors } from '../styles/theme';
 import { useUserLocation } from '../viewModels/useUserLocation';
 import { useFavoriteLocationsViewModel } from '../viewModels/useFavoriteLocationsViewModel';
