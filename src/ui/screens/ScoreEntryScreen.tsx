@@ -4,13 +4,15 @@ import { useNavigation } from "@react-navigation/native";
 import { styles } from "../styles/ScoreEntryStyles";
 import { useGameSessionDraft } from "../context/GameSessionDraftContext";
 import { useSessionNotifications } from "../viewModels/useSessionNotifications";
+import { useAuth } from "../auth/useAuth";
 import { GameSessionsApiRepository } from "../../infrastructure/api/GameSessionsApiRepository";
 
 export const ScoreEntryScreen = () => {
     const { selectedGame, players, location } = useGameSessionDraft();
     const navigation = useNavigation<any>();
     const { notifySessionInvite } = useSessionNotifications();
-    const sessionRepo = new GameSessionsApiRepository();
+    const { getAccessToken } = useAuth();
+    const sessionRepo = new GameSessionsApiRepository(getAccessToken);
     const [isSaved, setIsSaved] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
 
@@ -32,23 +34,30 @@ export const ScoreEntryScreen = () => {
         try {
             const resultPayload = {
                 game_id: selectedGame.game_id,
+                game_name: selectedGame.name,
                 played_at: new Date(),
+                location_id: null,
+                location_name: location?.label || null,
+                notes: notes || null,
                 players: rankedPlayers.map(p => ({
-                    user_id: p.id ?? null,
+                    user_id: p.type === "USER" ? (p.id as unknown as number) : null,
+                    name: p.name,
+                    guest_name: p.type === "GUEST" ? p.name : null,
                     score: p.score,
+                    is_winner: p.rank === 1,
                 })),
             };
 
             const savedSession = await sessionRepo.createSession(resultPayload);
             setIsSaved(true);
             // ilmoita lisätyille kaverille (vain rekisteröityneet)
-            for (const player of players) {
-                if (player.type === "USER" && player.id) {
-                    await notifySessionInvite(player.id, savedSession.session_id);
+            if (savedSession?.session_id) {
+                for (const player of players) {
+                    if (player.type === "USER" && player.id) {
+                        await notifySessionInvite(player.id, savedSession.session_id);
+                    }
                 }
             }
-
-            console.log("Saving result:", resultPayload);
         } catch (error) {
             console.error("Saving game session failed:", error);
             Alert.alert("Tallennus epäonnistui", "Pelin tallennus ei onnistunut. Tarkista yhteys tai palvelin.");
@@ -63,6 +72,8 @@ export const ScoreEntryScreen = () => {
             score: 0,
         }))
     );
+
+    const [notes, setNotes] = useState('');
 
     const updateScore = (index: number, value: string) => {
         const numeric = parseInt(value) || 0;
@@ -128,9 +139,24 @@ export const ScoreEntryScreen = () => {
                 );
             })}
 
+            {/* NOTES INPUT */}
+            {!isSaved && (
+                <View style={styles.playerRow}>
+                    <Text style={styles.playerName}>Muistiinpanot</Text>
+                    <TextInput
+                        style={styles.notesInput}
+                        placeholder="Lisää muistiinpanot..."
+                        placeholderTextColor="#94A3B8"
+                        value={notes}
+                        onChangeText={setNotes}
+                        editable={!isSaved}
+                    />
+                </View>
+            )}
+
             <Pressable style={styles.saveButton} onPress={handleSave} disabled={isSaved || isSaving}>
-                <Text style={styles.saveButtonText}>
-                    {isSaving ? "Tallennetaan..." : isSaved ? "Peli tallennettu" : "Tallenna peli"}
+                <Text style={[styles.saveButtonText]}>
+                    {isSaving ? "Tallennetaan..." : isSaved ? "Peli tallennettu!" : "Tallenna peli"}
                 </Text>
             </Pressable>
 

@@ -12,10 +12,10 @@ function formatDateFI(date: Date | string) {
   const year = d.getFullYear();
   return `${day}.${month}.${year}`;
 }
-
+ // TODO: finish logic for showing winner and players with scores, also group and location if available
 export function SessionCard({ session }: { session: GameSession }) {
   const winnerName = useMemo(() => {
-    const winner = session.players.reduce((max, p) => 
+    const winner = session.players.reduce((max, p) =>
       (typeof p.score === "number" && typeof max.score === "number" && p.score > max.score) ? p : max
     );
     return winner && typeof winner.score === "number" ? `Pelaaja ${winner.user_id}` : undefined;
@@ -27,11 +27,11 @@ export function SessionCard({ session }: { session: GameSession }) {
       .join(" • ");
   }, [session.players]);
 
-   const groupLine = useMemo(() => {
-  return session.group_id ? `Ryhmä: ${session.group_id}` : undefined;
-}, [session.group_id]);
+  const groupLine = useMemo(() => {
+    return session.group_id ? `Ryhmä: ${session.group_id}` : undefined;
+  }, [session.group_id]);
 
-   return (
+  return (
     <View>
       {/* Peli + pvm */}
       <View style={styles.settings}>
@@ -43,9 +43,14 @@ export function SessionCard({ session }: { session: GameSession }) {
         </Text>
       </View>
 
+      {/* Pelattu peli */}
+      <Text style={styles.subtitle}>
+        {session.game_name ? `🎲 ${session.game_name}` : "Ei pelin nimeä"}
+      </Text>
+
       {/* Paikka */}
       <Text style={styles.subtitle}>
-        {session.location_id ? `📍 Paikka ${session.location_id}` : "📍 (ei paikkaa)"}
+        {session.location_name ? `📍 ${session.location_name}` : "📍 (ei paikkaa)"}
       </Text>
 
       {/* Ryhmä */}
@@ -57,7 +62,7 @@ export function SessionCard({ session }: { session: GameSession }) {
 
       {/* Pelaajat + pisteet */}
       <Text style={styles.statText}>
-        {playersLine}
+        👤 {playersLine}
       </Text>
 
       {/* Voittaja */}

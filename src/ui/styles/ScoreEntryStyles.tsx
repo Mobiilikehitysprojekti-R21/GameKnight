@@ -51,6 +51,16 @@ export const styles = StyleSheet.create({
     fontWeight: "600",
   },
 
+   notesInput: {
+    width: 270,
+    backgroundColor: colors.background,
+    color: colors.textPrimary,
+    padding: spacing.sm,
+    borderRadius: radius.sm,
+    textAlign: "center",
+    fontWeight: "600",
+  },
+
   winnerBanner: {
   backgroundColor: "#FDE68A", // vaalea kulta
   padding: spacing.lg,
@@ -63,9 +73,12 @@ export const styles = StyleSheet.create({
 },
 
 winnerText: {
-  color: "#fff",
+  color: "#2b2b2b",
   fontWeight: "700",
   fontSize: 16,
+  textShadowColor: "rgba(0, 0, 0, 0.3)",
+  textShadowOffset: { width: 0, height: 2 },
+  textShadowRadius: 4,
 },
 
 saveButton: {

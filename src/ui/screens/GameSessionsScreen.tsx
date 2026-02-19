@@ -1,4 +1,4 @@
-import { ScrollView, View, Text, TouchableOpacity } from 'react-native';
+import { ScrollView, View, Text, TouchableOpacity, Pressable } from 'react-native';
 import { styles } from '../styles/GameSessionStyles';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/types'
@@ -24,7 +24,13 @@ export default function GameSessionsScreen({navigation}:Props) {
 
        {/* PELATUT PELIT */}
       <View style={styles.card}>
+        
         <Text style={styles.sectionTitle}>Pelatut pelit</Text>
+        <View style={[styles.settings, { justifyContent: "space-between", alignItems: "center" }]}>
+        <Pressable style={{ padding: 8 }} onPress={() => navigation.navigate("Home")}>
+          <Text style={{ fontSize: 15, color: "#8B5CF6", fontWeight: "600" }}>← Aloitusnäytölle</Text>
+        </Pressable></View>
+
         {loading ? (
           <Text style={styles.statText}>Ladataan...</Text>
         ) : sessions.length > 0 ? (

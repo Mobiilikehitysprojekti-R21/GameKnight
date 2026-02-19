@@ -22,10 +22,10 @@ export const calculateUserStats = (sessions: GameSession[], userId: number) => {
 
     const mostPlayedGame = Object.entries(gameFrequency).sort((a, b) => b[1] - a[1])[0]?.[0] || 'N/A';
 
-    const opponents = new Set<number>();
+     const opponents = new Set<number>();
     userSessions.forEach(session => {
         session.players.forEach((player) => {
-            if (player.user_id !== userId) {
+            if (typeof player.user_id === 'number' && player.user_id !== userId) {
                 opponents.add(player.user_id);
             }
         });
@@ -48,18 +48,24 @@ export const calculateGeneralStats = (sessions: GameSession[]) => {
     let mostWinningPlayer = '';
     let maxWins = 0;
 
-    sessions.forEach(session => {
-        session.players.forEach((player) => userIds.add(player.user_id));
-        if (session.group_id) {
+   sessions.forEach(session => {
+        session.players.forEach((player) => {
+            if (typeof player.user_id === 'number') {
+                userIds.add(player.user_id);
+            }
+        });
+
+        if (typeof session.group_id === 'number') {
             groups.add(session.group_id);
         }
+
         gameFrequency[session.game_id.toString()] = (gameFrequency[session.game_id.toString()] || 0) + 1;
     });
 
     const playerWins: { [key: string]: number } = {};
-    sessions.forEach(session => {
+        sessions.forEach(session => {
         session.players.forEach((player) => {
-            if (player.is_winner) {
+            if (player.is_winner && typeof player.user_id === 'number') {
                 playerWins[player.user_id.toString()] = (playerWins[player.user_id.toString()] || 0) + 1;
             }
         });

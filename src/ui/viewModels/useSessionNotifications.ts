@@ -7,7 +7,7 @@ import { useAuth } from '../auth/useAuth';
 export function useSessionNotifications() {
   const { getAccessToken } = useAuth();
 
-  const sessionRepo = new GameSessionsApiRepository();
+  const sessionRepo = new GameSessionsApiRepository(getAccessToken);
   const gameRepo = new BoardGameApiRepository(getAccessToken);
 
   // hae pelikerta ja formatoi alertiksi
