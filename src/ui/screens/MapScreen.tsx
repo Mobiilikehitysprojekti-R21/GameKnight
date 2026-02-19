@@ -4,17 +4,15 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { styles } from '../styles/MapStyles';
 import { TextInput } from 'react-native';
-import { useRoute } from '@react-navigation/native';
 import type { Location as DomainLocation } from '../../domain/entities/Location';
 import { colors } from '../styles/theme';
 import { useUserLocation } from '../viewModels/useUserLocation';
 import { useFavoriteLocationsViewModel } from '../viewModels/useFavoriteLocationsViewModel';
-import { useGameSessionDraftViewModel } from "../viewModels/useGameSessionDraftViewModel";
+import { useGameSessionDraft } from '../context/GameSessionDraftContext';
 
 
 export const MapScreen = () => {
   const navigation = useNavigation<any>();
-  const route = useRoute<any>();
   const { favorites } = useFavoriteLocationsViewModel();
   const { location: userLocation, loading, error, refreshLocation } = useUserLocation();
   const mapRef = useRef<MapView>(null);
@@ -22,7 +20,7 @@ export const MapScreen = () => {
     latitude: number;
     longitude: number;
   } | null>(null);
-  const { setLocation } = useGameSessionDraftViewModel();
+  const { setLocation } = useGameSessionDraft();
 
 
   useEffect(() => {
@@ -51,17 +49,17 @@ export const MapScreen = () => {
     setSelectedLocation(event.nativeEvent.coordinate);
   };
 
-const confirmLocation = () => {
-  if (!selectedLocation) return;
+  const confirmLocation = () => {
+    if (!selectedLocation) return;
 
-  setLocation({
-    label: favoriteName || "Valittu sijainti",
-    latitude: selectedLocation.latitude,
-    longitude: selectedLocation.longitude,
-  });
+    setLocation({
+      label: favoriteName || "Valittu sijainti",
+      latitude: selectedLocation.latitude,
+      longitude: selectedLocation.longitude,
+    });
 
-  navigation.goBack();
-};
+    navigation.goBack();
+  };
 
   if (loading)
     return (

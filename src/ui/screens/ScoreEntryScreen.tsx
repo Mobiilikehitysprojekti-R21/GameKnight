@@ -1,38 +1,60 @@
 import { useState, useMemo } from "react";
-import { View, Text, TextInput, ScrollView, Pressable } from "react-native";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { View, Text, TextInput, ScrollView, Pressable, Alert } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { styles } from "../styles/ScoreEntryStyles";
-import { useGameSessionDraftViewModel } from "../viewModels/useGameSessionDraftViewModel";
+import { useGameSessionDraft } from "../context/GameSessionDraftContext";
 import { useSessionNotifications } from "../viewModels/useSessionNotifications";
 import { GameSessionsApiRepository } from "../../infrastructure/api/GameSessionsApiRepository";
 
 export const ScoreEntryScreen = () => {
-    const { selectedGame, players, location } = useGameSessionDraftViewModel();
+    const { selectedGame, players, location } = useGameSessionDraft();
     const navigation = useNavigation<any>();
     const { notifySessionInvite } = useSessionNotifications();
     const sessionRepo = new GameSessionsApiRepository();
+    const [isSaved, setIsSaved] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
 
     const handleSave = async () => {
-        const resultPayload = {
-            game_id: selectedGame?.game_id,
-            played_at: new Date(),
-            players: rankedPlayers.map(p => ({
-                user_id: p.id ?? null,
-                score: p.score,
-            })),
-        };
+        if (isSaving || isSaved) return;
 
-        const savedSession = await sessionRepo.createSession(resultPayload);
-        // ilmoita lisätyille kaverille (vain rekisteröityneet)
-        for (const player of players) {
-            if (player.type === "USER" && player.id) {
-                await notifySessionInvite(player.id, savedSession.session_id);
-            }
+        if (!selectedGame?.game_id) {
+            Alert.alert("Tallennus epäonnistui", "Peliä ei ole valittu.");
+            return;
         }
 
-        console.log("Saving result:", resultPayload);
+        if (rankedPlayers.length === 0) {
+            Alert.alert("Tallennus epäonnistui", "Pelaajia ei löytynyt.");
+            return;
+        }
 
-        navigation.navigate("GameSessions");
+        setIsSaving(true);
+
+        try {
+            const resultPayload = {
+                game_id: selectedGame.game_id,
+                played_at: new Date(),
+                players: rankedPlayers.map(p => ({
+                    user_id: p.id ?? null,
+                    score: p.score,
+                })),
+            };
+
+            const savedSession = await sessionRepo.createSession(resultPayload);
+            setIsSaved(true);
+            // ilmoita lisätyille kaverille (vain rekisteröityneet)
+            for (const player of players) {
+                if (player.type === "USER" && player.id) {
+                    await notifySessionInvite(player.id, savedSession.session_id);
+                }
+            }
+
+            console.log("Saving result:", resultPayload);
+        } catch (error) {
+            console.error("Saving game session failed:", error);
+            Alert.alert("Tallennus epäonnistui", "Pelin tallennus ei onnistunut. Tarkista yhteys tai palvelin.");
+        } finally {
+            setIsSaving(false);
+        }
     };
 
     const [scores, setScores] = useState(
@@ -67,7 +89,7 @@ export const ScoreEntryScreen = () => {
         <ScrollView contentContainerStyle={styles.container}>
             <Text style={styles.title}>{selectedGame?.name}</Text>
 
-            {winner && (
+            {isSaved && winner && (
                 <View style={styles.winnerBanner}>
                     <Text style={styles.winnerText}>
                         🏆 Voittaja: {winner.name}
@@ -83,12 +105,12 @@ export const ScoreEntryScreen = () => {
                         key={index}
                         style={[
                             styles.playerRow,
-                            rankInfo?.rank === 1 && styles.winnerRow,
+                            isSaved && rankInfo?.rank === 1 && styles.winnerRow,
                         ]}
                     >
                         <View>
                             <Text style={styles.playerName}>{player.name}</Text>
-                            {rankInfo && (
+                            {isSaved && rankInfo && (
                                 <Text style={styles.rank}>
                                     Sijoitus: {rankInfo.rank}
                                 </Text>
@@ -106,9 +128,17 @@ export const ScoreEntryScreen = () => {
                 );
             })}
 
-            <Pressable style={styles.saveButton} onPress={handleSave}>
-                <Text style={styles.saveButtonText}>Tallenna peli</Text>
+            <Pressable style={styles.saveButton} onPress={handleSave} disabled={isSaved || isSaving}>
+                <Text style={styles.saveButtonText}>
+                    {isSaving ? "Tallennetaan..." : isSaved ? "Peli tallennettu" : "Tallenna peli"}
+                </Text>
             </Pressable>
+
+            {isSaved && (
+                <Pressable style={styles.saveButton} onPress={() => navigation.navigate("GameSessions")}>
+                    <Text style={styles.saveButtonText}>Siirry pelisessioihin</Text>
+                </Pressable>
+            )}
 
         </ScrollView>
     );
