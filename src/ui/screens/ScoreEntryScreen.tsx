@@ -1,12 +1,16 @@
 import { useState, useMemo } from "react";
 import { View, Text, TextInput, ScrollView, Pressable } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { styles } from "../styles/ScoreEntryStyles"; 
+import { styles } from "../styles/ScoreEntryStyles";
 import { useGameSessionDraftViewModel } from "../viewModels/useGameSessionDraftViewModel";
+import { useSessionNotifications } from "../viewModels/useSessionNotifications";
+import { GameSessionsApiRepository } from "../../infrastructure/api/GameSessionsApiRepository";
 
 export const ScoreEntryScreen = () => {
     const { selectedGame, players, location } = useGameSessionDraftViewModel();
     const navigation = useNavigation<any>();
+    const { notifySessionInvite } = useSessionNotifications();
+    const sessionRepo = new GameSessionsApiRepository();
 
     const handleSave = async () => {
         const resultPayload = {
@@ -17,6 +21,14 @@ export const ScoreEntryScreen = () => {
                 score: p.score,
             })),
         };
+
+        const savedSession = await sessionRepo.createSession(resultPayload);
+        // ilmoita lisätyille kaverille (vain rekisteröityneet)
+        for (const player of players) {
+            if (player.type === "USER" && player.id) {
+                await notifySessionInvite(player.id, savedSession.session_id);
+            }
+        }
 
         console.log("Saving result:", resultPayload);
 

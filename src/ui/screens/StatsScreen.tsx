@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { ScrollView, View, Text, TouchableOpacity } from 'react-native';
 import { styles } from '../styles/statStyles';
 import { useGameSessionsViewModel } from '../viewModels/useGameSessionsViewModel';
@@ -6,15 +7,37 @@ import { calculateUserStats, calculateGeneralStats } from '../utils/statsCalcula
 import { RootStackParamList } from '../../navigation/types';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { StatsCharts } from '../utils/statsVisualization';
+import { useSessionNotifications } from '../viewModels/useSessionNotifications';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Stats'>;
 
 export default function StatsScreen({ navigation }: Props) {
     const { sessions, loading } = useGameSessionsViewModel();
     const { user } = useAuthViewModel();
+    const { notifyStatsUpdate } = useSessionNotifications();
+    const previousUserStatsRef = useRef<{ gamesPlayed: number; gamesWonPercentage: number } | null>(null);
 
     const userStats = user?.sub ? calculateUserStats(sessions, user.sub) : null;
     const generalStats = calculateGeneralStats(sessions);
+
+    useEffect(() => {
+        if (loading || !userStats) return;
+
+        const previous = previousUserStatsRef.current;
+        if (previous) {
+            if (previous.gamesPlayed !== userStats.gamesPlayed) {
+                notifyStatsUpdate('Pelatut pelit', userStats.gamesPlayed);
+            }
+            if (previous.gamesWonPercentage !== userStats.gamesWonPercentage) {
+                notifyStatsUpdate('Voittoprosentti', userStats.gamesWonPercentage);
+            }
+        }
+
+        previousUserStatsRef.current = {
+            gamesPlayed: userStats.gamesPlayed,
+            gamesWonPercentage: userStats.gamesWonPercentage,
+        };
+    }, [loading, userStats, notifyStatsUpdate]);
 
     return (
         <ScrollView

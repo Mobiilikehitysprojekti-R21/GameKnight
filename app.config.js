@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 const config = {
     name: 'GameKnight',
     slug: 'GameKnight',
@@ -8,10 +10,10 @@ const config = {
     userInterfaceStyle: 'light',
     newArchEnabled: true,
     plugins: [
-      [
-        "expo-web-browser",
-        "expo-secure-store",
-      ]
+        [
+            "expo-web-browser",
+            "expo-secure-store",
+        ]
     ],
     splash: {
         image: './assets/splash-icon.png',
@@ -33,9 +35,9 @@ const config = {
         favicon: './assets/favicon.png',
     },
     extra: {
-        API_URL: process.env.API_URL,
+        API_URL: process.env.EXPO_PUBLIC_API_URL ?? process.env.API_URL,
     },
-    
+
 };
 
 export default config;

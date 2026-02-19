@@ -5,6 +5,7 @@ export type User = {
     auth0_id: string,   
     nickname: string
     user_id?: number
+    avatar_url?: string
 }
 
 /*

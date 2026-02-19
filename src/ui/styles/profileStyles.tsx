@@ -71,6 +71,21 @@ export const styles = StyleSheet.create({
     color: '#000',
   },
 
+  avatar: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    maxWidth: '100%',
+    marginBottom: 16
+  },
+
+  avatarContent: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+
    deleteButton: {
     backgroundColor: colors.danger,
     paddingVertical: spacing.md,

@@ -30,3 +30,33 @@ export async function authFetch(
     headers,
   });
 }
+
+/**
+ * Helper function for multipart/form-data requests (e.g., file uploads)
+ * Does NOT set Content-Type so Fetch can set it with proper boundary
+ *
+ * Usage:
+ * const result = await authFetchMultipart(getAccessToken, 'https://api.example.com/upload', {
+ *   method: 'POST',
+ *   body: formData
+ * });
+ */
+export async function authFetchMultipart(
+  getAccessToken: AccessTokenProvider,
+  url: string,
+  options: RequestInit = {}
+): Promise<Response> {
+  const token = await getAccessToken();
+
+  if (!token) {
+    throw new Error('No access token available. User must be logged in.');
+  }
+
+  const headers = new Headers(options.headers);
+  headers.set('Authorization', `Bearer ${token}`);
+
+  return fetch(url, {
+    ...options,
+    headers,
+  });
+}

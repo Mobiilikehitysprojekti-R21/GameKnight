@@ -1,5 +1,4 @@
 import { BoardGameRepository } from '../../domain/repositories/BoardGameRepository';
-import axios from 'axios';
 import Constants from 'expo-constants';
 import { BoardGame } from '../../domain/entities/BoardGame';
 
@@ -21,17 +20,24 @@ export class BoardGameApiRepository implements BoardGameRepository {
     return (await res.json()) as BoardGame[];
   }
 
-  // TODO: function to add game to db
-  async addGame(game: BoardGame): Promise<void> {
-    
-  }
-
   // Function to add game to user´s game collection
-  async addGameToCollection(user_id: number, bgg_id: BoardGame['bgg_id']): Promise<void> {
+  async addGameToCollection(user_id: string, bgg_id: BoardGame['bgg_id']): Promise<void> {
 
     try {
-      const res = await axios.post(`${this.apiUrl}/boardgames/addToUser`, {userId: user_id, game: bgg_id})
-      console.log(res.data)  // debugging...
+      const res = await authFetch(
+        this.getAccessToken, `${this.apiUrl}/boardgames/addToUser`, {
+        method: "POST",
+        body: JSON.stringify({ userId: user_id, game: bgg_id })
+      })
+
+      if (!res.ok) {
+        const text = await res.text()
+        console.error('Add game failed:', res.status, text)
+        throw new Error(`Add game failed: ${res.status}`)
+      }
+
+      const data = await res.json()
+      console.log('Added game to collection:', data)
     } catch (e: any) {
       console.error("Error adding game to collection:", e.response?.data)
       console.error("Status:", e.response?.status)
@@ -40,12 +46,12 @@ export class BoardGameApiRepository implements BoardGameRepository {
   }
 
   // Function to fetch user´s game collection
-  async getGameCollection(user_id: number): Promise<BoardGame[]> {
+  async getGameCollection(user_id: string): Promise<BoardGame[]> {
     
      try {
       const res = await authFetch(
       this.getAccessToken,
-      `${this.apiUrl}/boardgames/getUserGameCollection/${user_id}`)
+      `${this.apiUrl}/boardgames/getUserGameCollection/${encodeURIComponent(user_id)}`)
       console.log('etsitään käyttäjän pelejä')
       return (await res.json()) as BoardGame[]
     } catch (e) {
@@ -54,9 +60,10 @@ export class BoardGameApiRepository implements BoardGameRepository {
     }
   }
 
-  async deleteBoardGame(bgg_id: number): Promise<void> {
+  // Delete boardgame from user's game collection
+  async deleteBoardGame(bgg_id: number, auth0_id: string): Promise<void> {
     if (this.getAccessToken) {
-      const res = await authFetch(this.getAccessToken, `${this.apiUrl}/boardgames/${bgg_id}`, {
+      const res = await authFetch(this.getAccessToken, `${this.apiUrl}/boardgames/${encodeURIComponent(auth0_id)}/${bgg_id}`, {
         method: "DELETE"
       })
       if (!res.ok) {
@@ -68,6 +75,17 @@ export class BoardGameApiRepository implements BoardGameRepository {
       }
       return
     }
+  }
+
+    async getGameById(game_id: number): Promise<BoardGame | undefined> {
+    const res = await authFetch(
+      this.getAccessToken,
+      `${this.apiUrl}/boardgames/${encodeURIComponent(game_id)}`
+    );
+    if (res.status === 404) {
+      return undefined;
+    }
+    return (await res.json()) as BoardGame;
   }
 
 }

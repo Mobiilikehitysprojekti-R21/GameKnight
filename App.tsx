@@ -3,8 +3,8 @@ import HomeScreen from './src/ui/screens/HomeScreen';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import Toast from 'react-native-toast-message';
-
-
+import { useEffect } from 'react';
+import { requestNotificationPermission, setupNotificationHandler, getPushToken } from './src/ui/services/notifications';
 import { SearchScreenContainer } from './src/ui/screens/SearchScreenContainer';
 import StatsScreen from './src/ui/screens/StatsScreen';
 import SignUpScreen from './src/ui/screens/SignUpScreen';
@@ -26,6 +26,22 @@ import { GameSessionDraftProvider } from './src/ui/context/GameSessionDraftConte
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
+   useEffect(() => {
+
+    (async () => {
+      const granted = await requestNotificationPermission();
+      if (granted) {
+        const pushToken = await getPushToken();
+        console.log('Push token:', pushToken); 
+      }
+
+      setupNotificationHandler((payload) => {
+        console.log('Notification received:', payload);
+          // tähän tulisi navigointi jos olisi aitoja push-ilmoituksia (jump screen-to-screen)
+      });
+    })();
+  }, []);
+
   return (
     <SafeAreaProvider>
       <AuthProvider>

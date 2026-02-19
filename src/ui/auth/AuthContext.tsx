@@ -10,6 +10,7 @@ type AuthContextType = {
   login: (token: string, userData: any) => void   // function to set login state true (aka login)
   logout: () => void  // function to set login state false (aka logout)
   getAccessToken: () => Promise<string | null>
+  updateUser: (userData: any) => Promise<void>  // update userdata after changes
 }
 
 // Create auth context for authentication
@@ -29,31 +30,67 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   // LOGIN
   const login = async (token: string, userData: any) => {
     setAccessToken(token)               // token is set
-    setUser(userData)                   // user data is stored
-    // Store user data locally
-    await AsyncStorage.setItem("auth0_id", userData.sub)
-    await AsyncStorage.setItem("nickname", userData.nickname)
-    await AsyncStorage.setItem("email", userData.email)
-    // REFRESH TOKEN?
-    // TODO: userdatan säilöminen paikallisesti, elinkaari?
-    setIsLoggedIn(true)                 // boolean is set true ( user is logged in )
+    // Ensure nickname exists: prefer profile.nickname, fallback to profile.username
+    const nicknameToStore = userData.nickname ?? userData.username ?? ''
+    // user data is stored (with ensured nickname)
+    const userWithNickname = { ...(userData ?? {}), nickname: nicknameToStore }
+    setUser(userWithNickname)
+    // Persist core user fields for fast app start and offline access
+    await AsyncStorage.setItem("auth0_id", userWithNickname.sub)
+    await AsyncStorage.setItem("nickname", nicknameToStore)
+    await AsyncStorage.setItem("email", userWithNickname.email)
+    if (userWithNickname.user_id !== undefined && userWithNickname.user_id !== null) {
+      await AsyncStorage.setItem("user_id", String(userWithNickname.user_id))
+    }
+    if (userWithNickname.avatar_url !== undefined && userWithNickname.avatar_url !== null) {
+      await AsyncStorage.setItem("avatar_url", userWithNickname.avatar_url)
+    }
+
+    setIsLoggedIn(true)   // boolean is set true ( user is logged in )
+  }
+
+  //UPDATE USER DATA
+  // Update user (partial) and persist changed fields locally
+  const updateUser = async (userData: any) => {
+    console.log('[AuthContext] updateUser called with:', userData)
+    console.log('[AuthContext] Current user before update:', user)
+
+    // Create completely new object to force React state update
+    const newUser = { ...(user ?? {}), ...userData }
+    console.log('[AuthContext] New user object created:', newUser)
+    console.log('[AuthContext] New user avatar_url:', newUser.avatar_url)
+    setUser(newUser)
+    console.log('[AuthContext] setUser called')
+
+    // Only persist fields that are actually provided in this update
+    if (userData.nickname !== undefined) await AsyncStorage.setItem('nickname', userData.nickname)
+    if (userData.email !== undefined) await AsyncStorage.setItem('email', userData.email)
+    if (userData.sub !== undefined) await AsyncStorage.setItem('auth0_id', userData.sub)
+    if (userData.user_id !== undefined && userData.user_id !== null) {
+      await AsyncStorage.setItem('user_id', String(userData.user_id))
+    }
+    if (userData.avatar_url !== undefined && userData.avatar_url !== null) {
+      console.log('[AuthContext] Saving avatar_url to AsyncStorage:', userData.avatar_url)
+      await AsyncStorage.setItem('avatar_url', String(userData.avatar_url))
+    }
+    console.log('[AuthContext] updateUser completed')
   }
 
   // LOGOUT
   const logout = async () => {
     setAccessToken(null)    // token is set to null
     setUser(null)           // user data is set to null
-    // Clear locally stored data
+    // Clear locally stored auth/user data
     AsyncStorage.removeItem
     await AsyncStorage.clear()
     setIsLoggedIn(false)    // boolean is set false ( user has logged out )
     // Inform user about logout
     Toast.show({
-                    type: 'success',
-                    text1: 'Kirjauduit ulos.',
-                    text2: `Nähdään taas pian!`,
-                    position: 'top',
-                    visibilityTime: 3000,
+      type: 'success',
+      text1: 'Kirjauduit ulos.',
+      text2: `Nähdään taas pian!`,
+      position: 'top',
+      visibilityTime: 3000,
     })
   }
 
@@ -66,7 +103,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   // return context to all children components
   return (
-    <AuthContext.Provider value={{ isLoggedIn, accessToken, user, login, logout, getAccessToken }}>
+    <AuthContext.Provider value={{ isLoggedIn, accessToken, user, login, logout, getAccessToken, updateUser }}>
       {children}
     </AuthContext.Provider>
   )

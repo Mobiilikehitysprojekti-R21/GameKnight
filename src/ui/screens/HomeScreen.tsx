@@ -1,15 +1,16 @@
-import { ScrollView, View, Text, TouchableOpacity } from 'react-native';
+import { ScrollView, View, Text, TouchableOpacity, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { styles } from '../styles/homeStyles';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useAuthViewModel } from '../viewModels/useAuthViewModel';
 import { useHomeScreenViewModel } from '../viewModels/useHomeScreenViewModel';
+import { useProfileScreenViewModel } from '../viewModels/useProfileScreenViewModel';
 
 type Props = NativeStackScreenProps<any>
 export default function HomeScreen({ navigation }: Props) {
   const { loggedIn, displayName, errorMessage, login, logout } =
     useAuthViewModel();
-
+  
   const vm = useHomeScreenViewModel()
 
   return (
@@ -23,66 +24,71 @@ export default function HomeScreen({ navigation }: Props) {
         <Text style={styles.subtitle}>Remember every game night!</Text>
       </View>
 
-      {/*TERVEHDYS*/}
-      {loggedIn ?
-        (<View style={styles.card}>
-          <Text style={styles.sectionTitle}>{`Hei, ${vm.nickname}!`}</Text>
+      {!loggedIn && (
+        <View style={styles.card}>
+          <Text style={styles.sectionTitle}>{`TERVETULOA!`}</Text>
 
           <Text style={styles.statText}>
-            Mukava nähdä taas ❤️
+            Pelaaminen on parasta kavereiden kanssa.
           </Text>
-        </View>) : <></>}
-
-      {/* KIRJAUTUMINEN */}
-      <View style={styles.card}>
-        <Text style={styles.sectionTitle}>Käyttäjä</Text>
-
-        <Text style={styles.statText}>
-          {loggedIn
-            ? `Kirjautunut käyttäjänä: ${vm.nickname}`
-            : 'Kirjaudu sisään tallentaaksesi pisteet ja tilastot'}
-        </Text>
-
-        <TouchableOpacity
-          style={styles.loginButton}
-          onPress={loggedIn ? logout : login}
-        >
-          <Text style={styles.loginButtonText}>
-            {loggedIn ? 'Kirjaudu ulos' : 'Kirjaudu / Luo käyttäjä'}
+          <Text style={styles.statText}>
+            Liityhän siis mukaan joukkoomme!
           </Text>
-        </TouchableOpacity>
 
-        {errorMessage && (
-          <Text style={[styles.statText, { color: 'red', marginTop: 8 }]}>
-            {errorMessage}
-          </Text>
-        )}
-      </View>
+        </View>
+      )}
 
-      {/* PÄÄTOIMINNOT */}
-      <View style={styles.card}>
-        <TouchableOpacity style={styles.primaryButton} onPress={() => navigation.navigate('NewGame')}>
-          <Text style={styles.buttonText}>Aloita uusi peli</Text>
-        </TouchableOpacity>
+      {loggedIn && (
+        <>
+          {/*TERVEHDYS*/}
+          <View style={styles.card}>
+            <View style={styles.greetingRow}>
+              <View >
+                <Text style={styles.sectionTitle}>{`Hei, ${displayName}!`}</Text>
+                <Text style={styles.statText}>
+                  Mukava nähdä taas ❤️
+                </Text>
 
-        <TouchableOpacity style={styles.secondaryButton}>
-          <Text style={styles.buttonText}>Jatka peliä</Text>
-        </TouchableOpacity>
-      </View>
+              </View>
+              {vm.avatar_url && (
+                <Image
+                  key={vm.avatar_url}
+                  source={{ uri: vm.avatar_url }}
+                  style={styles.avatarImage}
+                />
 
-      
-      {/* PROFIILI */}
-      <View style={styles.card}>
-        <Text style={styles.sectionTitle}>Profiili</Text>
+              )}
 
-        <Text style={styles.statText}>
-          Siirry profiilisivulle
-        </Text>
+            </View>
+          </View>
 
-        <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('Profile')}>
-          <Text style={styles.loginButtonText}>Profiilisivu</Text>
-        </TouchableOpacity>
-      </View>
+          {/* PELI -TOIMINNALLISUUS */}
+          < View style={styles.card}>
+            <TouchableOpacity style={styles.primaryButton} onPress={() => navigation.navigate('NewGame')}>
+              <Text style={styles.buttonText}>Aloita uusi peli</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.secondaryButton}>
+              <Text style={styles.buttonText}>Jatka peliä</Text>
+            </TouchableOpacity>
+          </View>
+
+
+          {/* PROFIILI */}
+          <View style={styles.card}>
+            <Text style={styles.sectionTitle}>Profiili</Text>
+
+            <Text style={styles.statText}>
+              Siirry profiilisivulle
+            </Text>
+
+            <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('Profile')}>
+              <Text style={styles.loginButtonText}>Profiilisivu</Text>
+            </TouchableOpacity>
+          </View>
+        </>
+      )
+      }
 
       {/* TILASTOT */}
       <View style={styles.card}>
@@ -102,6 +108,31 @@ export default function HomeScreen({ navigation }: Props) {
         </TouchableOpacity>
       </View>
 
+      {/* KIRJAUTUMINEN */}
+      <View style={styles.card}>
+        <Text style={styles.sectionTitle}>Käyttäjä</Text>
+
+        <Text style={styles.statText}>
+          {loggedIn
+            ? `Kirjautunut käyttäjänä: ${displayName}`
+            : 'Kirjaudu sisään tallentaaksesi pisteet ja tilastot'}
+        </Text>
+
+        <TouchableOpacity
+          style={styles.loginButton}
+          onPress={loggedIn ? logout : login}
+        >
+          <Text style={styles.loginButtonText}>
+            {loggedIn ? 'Kirjaudu ulos' : 'Kirjaudu / Luo käyttäjä'}
+          </Text>
+        </TouchableOpacity>
+
+        {errorMessage && (
+          <Text style={[styles.statText, { color: 'red', marginTop: 8 }]}>
+            {errorMessage}
+          </Text>
+        )}
+      </View>
 
     </ScrollView>
   );

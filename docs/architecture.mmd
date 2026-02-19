@@ -10,56 +10,58 @@ subgraph 1["application"]
 7["DeclineRequest.ts"]
 8["DeleteBoardGame.ts"]
 9["DeleteUser.ts"]
-A["FindBoardGames.ts"]
-B["GetFriendRequest.ts"]
-C["GetFriends.ts"]
-D["GetGameCollection.ts"]
-E["GetGameSessions.ts"]
-F["InviteFriend.ts"]
-G["SignInUser.ts"]
-K["SignUpUser.ts"]
+A["FetchUser.ts"]
+B["FindBoardGames.ts"]
+C["GetAvatarUrl.ts"]
+D["GetFriendRequest.ts"]
+E["GetFriends.ts"]
+F["GetGameCollection.ts"]
+G["GetGameSessions.ts"]
+H["InviteFriend.ts"]
+I["SignInUser.ts"]
+M["SignUpUser.ts"]
 end
-subgraph H["domain"]
-subgraph I["entities"]
-J["User.ts"]
-L["BoardGame.ts"]
-M["Friend.ts"]
-N["FriendInviteResult.ts"]
-O["FriendRequest.ts"]
-P["GameSessions.ts"]
-Q["Location.ts"]
-R["SessionPlayer.ts"]
+subgraph J["domain"]
+subgraph K["entities"]
+L["User.ts"]
+N["BoardGame.ts"]
+O["Friend.ts"]
+P["FriendInviteResult.ts"]
+Q["FriendRequest.ts"]
+R["GameSessions.ts"]
+S["Location.ts"]
+T["SessionPlayer.ts"]
 end
-subgraph S["repositories"]
-T["BoardGameRepository.ts"]
-U["FriendRepository.ts"]
-V["GameSessionRepository.ts"]
-W["SessionPlayerRepository.ts"]
-X["UserRepository.ts"]
-end
-end
-subgraph Y["infrastructure"]
-subgraph Z["api"]
-10["BoardGameApiRepository.ts"]
-11["authFetch.ts"]
-12["FriendApiRepository.ts"]
-13["GameSessionsApiRepository.ts"]
-14["UserApiRepository.ts"]
-subgraph 15["dtos"]
-16["BoardGameDto.ts"]
-end
-subgraph 17["mappers"]
-18["BoardGameMapper.ts"]
+subgraph U["repositories"]
+V["BoardGameRepository.ts"]
+W["FriendRepository.ts"]
+X["GameSessionRepository.ts"]
+Y["SessionPlayerRepository.ts"]
+Z["UserRepository.ts"]
 end
 end
+subgraph 10["infrastructure"]
+subgraph 11["api"]
+12["BoardGameApiRepository.ts"]
+13["authFetch.ts"]
+14["FriendApiRepository.ts"]
+15["GameSessionsApiRepository.ts"]
+16["UserApiRepository.ts"]
+subgraph 17["dtos"]
+18["BoardGameDto.ts"]
 end
-subgraph 19["navigation"]
-1A["types.ts"]
+subgraph 19["mappers"]
+1A["BoardGameMapper.ts"]
 end
-subgraph 1B["ui"]
-subgraph 1C["auth"]
-1D["AuthContext.tsx"]
-1E["useAuth.ts"]
+end
+end
+subgraph 1B["navigation"]
+1C["types.ts"]
+end
+subgraph 1D["ui"]
+subgraph 1E["auth"]
+1F["AuthContext.tsx"]
+1G["useAuth.ts"]
 end
 subgraph 1F["components"]
 1G["DoubleCheckModal.tsx"]
@@ -126,24 +128,91 @@ subgraph 2X["utils"]
 end
 subgraph 30["services"]
 31["location.ts"]
+subgraph 1H["components"]
+1I["DoubleCheckModal.tsx"]
+1L["FriendCard.tsx"]
+1N["GameList.tsx"]
+1P["Modal.tsx"]
+1Q["SessionCard.tsx"]
+1S["Settings.tsx"]
+1T["Stats.tsx"]
+1V["SubmitForm.tsx"]
+subgraph 1X["players"]
+1Y["FriendsPicker.tsx"]
+20["GuestPlayerModal.tsx"]
+21["PlayersList.tsx"]
+end
+end
+subgraph 1J["styles"]
+1K["theme.ts"]
+1M["friendStyles.tsx"]
+1O["gameCollectionStyles.tsx"]
+1R["GameSessionStyles.tsx"]
+1U["statStyles.tsx"]
+1W["signUpStyles.tsx"]
+1Z["NewGameStyles.tsx"]
+2F["homeStyles.tsx"]
+2I["MapStyles.tsx"]
+2Q["profileStyles.tsx"]
+2V["ScoreEntryStyles.tsx"]
+2Y["SearchStyles.tsx"]
+end
+subgraph 22["screens"]
+23["AuthControls.tsx"]
+26["FriendsScreen.tsx"]
+2A["GameCollectionScreen.tsx"]
+2C["GameSessionsScreen.tsx"]
+2E["HomeScreen.tsx"]
+2H["MapScreen.tsx"]
+2M["MapScreen.web.tsx"]
+2N["NewGameScreen.tsx"]
+2O["PlayerSearchScreen.tsx"]
+2P["ProfileScreen.tsx"]
+2U["ScoreEntryScreen.tsx"]
+2X["SearchScreen.tsx"]
+30["SearchScreenContainer.tsx"]
+31["SignUpScreen.tsx"]
+33["StatsScreen.tsx"]
+end
+subgraph 24["viewModels"]
+25["useAuthViewModel.ts"]
+27["useFriendsViewModel.ts"]
+2B["useGameCollectionViewModel.ts"]
+2D["useGameSessionsViewModel.ts"]
+2G["useHomeScreenViewModel.ts"]
+2J["useFavoriteLocationsViewModel.ts"]
+2K["useGameSessionDraftViewModel.ts"]
+2L["useUserLocation.ts"]
+2R["useProfileScreenViewModel.ts"]
+2W["useSessionNotifications.ts"]
+2Z["useSearchViewModel.ts"]
+32["useSignUpViewModel.ts"]
+end
+subgraph 28["services"]
+29["notifications.ts"]
+2S["imageService.ts"]
+2T["uploadService.ts"]
+37["location.ts"]
+end
+subgraph 34["utils"]
+35["statsCalculator.ts"]
+36["statsVisualization.tsx"]
 end
 end
 end
-G-->J
-10-->11
-14-->11
-1E-->1D
-1G-->1I
-1J-->1K
-1K-->1I
+I-->L
+12-->13
+14-->13
+16-->13
+1G-->1F
+1I-->1K
 1L-->1M
-1L-->1I
-1M-->1I
-1N-->1I
-1O-->1P
-1P-->1I
-1R-->1S
-1S-->1I
+1M-->1K
+1N-->1O
+1O-->1K
+1P-->1K
+1Q-->1R
+1R-->1K
 1T-->1U
 1U-->1I
 1W-->1X
@@ -231,3 +300,104 @@ G-->J
 2W-->29
 2Z-->1S
 2Z-->1I
+1U-->1K
+1V-->1W
+1W-->1K
+1Y-->1Z
+1Z-->1K
+20-->1Z
+21-->1Z
+21-->1K
+23-->25
+25-->16
+25-->1F
+26-->1M
+26-->27
+27-->14
+27-->29
+27-->1G
+2A-->12
+2A-->1N
+2A-->1P
+2A-->1O
+2A-->25
+2A-->2B
+2B-->5
+2B-->8
+2B-->B
+2B-->F
+2B-->1G
+2C-->1Q
+2C-->1R
+2C-->2D
+2D-->15
+2E-->2F
+2E-->25
+2E-->2G
+2F-->1K
+2G-->1G
+2H-->2I
+2H-->1K
+2H-->2J
+2H-->2K
+2H-->2L
+2I-->1K
+2J-->16
+2J-->1G
+2M-->2I
+2N-->1G
+2N-->1Y
+2N-->20
+2N-->21
+2N-->1Z
+2N-->2J
+2N-->27
+2N-->2K
+2O-->1Z
+2O-->27
+2P-->1I
+2P-->1L
+2P-->1P
+2P-->2Q
+2P-->25
+2P-->27
+2P-->2R
+2Q-->1K
+2R-->6
+2R-->9
+2R-->16
+2R-->1G
+2R-->2S
+2R-->2T
+2T-->13
+2U-->15
+2U-->2V
+2U-->2K
+2U-->2W
+2V-->1K
+2W-->12
+2W-->15
+2W-->29
+2W-->1G
+2X-->2Y
+2X-->2Z
+2Y-->1K
+30-->B
+30-->12
+30-->25
+30-->2X
+31-->1V
+31-->1W
+31-->32
+32-->I
+32-->M
+32-->16
+32-->1G
+33-->1U
+33-->35
+33-->36
+33-->25
+33-->2D
+33-->2W
+36-->1U
+36-->1K
