@@ -112,7 +112,6 @@ export class UserApiRepository implements UserRepository {
 
   // Fetch user data from database
   async fetchUser(auth0_id: string): Promise<User | null> {
-    console.log('UserApiRepo: fetchUser, auth0_id:', this.apiUrl); // debugging...
     try {
       if (this.getAccessToken) {
         const res = await authFetch(this.getAccessToken, `${this.apiUrl}/users/fetchUserNickname`, {
@@ -138,6 +137,7 @@ export class UserApiRepository implements UserRepository {
     }
   }
 
+  // Delete user
   async deleteUser(auth0_id: string): Promise<void> {
     if (this.getAccessToken) {
       const res = await authFetch(this.getAccessToken, `${this.apiUrl}/users/${auth0_id}`, {

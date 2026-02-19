@@ -1,13 +1,11 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../auth/useAuth";
 import type { BoardGame } from "../../domain/entities/BoardGame";
-//import { useAuth } from "../auth/useAuth";
 import { BoardGameApiRepository } from "../../infrastructure/api/BoardGameApiRepository";
 import { FindBoardGames } from "../../application/FindBoardGames";
 import { AddGameToCollection } from "../../application/AddGameToCollection";
 import { GetGameCollection } from "../../application/GetGameCollection";
 import { DeleteBoardGame } from "../../application/DeleteBoardGame";
-import { useHomeScreenViewModel } from "./useHomeScreenViewModel";
 import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -15,11 +13,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export function useGameCollectionViewModel(repo: BoardGameApiRepository) {
 
-
-    //const { isLoggedIn } = useAuth()    // authentication state
-    const [games, setGames] = useState<BoardGame[]>([]) // user´s game collection
+    
+    const [games, setGames] = useState<BoardGame[]>([])             // user's game collection
     const [searhedGame, setSearchedGame] = useState<BoardGame[]>()  // Search result of game search
-    const [bggId, setBggId] = useState<BoardGame["bgg_id"]>()       // Selected game´s bgg_id
+    const [bggId, setBggId] = useState<BoardGame["bgg_id"]>()       // Selected game's bgg_id
     const [loading, setLoading] = useState(true)                    // Loading state
     const [isGameChosen, setIsGameChosen] = useState(false)         // Indicates if user has chosen a game from the list of search results
     const [isGameAdded, setIsGameAdded] = useState(false)           // Indicates if game has been successfully added to the collection
@@ -30,11 +27,16 @@ export function useGameCollectionViewModel(repo: BoardGameApiRepository) {
     const getGameCollection = new GetGameCollection(repo)
     const deleteBoardGame = new DeleteBoardGame(repo)
 
+    // Storage key for AsyncStorage
     const STORAGE_KEY = "my_games";
 
+    // states for user data 
     const [nickname, setNickname] = useState<string | null>(null)
     const [auth0_id, setAuth0_id] = useState<string | null>(null)
     const [email, setEmail] = useState<string | null>(null)
+    const auth = useAuth()
+
+    // Auth from context
     const auth = useAuth()
 
 

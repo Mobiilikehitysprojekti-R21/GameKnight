@@ -1,9 +1,10 @@
-import { ScrollView, View, Text, TouchableOpacity } from 'react-native';
+import { ScrollView, View, Text, TouchableOpacity, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { styles } from '../styles/homeStyles';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useAuthViewModel } from '../viewModels/useAuthViewModel';
 import { useHomeScreenViewModel } from '../viewModels/useHomeScreenViewModel';
+import { useProfileScreenViewModel } from '../viewModels/useProfileScreenViewModel';
 
 type Props = NativeStackScreenProps<any>
 export default function HomeScreen({ navigation }: Props) {
@@ -25,30 +26,43 @@ export default function HomeScreen({ navigation }: Props) {
 
       {!loggedIn && (
         <View style={styles.card}>
-        <Text style={styles.sectionTitle}>{`TERVETULOA!`}</Text>
+          <Text style={styles.sectionTitle}>{`TERVETULOA!`}</Text>
 
-        <Text style={styles.statText}>
-          Pelaaminen on parasta kavereiden kanssa.
-        </Text>
-        <Text style={styles.statText}>
-          Liityhän siis mukaan joukkoomme!
-        </Text>
-        
+          <Text style={styles.statText}>
+            Pelaaminen on parasta kavereiden kanssa.
+          </Text>
+          <Text style={styles.statText}>
+            Liityhän siis mukaan joukkoomme!
+          </Text>
+
         </View>
       )}
 
-        {loggedIn && (
+      {loggedIn && (
         <>
-        {/*TERVEHDYS*/}
-        <View style={styles.card}>
-        <Text style={styles.sectionTitle}>{`Hei, ${displayName}!`}</Text>
+          {/*TERVEHDYS*/}
+          <View style={styles.card}>
+            <View style={styles.greetingRow}>
+              <View >
+                <Text style={styles.sectionTitle}>{`Hei, ${displayName}!`}</Text>
+                <Text style={styles.statText}>
+                  Mukava nähdä taas ❤️
+                </Text>
 
-        <Text style={styles.statText}>
-          Mukava nähdä taas ❤️
-        </Text>
-        </View>
+              </View>
+              {vm.avatar_url && (
+                <Image
+                  key={vm.avatar_url}
+                  source={{ uri: vm.avatar_url }}
+                  style={styles.avatarImage}
+                />
 
-          {/* PROFIILI */}
+              )}
+
+            </View>
+          </View>
+
+          {/* PELI -TOIMINNALLISUUS */}
           < View style={styles.card}>
             <TouchableOpacity style={styles.primaryButton} onPress={() => navigation.navigate('NewGame')}>
               <Text style={styles.buttonText}>Aloita uusi peli</Text>

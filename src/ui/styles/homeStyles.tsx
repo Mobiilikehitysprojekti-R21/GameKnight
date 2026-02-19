@@ -14,6 +14,17 @@ export const styles = StyleSheet.create({
     letterSpacing: 1,
   },
 
+  avatarImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginRight: 16,
+    marginLeft: 16,
+    alignSelf: 'center',
+    borderWidth: 2,
+    borderColor: colors.primary,
+  },
+
   subtitle: {
     marginTop: 8,
     fontSize: 15,
@@ -66,6 +77,12 @@ export const styles = StyleSheet.create({
   statText: {
     color: colors.textSecondary,
     fontSize: 14,
+  },
+
+  greetingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
   },
 
   loginButton: {

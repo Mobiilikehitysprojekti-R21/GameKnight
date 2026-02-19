@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import * as AuthSession from 'expo-auth-session';
+import Constants from 'expo-constants';
 import * as WebBrowser from 'expo-web-browser';
 import { AuthContext } from '../auth/AuthContext'
 import { UserApiRepository } from '../../infrastructure/api/UserApiRepository';
@@ -21,7 +22,7 @@ const discovery = {
 };
 
 export function useAuthViewModel() {
-  
+
   const auth = useContext(AuthContext)  // Access authentication context
 
   // Ensure hook is used inside AuthProvider
@@ -30,14 +31,27 @@ export function useAuthViewModel() {
   }
 
   const [errorMessage, setErrorMessage] = useState<string | undefined>()  // state for error messages
-  
+
+
+  const apiBaseUrl = Constants.expoConfig?.extra?.API_URL ?? ''
+
+  // Helper to build absolute avatar URLs from relative paths
+  const normalizeAvatarUrl = (avatarUrl?: string) => {
+    if (!avatarUrl) return ''
+    if (/^https?:\/\//i.test(avatarUrl)) return avatarUrl
+    if (!apiBaseUrl) return avatarUrl
+    const base = apiBaseUrl.endsWith('/') ? apiBaseUrl.slice(0, -1) : apiBaseUrl
+    const path = avatarUrl.startsWith('/') ? avatarUrl : `/${avatarUrl}`
+    return `${base}${path}`
+  }
+
   // redirect URI for OAuth callback
   //!! Expo Go uses a custom scheme for deep linking
   const redirectUri = AuthSession.makeRedirectUri({
     scheme: 'gameknight'  // this needs to match app.json
-  }) 
+  })
 
-  // console.log("redirect uri: ", redirectUri) TÄMÄ KANNATTAA TSEKATA JOS EI ALA TOIMIA, ja lisätä auth0 dashboardiin
+  //console.log("redirect uri: ", redirectUri) //CHECK THIS IF YOU ARE FACING PROBLEMS WITH NATIVE (redirect uri needs to be added on auth0 dashboardiin)
 
   // Create authentication request using Expo AuthSession
   const [request, response, promptAsync] = AuthSession.useAuthRequest(
@@ -55,10 +69,10 @@ export function useAuthViewModel() {
   )
 
   // Handle authorization response
-  useEffect(()=> {
+  useEffect(() => {
     if (response?.type === 'success') {
       const { code } = response.params
-    
+
       // Exchange authorization code for access token
       AuthSession.exchangeCodeAsync(
         {
@@ -72,76 +86,77 @@ export function useAuthViewModel() {
         },
         discovery
       )
-  .then((tokenResult) => {
-    //console.log("Result token:", tokenResult.accessToken) // debug: check JWT/JWE
-    const token = tokenResult.accessToken ?? null
+        .then((tokenResult) => {
+          //console.log("Result token:", tokenResult.accessToken) // debug: check JWT/JWE
+          const token = tokenResult.accessToken ?? null
 
-    // Fetch user profile from Auth0
-    if (token) {
-      fetch(`https://${AUTH0_DOMAIN}/userinfo`, {
-        headers: {
-          Authorization: `Bearer ${tokenResult.accessToken}`,
-        },
-      })
-      .then((res) => res.json())
-      .then(async (userData) => {
-        auth.login(token, userData) // store token and user data in authContext
-        // Pass the new token to the repository so the signup request runs reliably
-        const userRepo = new UserApiRepository(async () => token)
+          // Fetch user profile from Auth0
+          if (token) {
+            fetch(`https://${AUTH0_DOMAIN}/userinfo`, {
+              headers: {
+                Authorization: `Bearer ${tokenResult.accessToken}`,
+              },
+            })
+              .then((res) => res.json())
+              .then(async (userData) => {
+                auth.login(token, userData) // store token and user data in authContext
+                // Pass the new token to the repository so the signup request runs reliably
+                const userRepo = new UserApiRepository(async () => token)
 
-        // Signup and save user in the db
-        // If user is already in the db, continue with signin
-        try {
-          await userRepo.signUp({ auth0_id: userData.sub, email: userData.email, nickname: userData.nickname ?? '' })
-        } catch (error: any) {
-            
-            if (error === 409) {
-                console.warn('User already exists (409), continuing login');
-                alert(`Käyttäjä on jo luotu, kirjaudutaan sisään`)
-                return;
-            }
-            console.error("SignUp error:", error.message || error)
-            alert(`Virhe tilin luomisessa: ${error.message || error}`)
-        }
-        console.log("USER: ", userData) // debugging...
-        // Fetch latest user data from backend
-        try {
-          const fetched = await userRepo.fetchUser(userData.sub)
-          if (fetched) {
-            // Normalize fetched data to match AuthContext expectation (sub/nickname/email)
-            const mapped = {
-              ...fetched,
-              sub: fetched.auth0_id ?? userData.sub,
-              nickname: fetched.nickname ?? userData.nickname ?? userData.username ?? '',
-              user_id: fetched.user_id ?? ''
-            }
-            console.log(mapped)
-            // update auth context so UI sees correct nickname immediately
-            await auth.updateUser(mapped)
+                // Signup and save user in the db
+                // If user is already in the db, continue with signin
+                try {
+                  await userRepo.signUp({ auth0_id: userData.sub, email: userData.email, nickname: userData.nickname ?? '' })
+                } catch (error: any) {
+
+                  if (error === 409) {
+                    console.warn('User already exists (409), continuing login');
+                    alert(`Käyttäjä on jo luotu, kirjaudutaan sisään`)
+                    return;
+                  }
+                  console.error("SignUp error:", error.message || error)
+                  alert(`Virhe tilin luomisessa: ${error.message || error}`)
+                }
+
+                // Fetch latest user data from backend
+                try {
+                  const fetched = await userRepo.fetchUser(userData.sub)
+                  if (fetched) {
+                    // Normalize fetched data to match AuthContext expectation (sub/nickname/email)
+                    const mapped = {
+                      ...fetched,
+                      sub: fetched.auth0_id ?? userData.sub,
+                      nickname: fetched.nickname ?? userData.nickname ?? userData.username ?? '',
+                      user_id: fetched.user_id ?? '',
+                      avatar_url: normalizeAvatarUrl(fetched.avatar_url) ?? ''
+                    }
+                    console.log(mapped)
+                    // update auth context so UI sees correct nickname immediately
+                    await auth.updateUser(mapped)
+                  }
+                } catch (e) {
+                  console.warn('Failed to fetch user after login:', e)
+                }
+              })
           }
-        } catch (e) {
-          console.warn('Failed to fetch user after login:', e)
-        }
-      })
+        })
+        .catch((e) => {
+          // Handle errors
+          setErrorMessage(e.message)
+        })
     }
-  })
-  .catch((e) => {
-    // Handle errors
-    setErrorMessage(e.message)
-  })
-  }
 
   }, [response])
 
   // LOGIN
   const login = async () => {
     setErrorMessage(undefined)
-    promptAsync()
+    promptAsync()             // Launch Auth0 login in browser
   };
 
   // LOGOUT !! 
   const logout = async () => {
-    auth.logout()
+    auth.logout()       // Clear context + local storage via AuthContext
   };
 
   return {

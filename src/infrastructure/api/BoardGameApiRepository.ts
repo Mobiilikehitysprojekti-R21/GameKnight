@@ -20,11 +20,6 @@ export class BoardGameApiRepository implements BoardGameRepository {
     return (await res.json()) as BoardGame[];
   }
 
-  // TODO: function to add game to db
-  async addGame(game: BoardGame): Promise<void> {
-    
-  }
-
   // Function to add game to user´s game collection
   async addGameToCollection(user_id: string, bgg_id: BoardGame['bgg_id']): Promise<void> {
 
@@ -65,6 +60,7 @@ export class BoardGameApiRepository implements BoardGameRepository {
     }
   }
 
+  // Delete boardgame from user's game collection
   async deleteBoardGame(bgg_id: number, auth0_id: string): Promise<void> {
     if (this.getAccessToken) {
       const res = await authFetch(this.getAccessToken, `${this.apiUrl}/boardgames/${encodeURIComponent(auth0_id)}/${bgg_id}`, {
