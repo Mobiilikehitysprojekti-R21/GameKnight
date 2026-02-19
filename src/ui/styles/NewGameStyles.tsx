@@ -8,17 +8,24 @@ export const styles = StyleSheet.create({
     padding: spacing.md,
   },
 
+  menuContainer: {
+    flex: 1,
+    backgroundColor: colors.background,
+    padding: spacing.md,
+  },
+
   title: {
-    fontSize: 24,
-    fontWeight: "600",
-    color: colors.textPrimary,
+    fontSize: 36,
+    fontWeight: "bold",
+    color: "#F8FAFC",
+    letterSpacing: 1,
     marginBottom: spacing.md,
   },
 
   sectionTitle: {
-    fontSize: 16,
-    fontWeight: "500",
-    color: colors.textSecondary,
+    fontSize: 18,
+    fontWeight: "600",
+    color: colors.textPrimary,
     marginTop: spacing.lg,
     marginBottom: spacing.sm,
   },
@@ -29,6 +36,13 @@ export const styles = StyleSheet.create({
     color: colors.textSecondary,
     fontSize: 14,
     fontWeight: "600",
+  },
+
+  card: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: spacing.lg,
+    marginBottom: spacing.md,
   },
 
   favoriteLocation: {
@@ -123,6 +137,7 @@ export const styles = StyleSheet.create({
 
   playerName: {
     fontSize: 16,
+    color: colors.textPrimary,
   },
   playerActions: {
     flexDirection: "row",
@@ -138,6 +153,28 @@ export const styles = StyleSheet.create({
   addIcon: {
     fontSize: 18,
     fontWeight: "bold",
+  },
+
+  settings: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    maxWidth: '100%'
+  },
+
+  settingsButton: {
+    backgroundColor: colors.primary,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.md,
+    borderRadius: radius.md,
+    alignItems: 'center',
+    marginTop: 16,
+  },
+
+  settingsButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#000',
   },
 
 });
