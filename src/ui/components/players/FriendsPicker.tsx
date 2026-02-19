@@ -20,11 +20,11 @@ export const FriendsPicker = ({ friends, onSelect }: Props) => {
             onSelect({ id: friend.user_id.toString(), name: friend.nickname })
           }
         >
+          <Text style={styles.addIcon}>＋</Text>
+
           <Text style={styles.friendName}>
             {friend.nickname}
           </Text>
-
-          <Text style={styles.addIcon}>＋</Text>
         </Pressable>
       ))}
     </>

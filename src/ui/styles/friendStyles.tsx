@@ -81,7 +81,7 @@ export const styles = StyleSheet.create({
   },
 
   statText: {
-    color: colors.textSecondary,
+    color: colors.textPrimary,
     fontSize: 14,
     marginBottom: 16,
   },

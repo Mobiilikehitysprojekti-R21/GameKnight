@@ -134,10 +134,13 @@ const confirmLocation = () => {
             title={fav.label}
             pinColor="gold"
             onPress={() =>
-              setSelectedLocation({
-                latitude: fav.latitude,
-                longitude: fav.longitude,
-              })
+              {
+                setSelectedLocation({
+                  latitude: fav.latitude,
+                  longitude: fav.longitude,
+                });
+                setName(fav.label);
+              }
             }
           />
         ))}

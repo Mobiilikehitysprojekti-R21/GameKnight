@@ -47,7 +47,7 @@ export const styles = StyleSheet.create({
 
   favoriteLocation: {
     backgroundColor: colors.surface,
-    padding: spacing.sm,
+    padding: spacing.xs,
     borderRadius: radius.sm,
     marginBottom: spacing.xs,
   },
@@ -116,6 +116,9 @@ export const styles = StyleSheet.create({
   },
 
   friendRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
     padding: 12,
     borderBottomWidth: 1,
     borderColor: "#ddd",
@@ -123,6 +126,7 @@ export const styles = StyleSheet.create({
 
   friendName: {
     fontSize: 16,
+    color: colors.textPrimary,
   },
 
   secondaryButton: {
@@ -145,14 +149,18 @@ export const styles = StyleSheet.create({
   },
   iconButton: {
     padding: 6,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
   },
   deleteButton: {
-    backgroundColor: "#ffdddd",
+    backgroundColor: colors.danger,
   },
 
   addIcon: {
     fontSize: 18,
     fontWeight: "bold",
+    color: colors.textPrimary,
   },
 
   settings: {
@@ -176,5 +184,31 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#000',
   },
+  
+    inputColumn: {
+    flexDirection: 'column',
+    paddingVertical: spacing.md,
+    borderRadius: radius.md,
+    alignItems: 'center',
+    marginBottom: spacing.sm,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    padding: 8,
+    backgroundColor: '#fff',
+  },
 
+    loginButton: {
+    marginTop: 12,
+    paddingVertical: 12,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#334155',
+    alignItems: 'center'
+  },
+
+    loginButtonText: {
+    color: '#F8FAFC',
+    fontSize: 15,
+    fontWeight: '500',
+  },
 });

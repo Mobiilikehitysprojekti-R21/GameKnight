@@ -1,64 +1,32 @@
 import { useState } from "react";
-import { View, Text, TextInput, Pressable, FlatList } from "react-native";
-import { useRoute, useNavigation } from "@react-navigation/native";
-import { useFriendsViewModel } from "../viewModels/useFriendsViewModel";
+import { View, Text, TextInput, Pressable } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { styles } from "../styles/NewGameStyles";
-
-type RouteParams = {
-    onSelect: (user: { id?: string; name: string; type: "USER" | "GUEST" }) => void;
-};
+import { useGameSessionDraft } from "../context/GameSessionDraftContext";
 
 export const PlayerSearchScreen = () => {
-    const route = useRoute<any>();
     const navigation = useNavigation<any>();
-    const { friends } = useFriendsViewModel();
-
-    const { onSelect } = route.params as RouteParams;
+    const { setPlayers } = useGameSessionDraft();
 
     const [guestName, setGuestName] = useState("");
-
-    const handleFriendSelect = (friend: any) => {
-        onSelect({
-            id: friend.id ?? friend.user_id,
-            name: friend.nickname,
-            type: "USER",
-        });
-
-        navigation.goBack();
-    };
 
     const handleGuestAdd = () => {
         if (!guestName.trim()) return;
 
-        onSelect({
+        const newPlayer = {
+            id: `guest-${Date.now()}-${Math.random()}`,
             name: guestName.trim(),
-            type: "GUEST",
-        });
+            type: "GUEST" as const,
+        };
+
+        setPlayers(prev => [...prev, newPlayer]);
 
         navigation.goBack();
     };
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Lisää pelaaja</Text>
-
-            {/* Kaverit */}
-            <Text style={styles.sectionTitle}>Kaverit</Text>
-
-            <FlatList
-                data={friends}
-                keyExtractor={(item) => item.user_id.toString()}
-                renderItem={({ item }) => (
-                    <Pressable
-                        style={styles.friendRow}
-                        onPress={() => handleFriendSelect(item)}
-                    >
-                        <Text style={styles.friendName}>
-                            {item.nickname}
-                        </Text>
-                    </Pressable>
-                )}
-            />
+            <Text style={styles.title}>Lisää vieraspelaaja</Text>
 
             {/* Vieraspelaaja */}
             <Text style={[styles.sectionTitle, { marginTop: 20 }]}>
@@ -66,7 +34,7 @@ export const PlayerSearchScreen = () => {
             </Text>
 
             <TextInput
-                style={styles.locationInput}
+                style={styles.inputColumn}
                 placeholder="Syötä nimi"
                 value={guestName}
                 onChangeText={setGuestName}
@@ -77,7 +45,7 @@ export const PlayerSearchScreen = () => {
                 onPress={handleGuestAdd}
             >
                 <Text style={styles.primaryButtonText}>
-                    Lisää vieraspelaaja
+                    Lisää
                 </Text>
             </Pressable>
         </View>

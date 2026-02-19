@@ -1,6 +1,4 @@
-
 import { useState, useEffect, useMemo } from 'react';
-
 import { View, Text, TextInput, Pressable, ScrollView, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { BoardGame } from '../../domain/entities/BoardGame';
@@ -17,15 +15,6 @@ import { BoardGameApiRepository } from '../../infrastructure/api/BoardGameApiRep
 import { useGameCollectionViewModel } from '../viewModels/useGameCollectionViewModel';
 import NewGameFromList from '../components/NewGameFromList';
 import ModalComponent from '../components/Modal';
-
-
-/* Types */
-
-type GamePlayer = {
-  id?: string;
-  name: string;
-  type: "USER" | "GUEST";
-};
 
 /* Screen */
 
@@ -230,8 +219,8 @@ export const NewGameScreen = () => {
       <Text style={styles.title}>{selectedGame.name}</Text>
 
       <View style={styles.card}>
-        <Pressable onPress={() => setSelectedGame(null)}>
-          <Text style={styles.link}>Vaihda peli</Text>
+        <Pressable style={[styles.loginButton]} onPress={() => setSelectedGame(null)}>
+          <Text style={[styles.loginButtonText]}>Vaihda peli</Text>
         </Pressable>
 
         {/* Pelaajat */}
@@ -251,20 +240,7 @@ export const NewGameScreen = () => {
 
         <Pressable
           style={styles.secondaryButton}
-          onPress={() =>
-            navigation.navigate("PlayerSearch", {
-              onSelect: (user: { id?: string; name: string; type: "USER" | "GUEST" }) => {
-
-                setPlayers(prev => {
-                  const exists = prev.some(p => p.id === user.id);
-                  if (exists) return prev;
-
-                  return [...prev, user];
-                });
-
-              },
-            })
-          }
+          onPress={() => navigation.navigate("PlayerSearch")}
         >
 
           <Text style={styles.secondaryButtonText}>

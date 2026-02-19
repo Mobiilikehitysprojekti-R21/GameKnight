@@ -14,7 +14,7 @@ export function FriendCard({ friend }: { friend: Friend }) {
 
     <View>
       <Text style={styles.statText}>
-        <Text style={{ fontWeight: "bold" }}>{friend.nickname}</Text> {statusLabel(friend.status)}
+        <Text style={{ fontWeight: "bold" }}>👤 {friend.nickname}</Text> {statusLabel(friend.status)}
       </Text>
     </View>
   );
