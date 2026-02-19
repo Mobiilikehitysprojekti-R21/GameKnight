@@ -28,7 +28,7 @@ export default function GameCollectionScreen({ navigation }: Props) {
   // State to control modal visibility
   const [modalVisible, setModalVisible] = useState(false)
 
-  
+
   const [newGame, setNewgame] = useState('')    // input value for adding a new game
   const [search, setSearch] = useState('')      // input value for searching a game
 
@@ -53,15 +53,8 @@ export default function GameCollectionScreen({ navigation }: Props) {
         setSearch={setSearch}
         setGames={vm.handleDeleteGame}
         userid={String(vm.auth0_id)}
+        onAddGamePress={() => setModalVisible(true)}
       />
-      <View style={styles.card}>
-
-        <TouchableOpacity
-          style={styles.settingsButton}
-          onPress={() => setModalVisible(true)}>
-          <Text style={styles.settingsButtonText}>Lisää uusi peli</Text>
-        </TouchableOpacity>
-      </View>
 
       <ModalComponent
         modalVisible={modalVisible}
