@@ -5,13 +5,18 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useAuthViewModel } from '../viewModels/useAuthViewModel';
 import { useHomeScreenViewModel } from '../viewModels/useHomeScreenViewModel';
 import { useProfileScreenViewModel } from '../viewModels/useProfileScreenViewModel';
+import { useGameSessionsViewModel } from '../viewModels/useGameSessionsViewModel';
+import { calculateGeneralStats } from '../utils/statsCalculator';
+import { StatsCharts } from '../utils/statsVisualization';
 
 type Props = NativeStackScreenProps<any>
 export default function HomeScreen({ navigation }: Props) {
   const { loggedIn, displayName, errorMessage, login, logout } =
     useAuthViewModel();
-  
-  const vm = useHomeScreenViewModel()
+
+  const vm = useHomeScreenViewModel();
+  const { sessions } = useGameSessionsViewModel();
+  const generalStats = calculateGeneralStats(sessions);
 
   return (
     <ScrollView
@@ -24,19 +29,7 @@ export default function HomeScreen({ navigation }: Props) {
         <Text style={styles.subtitle}>Remember every game night!</Text>
       </View>
 
-      {!loggedIn && (
-        <View style={styles.card}>
-          <Text style={styles.sectionTitle}>{`TERVETULOA!`}</Text>
 
-          <Text style={styles.statText}>
-            Pelaaminen on parasta kavereiden kanssa.
-          </Text>
-          <Text style={styles.statText}>
-            Liityhän siis mukaan joukkoomme!
-          </Text>
-
-        </View>
-      )}
 
       {loggedIn && (
         <>
@@ -72,7 +65,20 @@ export default function HomeScreen({ navigation }: Props) {
               <Text style={styles.buttonText}>Jatka peliä</Text>
             </TouchableOpacity>
           </View>
-
+          <View style={styles.card}>
+            <Text style={styles.sectionTitle}>Tilastot</Text>
+            <Text style={styles.statText}>
+              Tarkastele omia pelitilastojasi
+            </Text>
+            <TouchableOpacity
+              style={styles.loginButton}
+              onPress={() => navigation.navigate('Stats')}
+            >
+              <Text style={styles.loginButtonText}>
+                Omat pelitilastot
+              </Text>
+            </TouchableOpacity>
+          </View>
 
           {/* PROFIILI */}
           <View style={styles.card}>
@@ -89,24 +95,6 @@ export default function HomeScreen({ navigation }: Props) {
         </>
       )
       }
-
-      {/* TILASTOT */}
-      <View style={styles.card}>
-        <Text style={styles.sectionTitle}>Tilastot</Text>
-        <Text style={styles.statText}>
-          {loggedIn
-            ? 'Tarkastele omia pelitilastojasi.'
-            : 'Katso yleisiä pelitilastoja. Kirjaudu sisään nähdäksesi omat tilastosi!'}
-        </Text>
-        <TouchableOpacity
-          style={styles.loginButton}
-          onPress={() => navigation.navigate('Stats')}
-        >
-          <Text style={styles.loginButtonText}>
-            {'Tarkastele pelattuja pelejä'}
-          </Text>
-        </TouchableOpacity>
-      </View>
 
       {/* KIRJAUTUMINEN */}
       <View style={styles.card}>
@@ -133,6 +121,26 @@ export default function HomeScreen({ navigation }: Props) {
           </Text>
         )}
       </View>
+
+      {/* TILASTOT */}
+      {!loggedIn && (
+        <>
+          <View style={styles.card}>
+            <Text style={styles.sectionTitle}>Pelitilastot</Text>
+            {!sessions || sessions.length === 0 ? (
+              <Text style={styles.statText}>Ei dataa saatavilla tai lataus epäonnistui</Text>
+            ) : (
+              <>
+                <Text style={styles.statText}>Rekisteröityneitä käyttäjiä: {generalStats.userCount}</Text>
+                <Text style={styles.statText}>Pelattujen pelien määrä: {generalStats.totalGamesCount}</Text>
+                <Text style={styles.statText}>Eniten voittanut pelaaja: {generalStats.mostWinningPlayer}</Text>
+                <StatsCharts generalStats={generalStats} />
+              </>
+            )}
+          </View>
+        </>
+      )}
+
 
     </ScrollView>
   );

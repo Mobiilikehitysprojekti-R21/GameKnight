@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useFocusEffect } from "@react-navigation/native";
 import type { GameSession } from "../../domain/entities/GameSessions";
 import { GameSessionsApiRepository } from "../../infrastructure/api/GameSessionsApiRepository";
 import { useAuth } from "../auth/useAuth";
@@ -21,15 +20,16 @@ export function useGameSessionsViewModel() {
         }));
         setSessions(sessions);
       })
-      .catch(() => setSessions([]))
+      .catch((error) => {
+        console.error("Failed to load sessions:", error);
+        setSessions([]);
+      })
       .finally(() => setLoading(false));
   }, [getAccessToken]);
 
-  useFocusEffect(
-    useCallback(() => {
-      fetchSessions();
-    }, [fetchSessions])
-  );
+  useEffect(() => {
+    fetchSessions();
+  }, [fetchSessions]);
 
   // uusimmat ensin
   const sorted = useMemo(() => {

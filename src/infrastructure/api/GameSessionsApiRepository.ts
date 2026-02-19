@@ -14,12 +14,10 @@ export class GameSessionsApiRepository implements GameSessionRepository {
       const res = await authFetch(this.getAccessToken, `${this.apiUrl}/gamesessions`, {
         method: 'GET',
       });
-      console.log(res);
       return res.json();
     }
 
     const res = await fetch(`${this.apiUrl}/gamesessions`);
-    console.log(res);
     return res.json();
   }
 

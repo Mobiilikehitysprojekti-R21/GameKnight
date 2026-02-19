@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { View, Text, TextInput, ScrollView, Pressable, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { styles } from "../styles/ScoreEntryStyles";
@@ -6,6 +6,15 @@ import { useGameSessionDraft } from "../context/GameSessionDraftContext";
 import { useSessionNotifications } from "../viewModels/useSessionNotifications";
 import { useAuth } from "../auth/useAuth";
 import { GameSessionsApiRepository } from "../../infrastructure/api/GameSessionsApiRepository";
+
+const toNumericId = (value: unknown): number | null => {
+    if (typeof value === "number" && Number.isFinite(value)) return value;
+    if (typeof value === "string" && value.trim() !== "") {
+        const parsed = Number(value);
+        return Number.isFinite(parsed) ? parsed : null;
+    }
+    return null;
+};
 
 export const ScoreEntryScreen = () => {
     const { selectedGame, players, location } = useGameSessionDraft();
@@ -40,7 +49,7 @@ export const ScoreEntryScreen = () => {
                 location_name: location?.label || null,
                 notes: notes || null,
                 players: rankedPlayers.map(p => ({
-                    user_id: p.type === "USER" ? (p.id as unknown as number) : null,
+                    user_id: p.type === "USER" ? toNumericId(p.id) : null,
                     name: p.name,
                     guest_name: p.type === "GUEST" ? p.name : null,
                     score: p.score,
@@ -74,6 +83,18 @@ export const ScoreEntryScreen = () => {
     );
 
     const [notes, setNotes] = useState('');
+
+    useEffect(() => {
+        setScores(
+            players.map((p: any) => ({
+                ...p,
+                score: 0,
+            }))
+        );
+        setNotes('');
+        setIsSaved(false);
+        setIsSaving(false);
+    }, [players, selectedGame?.game_id]);
 
     const updateScore = (index: number, value: string) => {
         const numeric = parseInt(value) || 0;

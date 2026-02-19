@@ -41,26 +41,32 @@ export const NewGameScreen = () => {
   const [newGame, setNewGame] = useState('')                    // Input value used in modal search field
   const [searchedGame, setSearchedGame] = useState<BoardGame | null>(null) // Selected game from modal search results
   const [isModalGameChosen, setIsModalGameChosen] = useState(false)       // Enables modal confirm button after user picks a search result
+  const currentUserId =
+    typeof user?.user_id === 'number'
+      ? String(user.user_id)
+      : typeof user?.user_id === 'string' && user.user_id.trim() !== ''
+        ? user.user_id.trim()
+        : null;
 
   /* Pelaajat */
 
   useEffect(() => {
-    if (!user?.sub) return;
+    if (!currentUserId) return;
 
     setPlayers(prev => {
-      const exists = prev.some(p => p.id === user.sub);
+      const exists = prev.some(p => p.id === currentUserId);
       if (exists) return prev;
 
       return [
         ...prev,
         {
-          id: user.sub,
+          id: currentUserId,
           name: user.nickname ?? user.name,
           type: "USER",
         },
       ];
     });
-  }, [user?.sub]);
+  }, [currentUserId, user?.nickname, user?.name, setPlayers]);
 
   console.log("Auth user:", user);
 

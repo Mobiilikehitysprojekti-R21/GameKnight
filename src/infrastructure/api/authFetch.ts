@@ -14,15 +14,16 @@ export async function authFetch(
   url: string,
   options: RequestInit = {}
 ): Promise<Response> {
-  console.log('getAccessToken:', getAccessToken);
   const token = await getAccessToken();
 
-  if (!token) {
-    throw new Error('No access token available. User must be logged in.');
+  const headers = new Headers(options.headers);
+
+  // Set Authorization header only if token is available
+  // Backend with optionalAuth will accept requests with or without token
+  if (token) {
+    headers.set('Authorization', `Bearer ${token}`);
   }
 
-  const headers = new Headers(options.headers);
-  headers.set('Authorization', `Bearer ${token}`);
   headers.set('Content-Type', 'application/json');
 
   return fetch(url, {
