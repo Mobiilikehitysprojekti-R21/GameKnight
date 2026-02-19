@@ -13,7 +13,7 @@ import { useGameSessionDraft } from '../context/GameSessionDraftContext';
 
 export const MapScreen = () => {
   const navigation = useNavigation<any>();
-  const { favorites } = useFavoriteLocationsViewModel();
+  const { favorites, addFavorite } = useFavoriteLocationsViewModel();
   const { location: userLocation, loading, error, refreshLocation } = useUserLocation();
   const mapRef = useRef<MapView>(null);
   const [selectedLocation, setSelectedLocation] = useState<{
@@ -21,6 +21,8 @@ export const MapScreen = () => {
     longitude: number;
   } | null>(null);
   const { setLocation } = useGameSessionDraft();
+  const [name, setName] = useState("");
+  const [saveMessage, setSaveMessage] = useState<string | null>(null);
 
 
   useEffect(() => {
@@ -39,8 +41,6 @@ export const MapScreen = () => {
     }
   }, [userLocation]);
 
-  const [favoriteName, setFavoriteName] = useState("");
-
   const handleMapPress = (event: MapPressEvent) => {
     setSelectedLocation(event.nativeEvent.coordinate);
   };
@@ -49,14 +49,37 @@ export const MapScreen = () => {
     setSelectedLocation(event.nativeEvent.coordinate);
   };
 
-  const confirmLocation = () => {
-    if (!selectedLocation) return;
+  const saveAsFavorite = async () => {
+    if (!selectedLocation || !name.trim()) {
+      setSaveMessage("Anna sijainnille nimi");
+      return;
+    }
 
-    setLocation({
-      label: favoriteName || "Valittu sijainti",
+    const result = await addFavorite({
+      label: name,
       latitude: selectedLocation.latitude,
       longitude: selectedLocation.longitude,
     });
+
+    if (result.success) {
+      setSaveMessage("✓ Sijainti tallennettu suosikiksi");
+      // Go back and pass the newly saved favorite
+      setTimeout(() => {
+        navigation.goBack();
+      }, 1000);
+    } else {
+      setSaveMessage(`Virhe: ${result.error}`);
+    }
+  };
+
+const confirmLocation = () => {
+  if (!selectedLocation) return;
+
+  setLocation({
+    label: name || "Valittu sijainti",
+    latitude: selectedLocation.latitude,
+    longitude: selectedLocation.longitude,
+  });
 
     navigation.goBack();
   };
@@ -133,18 +156,31 @@ export const MapScreen = () => {
           style={styles.input}
           placeholder="Nimeä sijainti"
           placeholderTextColor={colors.textSecondary}
-          value={favoriteName}
-          onChangeText={setFavoriteName}
+          value={name}
+          onChangeText={setName}
         />
 
-        <Pressable
-          style={styles.confirmButton}
-          onPress={confirmLocation}
-        >
-          <Text style={styles.confirmButtonText}>
-            Valitse sijainti
+        <View style={{ flexDirection: 'row', gap: 8 }}>
+          <Pressable
+            style={[styles.confirmButton, { flex: 1 }]}
+            onPress={saveAsFavorite}
+          >
+            <Text style={styles.confirmButtonText}>Tallenna suosikiksi</Text>
+          </Pressable>
+
+          <Pressable
+            style={[styles.confirmButton, { flex: 1 }]}
+            onPress={confirmLocation}
+          >
+            <Text style={styles.confirmButtonText}>Valitse sijainti</Text>
+          </Pressable>
+        </View>
+
+        {saveMessage && (
+          <Text style={{ marginTop: 8, textAlign: 'center', color: colors.textSecondary }}>
+            {saveMessage}
           </Text>
-        </Pressable>
+        )}
       </View>
     </View>
   );
