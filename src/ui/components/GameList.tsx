@@ -1,8 +1,10 @@
 import { SwipeListView } from "react-native-swipe-list-view"
-import { View, Text, TextInput, TouchableOpacity } from "react-native"
+import { View, Text, TextInput, TouchableOpacity, Image } from "react-native"
 import { BoardGame } from "../../domain/entities/BoardGame"
 import { styles } from "../styles/gameCollectionStyles"
 import { colors } from "../styles/theme"
+
+const defaultGamePic = require('../../../assets/defaultgamepic.png')
 
 // Component for list of games
 
@@ -15,10 +17,10 @@ type GameListProps = {
   setGames: (id: number, userid: string) => void      // function for updating gamelist after removal
   userid: string
   onNewGamePress: () => void          // navigate to NewGame screen
-
+  onAddGamePress: () => void          // open add game modal
 }
 
-const GameList = ({ filteredItems, games, userNick, search, setSearch, setGames, userid, onNewGamePress }: GameListProps) => {
+const GameList = ({ filteredItems, games, userNick, search, setSearch, setGames, userid, onNewGamePress, onAddGamePress }: GameListProps) => {
 
   return (
     <SwipeListView
@@ -57,7 +59,13 @@ const GameList = ({ filteredItems, games, userNick, search, setSearch, setGames,
 
       renderItem={({ item }) => (
         <View style={styles.rowFront}>
-          <Text style={styles.statText}>{item.name}</Text>
+
+          <Image
+            source={item.thumbnail_url ? { uri: item.thumbnail_url } : defaultGamePic}
+            style={{ width: 60, height: 60, borderRadius: 10 }}
+          />
+
+          <Text style={[styles.statText, { flex: 1, flexShrink: 1 }]} numberOfLines={2}>{item.name}</Text>
         </View>
       )}
 
@@ -79,6 +87,16 @@ const GameList = ({ filteredItems, games, userNick, search, setSearch, setGames,
 
       rightOpenValue={-110}
       disableRightSwipe
+
+      ListFooterComponent={
+        <View style={styles.card}>
+          <TouchableOpacity
+            style={styles.settingsButton}
+            onPress={onAddGamePress}>
+            <Text style={styles.settingsButtonText}>Lisää uusi peli</Text>
+          </TouchableOpacity>
+        </View>
+      }
     />
   )
 

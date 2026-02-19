@@ -153,6 +153,8 @@ export function useFriendsViewModel() {
             // rollback: palauta pyyntö jos epäonnistui
             if (req) setIncomingRequests(prev => [req, ...prev]);
             setError(e?.message ?? "Hyväksyminen epäonnistui");
+            // Fetch actual state from backend in case request was accepted but response failed
+            await refresh();
         } finally {
             setBusyRequestIds(prev => {
                 const copy = { ...prev };
@@ -180,6 +182,8 @@ export function useFriendsViewModel() {
             // rollback
             if (req) setIncomingRequests(prev => [req, ...prev]);
             setError(e?.message ?? "Hylkäys epäonnistui");
+            // Fetch actual state from backend in case request was declined but response failed
+            await refresh();
         } finally {
             setBusyRequestIds(prev => {
                 const copy = { ...prev };

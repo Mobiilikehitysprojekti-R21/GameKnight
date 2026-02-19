@@ -38,7 +38,6 @@ export function useGameCollectionViewModel(repo: BoardGameApiRepository) {
     // Auth from context
     const auth = useAuth()
 
-
     // Load user´s game collection, set loading state
     const loadGames = async () => {
         try {
@@ -206,6 +205,6 @@ export function useGameCollectionViewModel(repo: BoardGameApiRepository) {
         chooseGame,
         isGameChosen,
         isGameAdded,
-        auth0_id
+        auth0_id,
     }
 }
