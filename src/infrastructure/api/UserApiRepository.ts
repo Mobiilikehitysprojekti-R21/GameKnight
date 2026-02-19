@@ -159,18 +159,27 @@ export class UserApiRepository implements UserRepository {
       if (!res.ok) {
         throw new Error(`Failed to get favorite locations: ${res.status}`);
       }
-      return (await res.json()) as Location[];
+      const data = (await res.json()) as Array<{ label?: string; name?: string; latitude: number; longitude: number }>;
+      return data.map(item => ({
+        label: item.label ?? item.name ?? "",
+        latitude: item.latitude,
+        longitude: item.longitude,
+      }));
     }
 
     const response = await axios.get(`${this.apiUrl}/users/${userId}/favorite-locations`);
-
-    return response.data;
+    const data = response.data as Array<{ label?: string; name?: string; latitude: number; longitude: number }>;
+    return data.map(item => ({
+      label: item.label ?? item.name ?? "",
+      latitude: item.latitude,
+      longitude: item.longitude,
+    }));
   }
 
   async addFavoriteLocation(
     userId: number,
     location: {
-      name: string;
+      label: string;
       latitude: number;
       longitude: number;
     }
@@ -178,7 +187,11 @@ export class UserApiRepository implements UserRepository {
     if (this.getAccessToken) {
       const res = await authFetch(this.getAccessToken, `${this.apiUrl}/users/${userId}/favorite-locations`, {
         method: 'POST',
-        body: JSON.stringify(location),
+        body: JSON.stringify({
+          name: location.label,
+          latitude: location.latitude,
+          longitude: location.longitude,
+        }),
       });
 
       if (!res.ok) {
@@ -187,6 +200,10 @@ export class UserApiRepository implements UserRepository {
       return;
     }
 
-    await axios.post(`${this.apiUrl}/users/${userId}/favorite-locations`, location);
+    await axios.post(`${this.apiUrl}/users/${userId}/favorite-locations`, {
+      name: location.label,
+      latitude: location.latitude,
+      longitude: location.longitude,
+    });
   }
 }

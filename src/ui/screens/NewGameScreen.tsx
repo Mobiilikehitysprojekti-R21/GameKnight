@@ -1,7 +1,6 @@
 
 import { useState, useEffect } from 'react';
-
-import { View, Text, TextInput, Pressable, FlatList, ScrollView } from 'react-native';
+import { View, Text, TextInput, Pressable, FlatList, ScrollView, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { BoardGame } from '../../domain/entities/BoardGame';
 import { styles } from '../styles/NewGameStyles';
@@ -28,10 +27,10 @@ type GamePlayer = {
 export const NewGameScreen = () => {
 
   const navigation = useNavigation<any>();
-  const { favorites, addFavorite } = useFavoriteLocationsViewModel();
-  const { friends } = useFriendsViewModel(); 
+  const { favorites, error: favoritesError, addFavorite } = useFavoriteLocationsViewModel();
+  const { friends } = useFriendsViewModel();
   const [guestModalOpen, setGuestModalOpen] = useState(false);
-  const { selectedGame, players, location, setSelectedGame, setPlayers, setLocation,} = useGameSessionDraft();
+  const { selectedGame, players, location, setSelectedGame, setPlayers, setLocation, } = useGameSessionDraft();
   const availableFriends = friends.filter(f => f.user_id && !players.some(p => p.id?.toString() === f.user_id.toString()));
   const { user } = useAuth();
 
@@ -133,23 +132,25 @@ export const NewGameScreen = () => {
       >
         <Text style={styles.title}>Valitse peli</Text>
 
-        <Pressable onPress={() => navigation.navigate("Search")}>
-          <Text style={styles.link}>Hae peli</Text>
-        </Pressable>
+        <View style={styles.card}>
+          <Pressable onPress={() => navigation.navigate("Search")}>
+            <Text style={styles.link}>Hae peli</Text>
+          </Pressable>
 
-        <Pressable
-          onPress={() =>
-            setSelectedGame({
-              name: "Dummy",
-              game_id: 1,
-              bgg_id: 0,
-              is_expansion: false,
-            })
-          }
-          style={{ marginTop: 16 }}
-        >
-          <Text style={styles.link}>Valitse Dummy</Text>
-        </Pressable>
+          <Pressable
+            onPress={() =>
+              setSelectedGame({
+                name: "Dummy",
+                game_id: 1,
+                bgg_id: 0,
+                is_expansion: false,
+              })
+            }
+            style={{ marginTop: 16 }}
+          >
+            <Text style={styles.link}>Valitse Dummy</Text>
+          </Pressable>
+        </View>
       </ScrollView>
     );
   }
@@ -164,54 +165,54 @@ export const NewGameScreen = () => {
     >
       <Text style={styles.title}>{selectedGame.name}</Text>
 
-      <Pressable onPress={() => setSelectedGame(null)}>
-        <Text style={styles.link}>Vaihda peli</Text>
-      </Pressable>
+      <View style={styles.card}>
+        <Pressable onPress={() => setSelectedGame(null)}>
+          <Text style={styles.link}>Vaihda peli</Text>
+        </Pressable>
 
-      {/* Pelaajat */}
-      <Text style={styles.sectionTitle}>Pelaajat</Text>
+        {/* Pelaajat */}
+        <Text style={styles.sectionTitle}>Pelaajat</Text>
 
-      <PlayersList
-        players={players}
-        onMoveUp={movePlayerUp}
-        onMoveDown={movePlayerDown}
-        onRemove={removePlayer}
-      />
+        <PlayersList
+          players={players}
+          onMoveUp={movePlayerUp}
+          onMoveDown={movePlayerDown}
+          onRemove={removePlayer}
+        />
 
-      <FriendsPicker
-        friends={availableFriends}
-        onSelect={addRegisteredPlayer}
-      />
+        <FriendsPicker
+          friends={availableFriends}
+          onSelect={addRegisteredPlayer}
+        />
 
-      <Pressable
-        style={styles.secondaryButton}
-        onPress={() =>
-          navigation.navigate("PlayerSearch", {
-            onSelect: (user: { id?: string; name: string; type: "USER" | "GUEST" }) => {
+        <Pressable
+          style={styles.secondaryButton}
+          onPress={() =>
+            navigation.navigate("PlayerSearch", {
+              onSelect: (user: { id?: string; name: string; type: "USER" | "GUEST" }) => {
 
-              setPlayers(prev => {
-                const exists = prev.some(p => p.id === user.id);
-                if (exists) return prev;
+                setPlayers(prev => {
+                  const exists = prev.some(p => p.id === user.id);
+                  if (exists) return prev;
 
-                return [...prev, user];
-              });
+                  return [...prev, user];
+                });
 
-            },
-          })
-        }
-      >
+              },
+            })
+          }
+        >
 
-        <Text style={styles.secondaryButtonText}>
-          + Lisää pelaaja
-        </Text>
-      </Pressable>
+          <Text style={styles.secondaryButtonText}>
+            + Lisää pelaaja
+          </Text>
+        </Pressable>
+      </View>
 
-      {/* Sijainti */}
-      <Text style={styles.sectionTitle}>Sijainti</Text>
+      <View style={styles.card}>
+        {/* Sijainti */}
+        <Text style={styles.sectionTitle}>Sijainti</Text>
 
-      <Pressable onPress={() => navigation.navigate("MapScreen")
-
-      }>
         {/* Suosikkisijainnit */}
         {favorites.length > 0 && (
           <>
@@ -223,7 +224,7 @@ export const NewGameScreen = () => {
                 style={styles.favoriteLocation}
                 onPress={() => setLocation(loc)}
               >
-                <Text style={styles.favoriteLocationText}>
+                <Text style={styles.secondaryButton}>
                   {loc.label}
                 </Text>
               </Pressable>
@@ -231,39 +232,19 @@ export const NewGameScreen = () => {
           </>
         )}
 
-        <Text style={styles.link}>Valitse sijainti kartalta</Text>
-      </Pressable>
-
-      <TextInput
-        style={styles.locationInput}
-        placeholder="Valitse sijainti"
-        value={location?.label ?? ""}
-        editable={false}
-      />
-
-      {location && (
-        <Pressable
-          onPress={async () => {
-            const exists = favorites.some(
-              (l) =>
-                l.latitude === location.latitude &&
-                l.longitude === location.longitude
-            );
-
-            if (exists) return;
-
-            await addFavorite({
-              name: location.label,
-              latitude: location.latitude,
-              longitude: location.longitude,
-            });
-            console.log("Saved favorite");
-          }}
-        >
-          <Text style={styles.link}>Tallenna sijainti suosikiksi</Text>
+        {/* Navigate to map */}
+        <Pressable style={styles.primaryButton} onPress={() => navigation.navigate("MapScreen")}>
+          <Text style={styles.primaryButtonText}>Valitse sijainti kartalta</Text>
         </Pressable>
-      )}
 
+        {/* Valittu sijainti */}
+        {location && (
+          <Text style={[styles.sectionSubtitle, { textAlign: "center", marginTop: 12 }]}>
+            Valittu sijainti: {location.label}
+          </Text>
+        )}
+
+      </View>
 
       {/* Aloita peli */}
       <Pressable
