@@ -8,4 +8,5 @@ export type BoardGame = {
   average?: number
   users_rated?: number
   is_expansion: boolean
+  thumbnail_url?: string
 };

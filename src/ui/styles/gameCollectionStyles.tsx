@@ -57,6 +57,8 @@ export const styles = StyleSheet.create({
     alignItems: 'flex-end',
     justifyContent: 'center',
     paddingRight: 20,
+    borderRadius: radius.lg,
+    marginBottom: 4,
   },
 
   rowBackButtons: {
@@ -91,8 +93,14 @@ export const styles = StyleSheet.create({
   rowFront: {
     backgroundColor: colors.surface,
     borderBottomWidth: 1,
+    borderRadius: radius.lg,
     borderColor: colors.secondary,
-    padding: 16
+    padding: 16,
+    marginBottom: 4,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    maxWidth: '100%'
   },
 
   subtitle: {
@@ -108,7 +116,6 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     borderRadius: radius.lg,
     padding: spacing.lg,
-    marginBottom: spacing.md,
   },
 
   sectionTitle: {
