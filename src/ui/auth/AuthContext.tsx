@@ -95,7 +95,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }
 
   const getAccessToken = async (): Promise<string | null> => {
-    console.log("accessToken from context:", accessToken)
     return accessToken
   }
 

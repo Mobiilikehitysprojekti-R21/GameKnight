@@ -7,6 +7,7 @@ interface GeneralStatsProps {
     userCount: number;
     groupCount: number;
     mostWinningPlayer: string;
+    totalGamesCount: number;
 }
 
 interface UserStatsProps {
@@ -36,7 +37,7 @@ export const Stats: React.FC<StatsProps> = ({ loggedIn, generalStats, userStats 
             <>
                 <Text style={styles.sectionTitle}>Yleiset pelitilastot</Text>
                 <Text style={styles.statText}>Käyttäjiä: {generalStats.userCount}</Text>
-                <Text style={styles.statText}>Peliryhmien määrä: {generalStats.groupCount}</Text>
+                <Text style={styles.statText}>Pelattujen pelien määrä: {generalStats.totalGamesCount}</Text>
                 <Text style={styles.statText}>Eniten voittanut pelaaja: {generalStats.mostWinningPlayer}</Text>
                 <Text style={styles.statText}>Suosituimmat pelit:</Text>
                 {generalStats.mostPlayedGames.map((game, idx) => (

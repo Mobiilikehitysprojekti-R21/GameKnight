@@ -21,7 +21,7 @@ export const styles = StyleSheet.create({
     letterSpacing: 1,
   },
 
-    inputColumn: {
+  inputColumn: {
     flexDirection: 'column',
     paddingVertical: spacing.md,
     borderRadius: radius.md,
@@ -33,13 +33,13 @@ export const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
 
-    inputRow: {
+  inputRow: {
     flexDirection: 'row',
     maxWidth: '100%',
     alignItems: 'center'
   },
 
-    input: {
+  input: {
     borderWidth: 1,
     textAlign: 'center',
     borderColor: '#ccc',
@@ -109,7 +109,7 @@ export const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
 
-     deleteButton: {
+  deleteButton: {
     backgroundColor: colors.danger,
     paddingVertical: spacing.md,
     borderRadius: radius.md,
@@ -130,11 +130,31 @@ export const styles = StyleSheet.create({
     borderRadius: radius.md,
     paddingVertical: spacing.md,
     fontFamily: 'Arial',
-},
-chartTitle: {
+  },
+  chartTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: spacing.sm,
     color: colors.textPrimary,
-},
+  },
+  chartLegendRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: spacing.sm,
+  },
+  chartLegendItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: spacing.md,
+  },
+  chartLegendSwatch: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginRight: spacing.xs,
+  },
+  chartLegendText: {
+    color: colors.textSecondary,
+    fontSize: 14,
+  },
 });
