@@ -7,7 +7,7 @@ import { useAuth } from "../auth/useAuth";
 export function useUserGameSessionsViewModel(userId: number | null) {
     const [sessions, setSessions] = useState<GameSession[]>([]);
     const [loading, setLoading] = useState(false);
-    const { getAccessToken } = useAuth();
+    const { getAccessToken, user } = useAuth();
 
     const fetchUserSessions = useCallback(() => {
         if (typeof userId !== "number" || !Number.isFinite(userId)) {
@@ -17,9 +17,10 @@ export function useUserGameSessionsViewModel(userId: number | null) {
         }
 
         const safeUserId = userId;
+        const currentUserNickname = user?.nickname || "";
         setLoading(true);
         const repo = new GameSessionsApiRepository(getAccessToken);
-        repo.getSessionsByUserId(safeUserId)
+        repo.getSessions()
             .then((data: any[]) => {
                 const mappedSessions = data.map((session) => ({
                     ...session,
@@ -27,19 +28,25 @@ export function useUserGameSessionsViewModel(userId: number | null) {
                 }));
                 const filteredSessions = mappedSessions.filter((session) =>
                     session.players?.some((player: any) => {
+                        // Check if user is a registered player
                         const playerId = typeof player.user_id === "number"
                             ? player.user_id
                             : typeof player.user_id === "string" && player.user_id.trim() !== ""
                                 ? Number(player.user_id)
                                 : null;
-                        return Number.isFinite(playerId) && playerId === safeUserId;
+                        const isRegisteredPlayer = Number.isFinite(playerId) && playerId === safeUserId;
+                        
+                        // Check if user participated as a guest
+                        const isGuest = player.guest_name && player.guest_name === currentUserNickname;
+                        
+                        return isRegisteredPlayer || isGuest;
                     })
                 );
                 setSessions(filteredSessions);
             })
             .catch(() => setSessions([]))
             .finally(() => setLoading(false));
-    }, [getAccessToken, userId]);
+    }, [getAccessToken, userId, user?.nickname]);
 
     useFocusEffect(
         useCallback(() => {

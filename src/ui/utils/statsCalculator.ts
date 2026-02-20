@@ -36,6 +36,7 @@ export const calculateUserStats = (sessions: GameSession[], userId: number | str
     if (normalizedUserId === null && !normalizedUserName) {
         return {
             gamesPlayed: 0,
+            gamesPlayedOverTime: [],
             gamesWonPercentage: 0,
             mostPlayedGame: 'N/A',
             opponentsCount: 0,
@@ -56,6 +57,18 @@ export const calculateUserStats = (sessions: GameSession[], userId: number | str
 
     const gamesPlayed = userSessions.length;
 
+    // Calculate games played over time (by date)
+    const gamesPlayedOverTime: { [date: string]: number } = {};
+    userSessions.forEach(session => {
+        const date = new Date(session.played_at).toISOString().split('T')[0]; // YYYY-MM-DD format
+        gamesPlayedOverTime[date] = (gamesPlayedOverTime[date] || 0) + 1;
+    });
+
+    // Sort by date and convert to array
+    const gamesPlayedOverTimeArray = Object.entries(gamesPlayedOverTime)
+        .sort((a, b) => new Date(a[0]).getTime() - new Date(b[0]).getTime())
+        .map(([date, count]) => ({ date, count }));
+
     const gamesWon = userSessions.filter(session => {
         const player = session.players.find((p) => isCurrentUserPlayer(p));
         return isWinner(player?.is_winner);
@@ -70,8 +83,7 @@ export const calculateUserStats = (sessions: GameSession[], userId: number | str
     });
 
     const mostPlayedGame = Object.entries(gameFrequency).sort((a, b) => b[1] - a[1])[0]?.[0] || 'N/A';
-
-    const opponents = new Set<number>();
+    const opponents = new Set<string>();
     const opponentStats: { [key: string]: number } = {};
 
     // Laske käyttäjän omat voitot
@@ -84,22 +96,31 @@ export const calculateUserStats = (sessions: GameSession[], userId: number | str
     opponentStats['Minä'] = userWins;
 
     userSessions.forEach(session => {
-        // Etsi kaikki voittajat tässä sessiossa (paitsi käyttäjä)
+        // vain rekisteröidyt ystävät
         session.players.forEach(player => {
             if (isWinner(player.is_winner) && !isCurrentUserPlayer(player)) {
-                const opponentLabel = getWinnerLabel(player);
-                if (opponentLabel) {
-                    opponentStats[opponentLabel] = (opponentStats[opponentLabel] || 0) + 1;
+                const playerId = toNumericId(player.user_id);
+                if (playerId !== null) {
+                    const opponentLabel = getWinnerLabel(player);
+                    if (opponentLabel) {
+                        opponentStats[opponentLabel] = (opponentStats[opponentLabel] || 0) + 1;
+                    }
                 }
             }
         });
 
-        // Laske myös muut pelaajat (opponents) - joilla on user_id
+        // Laske kaikki vastustajat - sekä rekisteröidyt että vieraat
         session.players.forEach(p => {
             if (!isCurrentUserPlayer(p)) {
+                // Rekisteröidyt pelaajat (user_id)
                 const playerId = toNumericId(p.user_id);
                 if (playerId !== null) {
-                    opponents.add(playerId);
+                    opponents.add(`user_${playerId}`);
+                }
+                // Vieraat pelaajat (guest_name)
+                const guestName = typeof p.guest_name === 'string' ? p.guest_name.trim() : '';
+                if (guestName) {
+                    opponents.add(`guest_${guestName}`);
                 }
             }
         });
@@ -107,14 +128,13 @@ export const calculateUserStats = (sessions: GameSession[], userId: number | str
 
     return {
         gamesPlayed,
+        gamesPlayedOverTime: gamesPlayedOverTimeArray,
         gamesWonPercentage: Math.round(gamesWonPercentage),
         mostPlayedGame,
         opponentsCount: opponents.size,
         opponentStats,
     };
 };
-
-// ...existing code...
 
 export const calculateGeneralStats = (sessions: GameSession[]) => {
     const userIds = new Set<number>();

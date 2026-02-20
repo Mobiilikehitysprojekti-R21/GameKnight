@@ -7,6 +7,7 @@ import { colors, spacing, radius } from '../styles/theme';
 interface StatsChartsProps {
     userStats?: {
         gamesPlayed: number;
+        gamesPlayedOverTime?: Array<{ date: string; count: number }>;
         gamesWonPercentage: number;
         mostPlayedGame: string;
         opponentsCount: number;
@@ -32,30 +33,39 @@ export const StatsCharts: React.FC<StatsChartsProps> = ({ userStats, generalStat
             {generalStats && (
                 <View style={styles.chartContainer}>
                     <Text style={styles.chartTitle}>Suosituimmat pelit</Text>
-                    <BarChart
-                        data={{
-                            labels: generalStats.mostPlayedGames.slice(0, 5).map((g) => `Game ${g}`) || [],
-                            datasets: [
-                                {
-                                    data: generalStats.gameFrequencies.length > 0
-                                        ? generalStats.gameFrequencies
-                                        : [0], // jos ei dataa, näytä 0
-                                },
-                            ],
-                        }}
-                        width={screenWidth - 120}
-                        height={220}
-                        chartConfig={{
-                            backgroundColor: colors.background,
-                            backgroundGradientFrom: colors.background,
-                            backgroundGradientTo: colors.background,
-                            color: () => colors.primary,
-                            labelColor: () => colors.textPrimary,
-                        }}
-                        verticalLabelRotation={30}
-                        yAxisLabel=""
-                        yAxisSuffix=""
-                    />
+                    <View style={{ position: 'relative' }}>
+                        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingBottom: spacing.sm }}> 
+                            <BarChart
+                                data={{
+                                    labels: generalStats.mostPlayedGames.slice(0, 5).map((g) => `${g}`) || [],
+                                    datasets: [
+                                        {
+                                            data: (generalStats.gameFrequencies.length > 0
+                                                ? generalStats.gameFrequencies
+                                                : [0]).map(Math.round), // Round to integers
+                                        },
+                                    ],
+                                }}
+                                width={Math.max(screenWidth - 60, 400)}
+                                height={480}
+                                chartConfig={{
+                                    backgroundColor: colors.background,
+                                    backgroundGradientFrom: colors.background,
+                                    backgroundGradientTo: colors.background,
+                                    color: () => colors.primary,
+                                    labelColor: () => colors.textPrimary,
+                                    decimalPlaces: 0,
+                                }}
+                                verticalLabelRotation={45}
+                                yAxisLabel=""
+                                yAxisSuffix=""
+                            />
+                        </ScrollView>
+                        <Text style={{ position: 'absolute', 
+                            left: 0, top: 100, fontSize: 11, color: colors.textPrimary, 
+                            fontWeight: '600', transform: [{ rotate: '-90deg' }], 
+                            width: 100, textAlign: 'center', marginLeft: -30 }}>Pelikerrat</Text>
+                    </View>
                 </View>
             )}
 
@@ -151,28 +161,43 @@ export const StatsCharts: React.FC<StatsChartsProps> = ({ userStats, generalStat
 
 
             {/* pelatut pelit viivakaaviona */}
-            {userStats && (
+            {userStats && userStats.gamesPlayedOverTime && userStats.gamesPlayedOverTime.length > 0 && (
                 <View style={styles.chartContainer}>
-                    <Text style={styles.chartTitle}>Pelatut pelit</Text>
-                    <LineChart
-                        data={{
-                            labels: ['', ''],
-                            datasets: [
-                                {
-                                    data: [0, userStats.gamesPlayed],
-                                },
-                            ],
-                        }}
-                        width={screenWidth - 120}
-                        height={250}
-                        chartConfig={{
-                            backgroundColor: colors.background,
-                            backgroundGradientFrom: colors.background,
-                            backgroundGradientTo: colors.background,
-                            color: () => colors.primary,
-                            labelColor: () => colors.textPrimary,
-                        }}
-                    />
+                    <Text style={styles.chartTitle}>Pelatut pelit </Text>
+                    <View style={{ position: 'relative' }}>
+                        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingBottom: spacing.sm }}>
+                            <LineChart
+                                data={{
+                                    labels: userStats.gamesPlayedOverTime.map(item => {
+                                        const date = new Date(item.date);
+                                        return `${date.getDate()}.${date.getMonth() + 1}`;
+                                    }),
+                                    datasets: [
+                                        {
+                                            data: userStats.gamesPlayedOverTime.map(item => item.count),
+                                        },
+                                    ],
+                                }}
+                                width={Math.max(screenWidth - 60, userStats.gamesPlayedOverTime.length * 60)}
+                                height={300}
+                                chartConfig={{
+                                    backgroundColor: colors.background,
+                                    backgroundGradientFrom: colors.background,
+                                    backgroundGradientTo: colors.background,
+                                    color: () => colors.primary,
+                                    labelColor: () => colors.textPrimary,
+                                    decimalPlaces: 0,
+                                }}
+                                verticalLabelRotation={45}
+                                yAxisLabel=""
+                                yAxisSuffix=""
+                            />
+                        </ScrollView>
+                        <Text style={{ position: 'absolute', 
+                            left: 0, top: 100, fontSize: 11, color: colors.textPrimary, 
+                            fontWeight: '600', transform: [{ rotate: '-90deg' }], 
+                            width: 100, textAlign: 'center', marginLeft: -30 }}>Pelikerrat</Text>
+                    </View>
                 </View>
             )}
         </View>
