@@ -45,7 +45,7 @@ export const ScoreEntryScreen = () => {
                 game_id: selectedGame.game_id,
                 game_name: selectedGame.name,
                 played_at: new Date(),
-                location_id: null,
+                location_id: location?.id || null,
                 location_name: location?.label || null,
                 notes: notes || null,
                 players: rankedPlayers.map(p => ({
@@ -57,8 +57,25 @@ export const ScoreEntryScreen = () => {
                 })),
             };
 
+            console.log("Saving session with location:", { location, location_id: location?.id, location_name: location?.label });
+            console.log("Full payload:", resultPayload);
+
             const savedSession = await sessionRepo.createSession(resultPayload);
             setIsSaved(true);
+            
+            // If location_id is null but we have location data, add it to the session
+            if (savedSession?.session_id && !resultPayload.location_id && location) {
+                try {
+                    await sessionRepo.addLocation(savedSession.session_id, {
+                        name: location.label,
+                        latitude: location.latitude,
+                        longitude: location.longitude,
+                    });
+                } catch (locErr) {
+                    console.warn("Failed to add location to session:", locErr);
+                }
+            }
+            
             // ilmoita lisätyille kaverille (vain rekisteröityneet)
             if (savedSession?.session_id) {
                 for (const player of players) {
@@ -162,7 +179,7 @@ export const ScoreEntryScreen = () => {
 
             {/* NOTES INPUT */}
             {!isSaved && (
-                <View style={styles.playerRow}>
+                <View style={styles.card}>
                     <Text style={styles.playerName}>Muistiinpanot</Text>
                     <TextInput
                         style={styles.notesInput}
@@ -182,7 +199,7 @@ export const ScoreEntryScreen = () => {
             </Pressable>
 
             {isSaved && (
-                <Pressable style={styles.saveButton} onPress={() => navigation.navigate("GameSessions")}>
+                <Pressable style={styles.saveButton} onPress={() => navigation.navigate("GameSessions", { fromScoreEntry: true })}>
                     <Text style={styles.saveButtonText}>Siirry pelisessioihin</Text>
                 </Pressable>
             )}

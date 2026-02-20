@@ -12,7 +12,7 @@ function formatDateFI(date: Date | string) {
   const year = d.getFullYear();
   return `${day}.${month}.${year}`;
 }
-// TODO: finish logic for showing winner and players with scores, also group and location if available
+
 export function SessionCard({ session }: { session: GameSession }) {
   const getPlayerLabel = (player: GameSession['players'][number]) => {
     if (player.name) return player.name;
@@ -42,7 +42,7 @@ export function SessionCard({ session }: { session: GameSession }) {
       {/* Peli + pvm */}
       <View style={styles.settings}>
         <Text style={styles.sectionTitle}>
-          {`Peli ${session.game_id}`}
+          {`Peli ${session.session_id}`}
         </Text>
         <Text style={styles.sectionTitle}>
           {formatDateFI(session.played_at)}
