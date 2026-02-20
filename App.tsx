@@ -22,21 +22,35 @@ import { AuthProvider } from './src/ui/auth/AuthContext';
 import { PlayerSearchScreen } from './src/ui/screens/PlayerSearchScreen';
 import { ScoreEntryScreen } from './src/ui/screens/ScoreEntryScreen';
 import { GameSessionDraftProvider } from './src/ui/context/GameSessionDraftContext';
+import * as Notifications from 'expo-notifications';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
+
+  Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldShowBanner: true,
+    shouldShowList: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
+
    useEffect(() => {
 
     (async () => {
       const granted = await requestNotificationPermission();
       if (granted) {
+        // Push-token on mockattu demoa varten
         const pushToken = await getPushToken();
         console.log('Push token:', pushToken); 
       }
 
       setupNotificationHandler((payload) => {
         console.log('Notification received:', payload);
+        
           // tähän tulisi navigointi jos olisi aitoja push-ilmoituksia (jump screen-to-screen)
       });
     })();
