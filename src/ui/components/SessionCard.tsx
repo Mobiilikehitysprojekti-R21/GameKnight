@@ -12,18 +12,24 @@ function formatDateFI(date: Date | string) {
   const year = d.getFullYear();
   return `${day}.${month}.${year}`;
 }
- // TODO: finish logic for showing winner and players with scores, also group and location if available
+// TODO: finish logic for showing winner and players with scores, also group and location if available
 export function SessionCard({ session }: { session: GameSession }) {
+  const getPlayerLabel = (player: GameSession['players'][number]) => {
+    if (player.name) return player.name;
+    if (player.guest_name) return player.guest_name;
+    return `Pelaaja ${player.user_id}`;
+  };
+
   const winnerName = useMemo(() => {
     const winner = session.players.reduce((max, p) =>
       (typeof p.score === "number" && typeof max.score === "number" && p.score > max.score) ? p : max
     );
-    return winner && typeof winner.score === "number" ? `Pelaaja ${winner.user_id}` : undefined;
+    return winner && typeof winner.score === "number" ? getPlayerLabel(winner) : undefined;
   }, [session.players]);
 
   const playersLine = useMemo(() => {
     return session.players
-      .map(p => (typeof p.score === "number" ? `Pelaaja ${p.user_id} ${p.score}` : `Pelaaja ${p.user_id}`))
+      .map(p => (typeof p.score === "number" ? `${getPlayerLabel(p)} ${p.score}` : getPlayerLabel(p)))
       .join(" • ");
   }, [session.players]);
 
