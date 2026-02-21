@@ -12,11 +12,10 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/types';
 import { FriendCard } from '../components/FriendCard';
 import { useFriendsViewModel } from '../viewModels/useFriendsViewModel';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useProfileScreenViewModel } from '../viewModels/useProfileScreenViewModel';
 import { useAuthViewModel } from '../viewModels/useAuthViewModel';
 import { colors } from '../styles/theme'
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import ModalComponent from '../components/Modal';
 import DCModalComponent from '../components/DoubleCheckModal';
 
@@ -47,27 +46,7 @@ export default function ProfileScreen({ navigation }: Props) {
   const [modalVisible, setModalVisible] = useState(false);
   const [dcModalVisible, setDcModalVisible] = useState(false)
 
-  // state for user´s nickname
-  const [userNick, setUserNick] = useState('');
-
-  // Load user´s nickname if user is logged in
-  useEffect(() => {
-    //if (!vm.isLoggedIn) return;
-    if (!authVm.loggedIn) return;
-
-    const loadUserNick = async () => {
-      try {
-        const nick = await AsyncStorage.getItem('nickname');
-        if (nick) {
-          setUserNick(nick);
-        }
-      } catch (e) {
-        console.error('Failed to load nickname', e);
-      }
-    };
-
-    loadUserNick();
-  }, [authVm.loggedIn]);
+  const userNick = authVm.displayName;
 
   return (
     <>
@@ -103,7 +82,7 @@ export default function ProfileScreen({ navigation }: Props) {
                   style={{ width: 100, height: 100, borderRadius: 75, }}
                 />
               )}</View>
-            
+
             <TouchableOpacity style={styles.settingsButton} onPress={vm.selectProfileImage}>
               <Text style={styles.settingsButtonText}>Vaihda kuva</Text>
             </TouchableOpacity>
@@ -119,9 +98,9 @@ export default function ProfileScreen({ navigation }: Props) {
               <Text style={styles.settingsButtonText}>Poista</Text>
             </TouchableOpacity>
           </View>
-          
+
         </View>
-        
+
 
         {/* OMAT PELIT */}
         <View style={styles.card}>
@@ -166,7 +145,7 @@ export default function ProfileScreen({ navigation }: Props) {
             ))
           )}
 
-          
+
 
           <TouchableOpacity
             style={styles.primaryButton}
