@@ -52,15 +52,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   //UPDATE USER DATA
   // Update user (partial) and persist changed fields locally
   const updateUser = async (userData: any) => {
-    console.log('[AuthContext] updateUser called with:', userData)
-    console.log('[AuthContext] Current user before update:', user)
-
+    
     // Create completely new object to force React state update
     const newUser = { ...(user ?? {}), ...userData }
-    console.log('[AuthContext] New user object created:', newUser)
-    console.log('[AuthContext] New user avatar_url:', newUser.avatar_url)
+    
     setUser(newUser)
-    console.log('[AuthContext] setUser called')
+    
 
     // Only persist fields that are actually provided in this update
     if (userData.nickname !== undefined) await AsyncStorage.setItem('nickname', userData.nickname)
@@ -70,10 +67,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       await AsyncStorage.setItem('user_id', String(userData.user_id))
     }
     if (userData.avatar_url !== undefined && userData.avatar_url !== null) {
-      console.log('[AuthContext] Saving avatar_url to AsyncStorage:', userData.avatar_url)
       await AsyncStorage.setItem('avatar_url', String(userData.avatar_url))
     }
-    console.log('[AuthContext] updateUser completed')
   }
 
   // LOGOUT
