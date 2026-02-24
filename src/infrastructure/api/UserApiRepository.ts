@@ -152,24 +152,36 @@ export class UserApiRepository implements UserRepository {
       return
     }
   }
-
+  
+// Maps response data to ensure consistent Location format with normalized ID
   async getFavoriteLocations(userId: number): Promise<Location[]> {
+    let data: Array<{ location_id?: number; id?: number; label?: string; name?: string; latitude: number; longitude: number }>;
+
     if (this.getAccessToken) {
       const res = await authFetch(this.getAccessToken, `${this.apiUrl}/users/${userId}/favorite-locations`);
       if (!res.ok) {
         throw new Error(`Failed to get favorite locations: ${res.status}`);
       }
-      const data = (await res.json()) as Array<{ label?: string; name?: string; latitude: number; longitude: number }>;
-      return data.map(item => ({
-        label: item.label ?? item.name ?? "",
-        latitude: item.latitude,
-        longitude: item.longitude,
-      }));
+      data = (await res.json()) as Array<{ 
+        location_id?: number; 
+        id?: number; 
+        label?: string; 
+        name?: string; 
+        latitude: number; 
+        longitude: number }>;
+    } else {
+      const response = await axios.get(`${this.apiUrl}/users/${userId}/favorite-locations`);
+      data = response.data as Array<{ 
+        location_id?: number; 
+        id?: number; 
+        label?: string; 
+        name?: string; 
+        latitude: number; 
+        longitude: number }>;
     }
 
-    const response = await axios.get(`${this.apiUrl}/users/${userId}/favorite-locations`);
-    const data = response.data as Array<{ label?: string; name?: string; latitude: number; longitude: number }>;
     return data.map(item => ({
+      id: item.location_id ?? item.id,
       label: item.label ?? item.name ?? "",
       latitude: item.latitude,
       longitude: item.longitude,
@@ -183,7 +195,7 @@ export class UserApiRepository implements UserRepository {
       latitude: number;
       longitude: number;
     }
-  ): Promise<void> {
+  ): Promise<{ id: number; label: string; latitude: number; longitude: number }> {
     if (this.getAccessToken) {
       const res = await authFetch(this.getAccessToken, `${this.apiUrl}/users/${userId}/favorite-locations`, {
         method: 'POST',
@@ -197,13 +209,27 @@ export class UserApiRepository implements UserRepository {
       if (!res.ok) {
         throw new Error(`Failed to add favorite location: ${res.status}`);
       }
-      return;
+      
+      const data = await res.json();
+      return {
+        id: data.location_id || data.id,
+        label: data.name || location.label,
+        latitude: data.latitude,
+        longitude: data.longitude,
+      };
     }
 
-    await axios.post(`${this.apiUrl}/users/${userId}/favorite-locations`, {
+    const response = await axios.post(`${this.apiUrl}/users/${userId}/favorite-locations`, {
       name: location.label,
       latitude: location.latitude,
       longitude: location.longitude,
     });
+    
+    return {
+      id: response.data.location_id || response.data.id,
+      label: response.data.name || location.label,
+      latitude: response.data.latitude,
+      longitude: response.data.longitude,
+    };
   }
 }

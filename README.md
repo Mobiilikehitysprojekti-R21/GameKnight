@@ -1,5 +1,8 @@
 # GameKnight - Mobile app
 
+> ⚠️ IMPORTANT! ⚠️
+> This project is two parted. Server implementation is [here](https://github.com/Mobiilikehitysprojekti-R21/GameKnight-server):
+
 ## Styling guide
 
 Install prettier with `npm i` in project root folder and install [prettier extension for VS Code](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode).

@@ -59,6 +59,7 @@ export const styles = StyleSheet.create({
     borderRadius: radius.sm,
     textAlign: "center",
     fontWeight: "600",
+    marginTop: spacing.sm,
   },
 
   winnerBanner: {
@@ -94,5 +95,12 @@ saveButtonText: {
   fontWeight: "700",
   fontSize: 16,
 },
+
+ card: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: spacing.lg,
+    marginBottom: spacing.md,
+  },
 
 });

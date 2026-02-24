@@ -9,8 +9,9 @@ import { useAuthViewModel } from '../viewModels/useAuthViewModel';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'GameSessions'>
 
-export default function GameSessionsScreen({ navigation }: Props) {
+export default function GameSessionsScreen({ navigation, route }: Props) {
   const { user } = useAuthViewModel();
+  const fromScoreEntry = (route.params as any)?.fromScoreEntry ?? false;
 
   const numericUserId =
     typeof user?.user_id === 'number'
@@ -38,10 +39,13 @@ export default function GameSessionsScreen({ navigation }: Props) {
       <View style={styles.card}>
 
         <Text style={styles.sectionTitle}>Pelatut pelit</Text>
-        <View style={[styles.settings, { justifyContent: "space-between", alignItems: "center" }]}>
-          <Pressable style={{ padding: 8 }} onPress={() => navigation.navigate("Home")}>
-            <Text style={{ fontSize: 15, color: "#8B5CF6", fontWeight: "600" }}>← Aloitusnäytölle</Text>
-          </Pressable></View>
+        {fromScoreEntry && (
+          <View style={[styles.settings, { justifyContent: "space-between", alignItems: "center" }]}>
+            <Pressable style={{ padding: 8 }} onPress={() => navigation.navigate("Home")}>
+              <Text style={{ fontSize: 15, color: "#8B5CF6", fontWeight: "600" }}>← Aloitusnäytölle</Text>
+            </Pressable>
+          </View>
+        )}
 
         {loading ? (
           <Text style={styles.statText}>Ladataan...</Text>

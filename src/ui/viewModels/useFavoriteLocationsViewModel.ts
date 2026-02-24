@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback } from "react";
 import { UserApiRepository } from "../../infrastructure/api/UserApiRepository";
 import type { Location } from "../../domain/entities/Location";
 import { useAuth } from "../auth/useAuth";
@@ -56,8 +58,13 @@ export const useFavoriteLocationsViewModel = () => {
         return { success: false, error: errMsg };
       }
 
-      await repo.addFavoriteLocation(userId, location);
-      await loadFavorites();
+      const savedLocation = await repo.addFavoriteLocation(userId, location);      
+      // Add to local state immediately for instant UI update (with ID from server)
+      setFavorites((prevFavorites) => [...prevFavorites, savedLocation]);
+      
+      // Reload from API in background to ensure sync
+      loadFavorites();
+      
       return { success: true };
     } catch (err: any) {
       const errMsg = err?.message ?? "Failed to add favorite location";
@@ -70,6 +77,13 @@ export const useFavoriteLocationsViewModel = () => {
   useEffect(() => {
     loadFavorites();
   }, [user?.user_id]);
+
+  // Reload favorites whenever screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      loadFavorites();
+    }, [user?.user_id])
+  );
 
   return {
     favorites,
